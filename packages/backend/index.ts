@@ -1,13 +1,7 @@
-import express from 'express';
-const app = express();
-const port = 8081; // default port to listen
+import { config } from './src/configuration/environment';
+import { app } from './src/configuration/express';
+import { loggerFile } from './src/configuration/logger';
 
-// define a route handler for the default home page
-app.get( '/', ( req, res ) => {
-    res.send( 'Hello world!' );
-} );
-
-// start the Express server
-app.listen( port, () => {
-    console.log( `server started at http://localhost:${ port }` );
-} );
+const server = app.listen(config.port, () => {
+  loggerFile.debug(`server started on http://localhost:${config.port} (${config.env})`);
+}); 
