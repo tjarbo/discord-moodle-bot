@@ -4,4 +4,4 @@ import { loggerFile } from './src/configuration/logger';
 
 const server = app.listen(config.port, () => {
   loggerFile.debug(`server started on http://localhost:${config.port} (${config.env})`);
-}); 
+});
