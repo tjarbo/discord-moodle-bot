@@ -1,0 +1,30 @@
+{
+  "author": "",
+  "description": "Discord Bot, welcher über neue Aktivitäten auf der Moodle-Plattform benachrichtigt.",
+  "homepage": "https://github.com/tjarbo/discord-moodle-bot#readme",
+  "license": "AGPL-3.0-only",
+  "name": "fancy-moodle-discord-bot",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjarbo/discord-moodle-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tjarbo/discord-moodle-bot/issues"
+  },
+  "keywords": [
+    "discord",
+    "moodle",
+    "bot"
+  ],
+  "scripts": {
+    "start": "lerna run start --parallel",
+    "build": "lerna run build",
+    "build:prod": "lerna run build:prod",
+    "postinstall": "lerna bootstrap",
+    "test": "lerna run test"
+  },
+  "devDependencies": {
+    "lerna": "^3.20.2"
+  }
+}

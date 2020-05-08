@@ -1,0 +1,26 @@
+{
+  "name": "@fmdb/backend",
+  "version": "1.0.0",
+  "description": "API&Bot backend of the FMDB-Project",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:prod": "tsc",
+    "build:watch": "tsc --watch --preserveWatchOutput",
+    "clean": "rd dist /s /q || rm -r dist/",
+    "lint": "npm run prebuild",
+    "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+    "prestart": "npm run build",
+    "start": "concurrently -c \"yellow.bold,orange.bold\" -n \"WATCH,RUN\" \"yarn build:watch\" \"nodemon --ignore dist/docs/ .\"",
+    "test": "echo \"Add tests please\""
+  },
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^8.2.0",
+    "@types/hapi__joi": "^17.1.0",
+    "@types/node": "^13.13.5"
+  }
+}
