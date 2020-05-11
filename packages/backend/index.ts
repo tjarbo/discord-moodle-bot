@@ -4,6 +4,7 @@ import * as util from 'util';
 import { config } from './src/configuration/environment';
 import { app } from './src/configuration/express';
 import { loggerFile } from './src/configuration/logger';
+import { client } from './src/configuration/discord';
 
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(() => {
   loggerFile.debug('Mongoose connected');
@@ -17,6 +18,10 @@ if (config.mongooseDebug) {
     loggerFile.debug(`${collectionName}.${method}`, util.inspect(query, false, 20), doc);
   });
 }
+
+client.on('message', message => {
+	console.log(message.content);
+});
 
 const server = app.listen(config.port, () => {
   loggerFile.debug(`server started on http://localhost:${config.port} (${config.env})`);

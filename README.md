@@ -21,6 +21,7 @@ NODE_ENV=development
 SERVER_PORT=4040
 MONGO_HOST=mongodb://localhost:27017/fmdb
 MONGOOSE_DEBUG=true
+DISCORD_TOKEN=XXXXX.....XXXXX
 ```
 
 ### Start development 🛫
