@@ -23,7 +23,9 @@ const envVarsSchema = object({
   MONGO_HOST: string().required()
     .description('Mongo DB host url'),
   MONGO_PORT: number()
-    .default(27017)
+    .default(27017),
+  DISCORD_TOKEN: string().required()
+  .description('Mongo DB host url')
 }).unknown()
   .required();
 
@@ -31,6 +33,7 @@ const { error, value: envVars } = envVarsSchema.validate(process.env);
 if (error) throw new Error(`Config validation error: ${error.message}`);
 
 export const config = {
+  discordToken: envVars.DISCORD_TOKEN,
   env: envVars.NODE_ENV,
   mongo: {
     host: envVars.MONGO_HOST,
