@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import { config } from './environment';
-import { loggerFile } from "./logger";
+import { loggerFile } from './logger';
 
 export const client = new Discord.Client();
 
