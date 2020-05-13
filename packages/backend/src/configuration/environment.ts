@@ -25,7 +25,7 @@ const envVarsSchema = object({
   MONGO_PORT: number()
     .default(27017),
   DISCORD_TOKEN: string().required()
-  .description('Mongo DB host url')
+  .description('Discord Token for bot')
 }).unknown()
   .required();
 
