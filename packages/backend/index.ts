@@ -12,13 +12,13 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
 
   User.findOne({'userName': config.adminName}).then((user) => {
     if (user) return; // If env-admin already exits - skip setup
-    
+
     // add env-admin to database
     const userObj = {
       userName: config.adminName,
       userId: config.adminId,
     };
-   
+
     new User(userObj).save();
   });
 
@@ -32,10 +32,6 @@ if (config.mongooseDebug) {
     loggerFile.debug(`${collectionName}.${method}`, util.inspect(query, false, 20), doc);
   });
 }
-
-client.on('message', message => {
-	console.log(message.content);
-});
 
 const server = app.listen(config.port, () => {
   loggerFile.debug(`server started on http://localhost:${config.port} (${config.env})`);
