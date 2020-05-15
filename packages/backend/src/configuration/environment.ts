@@ -25,7 +25,11 @@ const envVarsSchema = object({
   MONGO_PORT: number()
     .default(27017),
   DISCORD_TOKEN: string().required()
-  .description('Discord Token for bot')
+  .description('Discord Token for bot'),
+  ADMIN_ID: string().required()
+  .description('Discord ID of the admin'),
+  ADMIN_NAME: string().required()
+  .description('Discord username#0000 of the admin')
 }).unknown()
   .required();
 
@@ -33,6 +37,8 @@ const { error, value: envVars } = envVarsSchema.validate(process.env);
 if (error) throw new Error(`Config validation error: ${error.message}`);
 
 export const config = {
+  adminId: envVars.ADMIN_ID,
+  adminName: envVars.ADMIN_NAME,
   discordToken: envVars.DISCORD_TOKEN,
   env: envVars.NODE_ENV,
   mongo: {
@@ -40,5 +46,5 @@ export const config = {
     port: envVars.MONGO_PORT
   },
   mongooseDebug: envVars.MONGOOSE_DEBUG,
-  port: envVars.SERVER_PORT
+  port: envVars.SERVER_PORT,
 };
