@@ -4,7 +4,7 @@ import { Schema, model, Model, Document } from 'mongoose';
 export interface IUserDocument extends Document {
   [_id: string]: any;
   userName: String;
-  userId: Date;
+  userId: String;
 }
 
 const userSchema = new Schema({

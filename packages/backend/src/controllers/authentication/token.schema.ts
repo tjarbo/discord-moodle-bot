@@ -11,7 +11,7 @@ interface ITokenDocument extends Document {
 const tokenSchema = new Schema({
   key: Number,
   createdAt: { type: Date, default: Date.now },
-  userID: String,
+  userId: String,
 });
 
 export const Token: Model<ITokenDocument> = model<ITokenDocument>('Token', tokenSchema);
