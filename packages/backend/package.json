@@ -29,6 +29,7 @@
     "method-override": "^3.0.0",
     "mongoose": "^5.9.12",
     "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
     "swagger-ui-express": "^4.1.4",
     "tslint": "^6.1.2",
     "typescript": "^3.8.3"
@@ -45,6 +46,7 @@
     "@types/mongoose": "^5.7.15",
     "@types/node": "^13.13.5",
     "@types/passport": "^1.0.3",
+    "@types/passport-local": "^1.0.33",
     "@types/swagger-ui-express": "^4.1.2",
     "@types/ws": "^7.2.4",
     "concurrently": "^5.2.0",
