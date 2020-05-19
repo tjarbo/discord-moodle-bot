@@ -28,8 +28,10 @@ const envVarsSchema = object({
   .description('Discord Token for bot'),
   ADMIN_ID: string().required()
   .description('Discord ID of the admin'),
-  ADMIN_NAME: string().required()
-  .description('Discord username#0000 of the admin')
+  ADMIN_NAME: string().required().regex(/[a-z]+#[0-9]+/)
+  .description('Discord username#0000 of the admin'),
+  JWT_SECRET: string().required(),
+  JWT_EXPIRESIN: string().required(),
 }).unknown()
   .required();
 
@@ -41,6 +43,10 @@ export const config = {
   adminName: envVars.ADMIN_NAME,
   discordToken: envVars.DISCORD_TOKEN,
   env: envVars.NODE_ENV,
+  jwt: {
+    secret: envVars.JWT_SECRET,
+    expiresIn: envVars.JWT_EXPIRESIN,
+  },
   mongo: {
     host: envVars.MONGO_HOST,
     port: envVars.MONGO_PORT
