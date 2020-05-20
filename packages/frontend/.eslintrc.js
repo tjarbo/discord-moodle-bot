@@ -21,10 +21,14 @@ module.exports = {
     {
       files: [
         '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)',
+        '**/tests/**/*.spec.{j,t}s?(x)',
+        '**/tests/**/*.spec_.{j,t}s?(x)',
       ],
       env: {
         mocha: true,
+      },
+      rules: {
+        'no-unused-expressions': 'off',
       },
     },
   ],
