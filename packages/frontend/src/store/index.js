@@ -22,7 +22,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         axios.post(`${URL}/token`, { username })
           .then(() => {
-            context.commit('SET_AUTH', {});
+            context.commit('SET_AUTH', undefined);
             resolve({});
           })
           .catch((err) => {

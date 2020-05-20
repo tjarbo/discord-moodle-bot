@@ -1,8 +1,9 @@
 <template>
   <div id="loginview">
-    <form class="pure-form pure-form-stacked" @submit="submit">
+    <form class="pure-form pure-form-stacked" @submit="onSubmit">
       <fieldset>
         <legend>Login - Fancy-Moodle-Discord-Bot</legend>
+        <span class="warning-text">{{form.errorText}}</span>
         <label for="discordusername">Discord Username</label>
         <input
           id="discordusername"
@@ -19,7 +20,12 @@
           v-model="form.token"
           :disabled="tokenInputDisabled"
         />
-        <button type="submit" class="pure-button pure-button-primary">{{submitButtonText}}</button>
+        <button
+          class="pure-button pure-button-primary"
+          type="submit"
+        >
+        {{form.submitButtonText}}
+        </button>
       </fieldset>
     </form>
   </div>
@@ -30,35 +36,53 @@ export default {
   name: 'LoginView',
   data: () => ({
     form: {
-      username: '',
+      errorText: '',
       token: '',
+      username: '',
+      submitButtonText: 'Token anfordern',
     },
-    submitButtonText: 'Token anfordern',
     tokenInputDisabled: true,
   }),
   methods: {
-    submit() {
+    onSubmit(event) {
+      event.preventDefault();
+      // request token in first case
       if (this.tokenInputDisabled) {
         this.$store.dispatch('requestToken', this.form.username)
-          .then(() => { this.tokenInputDisabled = false; })
+          .then(() => {
+            // token request was successful
+            this.form.errorText = '';
+            this.form.submitButtonText = 'Anmelden';
+            this.tokenInputDisabled = false;
+          })
           .catch((err) => {
+            // token request failed
             console.log(err);
-            alert(`${err}`);
+            this.form.errorText = err;
+            this.form.submitButtonText = 'Token anfordern';
             this.tokenInputDisabled = true;
           });
+      // login with token in the other case
       } else {
-        const creds = {
+        // create object with login credentials
+        const credentials = {
           username: this.form.username,
           tokenKey: this.form.token,
         };
-        this.$store.dispatch('loginWithToken', creds)
+        this.$store.dispatch('loginWithToken', credentials)
           .then(() => {
-            alert('successfully logged in!');
+            // login was successful
+            this.form.errorText = '';
+            this.form.submitButtonText = 'Token anfordern';
+            this.tokenInputDisabled = true;
+            this.$router.push('dashboard');
           })
           .catch((err) => {
+            // login failed
             console.log(err);
-            alert(`${err}`);
-            this.tokenInputDisabled = true;
+            this.form.errorText = err;
+            this.form.submitButtonText = 'Anmelden';
+            this.tokenInputDisabled = false;
           });
       }
     },
@@ -66,5 +90,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.warning-text {
+  color: rgb(202, 60, 60);;
+}
 </style>
