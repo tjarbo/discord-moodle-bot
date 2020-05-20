@@ -61,6 +61,8 @@ export const config = {
   },
   mongooseDebug: envVars.MONGOOSE_DEBUG,
   port: envVars.SERVER_PORT,
-  moodleBaseURL: envVars.MOODLE_BASE_URL,
-  moodleToken: envVars.MOODLE_TOKEN,
+  moodle: {
+    baseURL: envVars.MOODLE_BASE_URL,
+    token: envVars.MOODLE_TOKEN,
+  },
 };
