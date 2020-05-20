@@ -32,7 +32,11 @@ const envVarsSchema = object({
   ADMIN_NAME: string().required().regex(/[a-z]+#[0-9]+/)
   .description('Discord username#0000 of the admin'),
   JWT_SECRET: string().required(),
-  JWT_EXPIRESIN: string().required()
+  JWT_EXPIRESIN: string().required(),
+  MOODLE_BASE_URL: string().required()
+  .description('Base URL for Moodle, eg. https://moodle.domain.me'),
+  MOODLE_TOKEN: string().required()
+  .description('Token to communicate with Moodle-Webservice API')
 }).unknown()
   .required();
 
