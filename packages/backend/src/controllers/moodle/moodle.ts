@@ -1,9 +1,9 @@
 import fetch from 'node-fetch';
 import { loggerFile } from '../../configuration/logger';
 import { config } from '../../configuration/environment';
-import { Course } from './course.class';
-import { Assignment } from './assignment.class';
-import { Ressource } from './ressource.class';
+import { ICourse } from './course.interface';
+import { IAssignment } from './assignment.interface';
+import { IRessource } from './ressource.interface';
 
 function getBaseUrl() {
     let url = config.moodle.baseURL;
@@ -37,7 +37,7 @@ export function fetchMoodleData() {
     // mind the recursion loop!!!
 }
 
-async function fetchAssignments(moodleUrl: string): Promise<Course[]> {
+async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
     return fetch(moodleUrl + '&wsfunction=mod_assign_get_assignments')
 	  .then(res => res.json())
       .then(json => json.courses)
@@ -46,7 +46,7 @@ async function fetchAssignments(moodleUrl: string): Promise<Course[]> {
     });
 }
 
-async function fetchRessources(moodleUrl: string): Promise<Ressource[]> {
+async function fetchRessources(moodleUrl: string): Promise<IRessource[]> {
     return fetch(moodleUrl + '&wsfunction=mod_resource_get_resources_by_courses')
 	  .then(res => res.json())
       .then(json => json.resources)
@@ -55,8 +55,8 @@ async function fetchRessources(moodleUrl: string): Promise<Ressource[]> {
     });
 }
 
-function filterAssignments(courses: Course[], timestamp: number):Assignment[] {
-    const assignments: Assignment[] = [];
+function filterAssignments(courses: ICourse[], timestamp: number):IAssignment[] {
+    const assignments: IAssignment[] = [];
     courses.forEach(course => {
         course.assignments.forEach( assignment => {
             if (assignment.timemodified > timestamp)
