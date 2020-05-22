@@ -12,7 +12,7 @@
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "prestart": "npm run build",
     "start": "concurrently -c \"yellow.bold,orange.bold\" -n \"WATCH,RUN\" \"npm run build:watch\" \"nodemon --ignore dist/docs/ .\"",
-    "test": "echo \"Add tests please\""
+    "test": "jest"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
@@ -45,14 +45,18 @@
     "@types/express-rate-limit": "^5.0.0",
     "@types/hapi__joi": "^17.1.0",
     "@types/helmet": "0.0.46",
+    "@types/jest": "^25.2.3",
     "@types/method-override": "0.0.31",
     "@types/mongoose": "^5.7.15",
-    "@types/node": "^13.13.5",
+    "@types/node": "^13.13.8",
     "@types/passport": "^1.0.3",
     "@types/passport-local": "^1.0.33",
     "@types/swagger-ui-express": "^4.1.2",
     "@types/ws": "^7.2.4",
     "concurrently": "^5.2.0",
-    "nodemon": "^2.0.3"
+    "jest": "^26.0.1",
+    "mockingoose": "^2.13.2",
+    "nodemon": "^2.0.3",
+    "ts-jest": "^26.0.0"
   }
 }
