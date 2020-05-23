@@ -36,7 +36,11 @@ const envVarsSchema = object({
   MOODLE_BASE_URL: string().required()
   .description('Base URL for Moodle, eg. https://moodle.domain.me'),
   MOODLE_TOKEN: string().required()
-  .description('Token to communicate with Moodle-Webservice API')
+  .description('Token to communicate with Moodle-Webservice API'),
+  MOODLE_USERID: number().required()
+  .description('Moodle user Id required to fetch course details'),
+  MOODLE_USE_COURSE_SHORTNAME: boolean().default(true)
+  .description('Whether to use short- or fullname of the courses in the discord message'),
 }).unknown()
   .required();
 
@@ -63,6 +67,8 @@ export const config = {
   port: envVars.SERVER_PORT,
   moodle: {
     baseURL: envVars.MOODLE_BASE_URL,
-    token: envVars.MOODLE_TOKEN,
+    token:   envVars.MOODLE_TOKEN,
+    userId:  envVars.MOODLE_USERID,
+    useCourseShortname: envVars.MOODLE_USE_COURSE_SHORTNAME,
   },
 };
