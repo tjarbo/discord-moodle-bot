@@ -2,7 +2,7 @@
  * Auth.js manages the user authentification for the REST-API
  */
 
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { object, string, number } from '@hapi/joi';
 import { User, IUserDocument } from '../user/user.schema';
 import { loggerFile } from '../../configuration/logger';
@@ -11,6 +11,7 @@ import { client } from '../../configuration/discord';
 import jwt from 'jsonwebtoken';
 import expressjwt from 'express-jwt';
 import { config } from '../../configuration/environment';
+import { ApiError } from '../error/api.class';
 
 const tokenReqeuestSchema = object({
   username: string().required(),
@@ -21,8 +22,16 @@ const authRequestSchema = object({
   tokenKey: number().greater(100000).less(999999),
 });
 
+
+/**
+ * Generates a signed jwt token, which conatins the user 
+ * object
+ * 
+ * @param {IUserDocument} user
+ * @returns jwt
+ */
 function generateJWToken(user: IUserDocument) {
-  const data =  {
+  const data = {
     _id: user._id,
     name: user.name,
     email: user.email
@@ -33,7 +42,14 @@ function generateJWToken(user: IUserDocument) {
   return jwt.sign({ data, }, signature, { expiresIn: expiration });
 }
 
-function getTokenFromHeader(req: Request) {
+/**
+ * Returns the jwt from the request header 
+ *
+ * ! export only for unit testing (rewire doesn't work :/ )
+ * @param {Request} req
+ * @returns {(string | null)} jwt or null
+ */
+export function getTokenFromHeader(req: Request): string | null {
   if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
     return req.headers.authorization.split(' ')[1];
   }
@@ -49,39 +65,40 @@ function getTokenFromHeader(req: Request) {
  * @param {Request} req
  * @param {Response} res
  */
-export function authRequestToken(req: Request, res: Response) {
-  const tokenRequest = tokenReqeuestSchema.validate(req.body);
+export async function authRequestToken(req: Request, res: Response, next: NextFunction) {
 
-  if (tokenRequest.error) {
-    res.status(400).json(tokenRequest.error.message);
-    return;
+  try {
+    const tokenRequest = tokenReqeuestSchema.validate(req.body);
+    if (tokenRequest.error) throw new ApiError(400, tokenRequest.error.message)
+
+    // 1. check if user exits at the database
+    const user = await User.findOne({ 'userName': tokenRequest.value.username })
+    console.log("######asdasdasdasda'#######");
+    
+    if (!user) throw new ApiError(404 ,`Nutzer ${tokenRequest.value.username} nicht gefunden`);
+    console.log("%%%%%%%%%%%%werwerewr%%%%%%%%");
+    
+    // 2. Generate a new Token and save it in the database
+    const tokenObj = {
+      userId: user.userId,
+      key: Math.floor(100000 + Math.random() * 900000)
+    };
+    const token = await (new AuthToken(tokenObj)).save()
+
+    // 3. Send token to user
+    const discordUser = client.users.cache.get(user.userId.toString());
+    if (!discordUser) throw new ApiError(409, `${tokenRequest.value.username} nicht im Discord Cache. Schreibe dem Bot eine kleine 'Test' Nachricht (per DM) und versuche es erneut.`);
+
+    discordUser.send(`:key: **Es wurde ein Zugangstoken angefordert**\n Zugangstoken lautet: ${token.key}\n`);
+    discordUser.send(`Solltest du den Token nicht angefordert haben-Kein Problem, lösche diese Nachricht einfach`);
+    
+    // 4. Done
+    res.status(200).end();
+
+  } catch (err) {
+    loggerFile.error(err.message);
+    next(err);
   }
-
-  // 1. check if user exits at the database
-  User.findOne({ 'userName': tokenRequest.value.username })
-    .then((user: IUserDocument) => {
-      if (!user) throw new Error(`Nutzer ${tokenRequest.value.username} nicht gefunden`);
-
-      // 2. Generate a new Token and save it in the database
-      const tokenObj = {
-        userId: user.userId,
-        key: Math.floor(100000 + Math.random() * 900000)
-      };
-      new AuthToken(tokenObj).save()
-        .then((token) => {
-          // 3. Send token to user
-          const discordUser = client.users.cache.get(user.userId.toString());
-          if (!discordUser) throw new Error(`${tokenRequest.value.username} nicht im Discord Cache. Schreibe dem Bot eine kleine 'Test' Nachricht (per DM) und versuche es erneut.`);
-
-          discordUser.send(`:key: **Es wurde ein Zugangstoken angefordert**\n Zugangstoken lautet: ${token.key}\n`);
-          discordUser.send(`Solltest du den Token nicht angefordert haben-Kein Problem, lösche diese Nachricht einfach`);
-          res.status(200).end();
-        });
-    })
-    .catch((err: Error) => {
-      loggerFile.error(err.message);
-      res.status(404).send(err.message);
-    });
 }
 
 /**
@@ -111,7 +128,7 @@ export function authLogin(req: Request, res: Response) {
       AuthToken.findOne({ key: authRequest.value.tokenKey })
         .then((token) => {
           if (token && user.userId === token.userId) {
-            res.status(200).json({'accesstoken': generateJWToken(user)});
+            res.status(200).json({ 'accesstoken': generateJWToken(user) });
           } else {
             res.status(401).send('Invalid token');
             return;
