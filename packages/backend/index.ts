@@ -23,6 +23,9 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
     new User(userObj).save();
   });
 
+  // TODO: Replace placeholder with real value
+  const interval = 5 * 60 * 1000;
+  setInterval(() => fetchMoodleData(), interval);
   fetchMoodleData();
 }).catch((error) => {
   loggerFile.error('Mongoose NOT Connected', error);
