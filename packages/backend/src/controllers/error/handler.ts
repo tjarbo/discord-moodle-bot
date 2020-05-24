@@ -22,7 +22,7 @@ export function apiErrorHandler(err: ApiError, req: Request, res: Response, next
       break;
   
     default:
-      statusCode = err.statusCode;
+      statusCode = err.statusCode || 500;
       message = err.message;
       break;
   }

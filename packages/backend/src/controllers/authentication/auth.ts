@@ -69,21 +69,18 @@ export async function authRequestToken(req: Request, res: Response, next: NextFu
 
   try {
     const tokenRequest = tokenReqeuestSchema.validate(req.body);
-    if (tokenRequest.error) throw new ApiError(400, tokenRequest.error.message)
+    if (tokenRequest.error) throw new ApiError(400, tokenRequest.error.message);
 
     // 1. check if user exits at the database
     const user = await User.findOne({ 'userName': tokenRequest.value.username })
-    console.log("######asdasdasdasda'#######");
-    
     if (!user) throw new ApiError(404 ,`Nutzer ${tokenRequest.value.username} nicht gefunden`);
-    console.log("%%%%%%%%%%%%werwerewr%%%%%%%%");
     
     // 2. Generate a new Token and save it in the database
     const tokenObj = {
       userId: user.userId,
       key: Math.floor(100000 + Math.random() * 900000)
     };
-    const token = await (new AuthToken(tokenObj)).save()
+    const token = await (new AuthToken(tokenObj)).save();
 
     // 3. Send token to user
     const discordUser = client.users.cache.get(user.userId.toString());
