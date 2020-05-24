@@ -13,20 +13,20 @@ import expressjwt from 'express-jwt';
 import { config } from '../../configuration/environment';
 import { ApiError } from '../error/api.class';
 
-const tokenReqeuestSchema = object({
+const authTokenReqeuestSchema = object({
   username: string().required(),
 });
 
-const authRequestSchema = object({
+const authLoginRequestSchema = object({
   username: string().required(),
-  tokenkey: number().greater(100000).less(999999).required(),
+  token: number().greater(100000).less(999999).required(),
 });
 
 
 /**
- * Generates a signed jwt token, which conatins the user 
+ * Generates a signed jwt token, which conatins the user
  * object
- * 
+ *
  * @param {IUserDocument} user
  * @returns jwt
  */
@@ -43,7 +43,7 @@ function generateJWToken(user: IUserDocument) {
 }
 
 /**
- * Returns the jwt from the request header 
+ * Returns the jwt from the request header
  *
  * ! export only for unit testing (rewire doesn't work :/ )
  * @param {Request} req
@@ -65,14 +65,14 @@ export function getTokenFromHeader(req: Request): string | null {
  * @param {Request} req
  * @param {Response} res
  */
-export async function authRequestToken(req: Request, res: Response, next: NextFunction) {
+export async function authTokenRequest(req: Request, res: Response, next: NextFunction) {
 
   try {
-    const tokenRequest = tokenReqeuestSchema.validate(req.body);
+    const tokenRequest = authTokenReqeuestSchema.validate(req.body);
     if (tokenRequest.error) throw new ApiError(400, tokenRequest.error.message);
 
     // 1. check if user exits at the database
-    const user = await User.findOne({ 'userName': tokenRequest.value.username })
+    const user = await User.findOne({ 'userName': tokenRequest.value.username });
     if (!user) throw new ApiError(404, `Nutzer ${tokenRequest.value.username} nicht gefunden`);
 
     // 2. Generate a new Token and save it in the database
@@ -105,18 +105,18 @@ export async function authRequestToken(req: Request, res: Response, next: NextFu
  * @param {Request} req
  * @param {Response} res
  */
-export async function authLogin(req: Request, res: Response, next: NextFunction) {
+export async function authLoginRequest(req: Request, res: Response, next: NextFunction) {
   try {
     // validate user input!
-    const authRequest = authRequestSchema.validate(req.body);
+    const authRequest = authLoginRequestSchema.validate(req.body);
     if (authRequest.error) throw new ApiError(400, authRequest.error.message);
 
      // 1. check if user exits at the database
-     const user = await User.findOne({ 'userName': authRequest.value.username })
+     const user = await User.findOne({ 'userName': authRequest.value.username });
      if (!user) throw new ApiError(404, `Nutzer ${authRequest.value.username} nicht gefunden`);
 
     // 2. find token in the datase and compare the deposited discord user id
-    const token = await AuthToken.findOne({ key: authRequest.value.tokenkey });
+    const token = await AuthToken.findOne({ key: authRequest.value.token });
     if (!token || user.userId !== token.userId) throw new ApiError(401,  'Invalid token!');
 
     res.status(200).json({ 'accesstoken': generateJWToken(user) });

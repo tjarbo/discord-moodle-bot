@@ -1,5 +1,5 @@
 // mock relevant imports
-import { getTokenFromHeader, authLogin, authRequestToken } from '../src/controllers/authentication/auth';
+import { getTokenFromHeader, authLoginRequest, authTokenRequest } from '../src/controllers/authentication/auth';
 import { User } from '../src/controllers/user/user.schema';
 import { Request, Response } from 'express';
 import mockingoose from 'mockingoose';
@@ -23,7 +23,7 @@ describe('auth.ts getTokenFromHeader', () => {
   });
 });
 
-describe('auth.js authRequestToken', () => {
+describe('auth.js authTokenRequest', () => {
   let mockRequest: Request;
   let mockResponse: Response;
   let mockUser: any;
@@ -71,7 +71,7 @@ describe('auth.js authRequestToken', () => {
   it('should log error if wrong tokenRequest is provided', () => {
 
     // no body
-    authRequestToken(mockRequest, mockResponse, mockNext);
+    authTokenRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(400, "\"username\" is required"));
@@ -79,7 +79,7 @@ describe('auth.js authRequestToken', () => {
     // number as username (userid instead of username)
     mockRequest.body.username = 12312312312312;
 
-    authRequestToken(mockRequest, mockResponse, mockNext);
+    authTokenRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(2);
     expect(mockNext.mock.calls.length).toBe(2);
     expect(mockNext.mock.calls[1][0]).toEqual(new ApiError(400, "\"username\" must be a string"));
@@ -89,7 +89,7 @@ describe('auth.js authRequestToken', () => {
     mockRequest.body.username = "testuser2#123123";
     mockingoose(User).toReturn(null, 'findOne');
 
-    await authRequestToken(mockRequest, mockResponse, mockNext);
+    await authTokenRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Nutzer ${mockRequest.body.username} nicht gefunden`));
@@ -104,7 +104,7 @@ describe('auth.js authRequestToken', () => {
     mockingoose(User).toReturn(mockUser, 'findOne');
     mockingoose(AuthToken).toReturn(testError, 'save');
 
-    await authRequestToken(mockRequest, mockResponse, mockNext);
+    await authTokenRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(testError);
@@ -120,7 +120,7 @@ describe('auth.js authRequestToken', () => {
     spyDiscordClientUsers.mockReturnValue(null);
 
 
-    await authRequestToken(mockRequest, mockResponse, mockNext);
+    await authTokenRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(409, `${mockUser.userName} nicht im Discord Cache. Schreibe dem Bot eine kleine 'Test' Nachricht (per DM) und versuche es erneut.`));
@@ -136,7 +136,7 @@ describe('auth.js authRequestToken', () => {
     const mockDiscordUser = { send: jest.fn()};
     spyDiscordClientUsers.mockReturnValue(mockDiscordUser);
 
-    await authRequestToken(mockRequest, mockResponse, mockNext);
+    await authTokenRequest(mockRequest, mockResponse, mockNext);
     
     // user with correct id should have been requested
     expect(spyDiscordClientUsers.mock.calls.length).toBe(1);
@@ -155,7 +155,7 @@ describe('auth.js authRequestToken', () => {
   });
 })
 
-describe('auth.js authLogin', () => {
+describe('auth.js authLoginRequest', () => {
   let mockRequest: Request;
   let mockResponse: Response;
   let mockUser: any;
@@ -200,7 +200,7 @@ describe('auth.js authLogin', () => {
   
   it('should log error if wrong authRequest is provided', async () => {
     // no body
-    await authLogin(mockRequest, mockResponse, mockNext);
+    await authLoginRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(400, "\"username\" is required"));
@@ -208,7 +208,7 @@ describe('auth.js authLogin', () => {
     // number as username (userid instead of username)
     mockRequest.body.username = 12312312312312;
 
-    await authLogin(mockRequest, mockResponse, mockNext);
+    await authLoginRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(2);
     expect(mockNext.mock.calls.length).toBe(2);
     expect(mockNext.mock.calls[1][0]).toEqual(new ApiError(400, "\"username\" must be a string")); 
@@ -216,19 +216,19 @@ describe('auth.js authLogin', () => {
     // no token
     mockRequest.body.username = mockUser.userName;
 
-    await authLogin(mockRequest, mockResponse, mockNext);
+    await authLoginRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(3);
     expect(mockNext.mock.calls.length).toBe(3);
-    expect(mockNext.mock.calls[2][0]).toEqual(new ApiError(400, "\"tokenkey\" is required"));
+    expect(mockNext.mock.calls[2][0]).toEqual(new ApiError(400, "\"token\" is required"));
     
     // token is too small
     mockRequest.body.username = mockUser.userName;
-    mockRequest.body.tokenkey = "12312";
+    mockRequest.body.token = "12312";
 
-    await authLogin(mockRequest, mockResponse, mockNext);
+    await authLoginRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(4);
     expect(mockNext.mock.calls.length).toBe(4);
-    expect(mockNext.mock.calls[3][0]).toEqual(new ApiError(400, "\"tokenkey\" must be greater than 100000"));
+    expect(mockNext.mock.calls[3][0]).toEqual(new ApiError(400, "\"token\" must be greater than 100000"));
 
     // no successfull response
     expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
@@ -237,10 +237,10 @@ describe('auth.js authLogin', () => {
 
   it('should log error if unkown user is provided', async () => {
     mockRequest.body.username = "testuser2#123123";
-    mockRequest.body.tokenkey = mockToken.key;
+    mockRequest.body.token = mockToken.key;
     mockingoose(User).toReturn(null, 'findOne');
 
-    await authLogin(mockRequest, mockResponse, mockNext);
+    await authLoginRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Nutzer ${mockRequest.body.username} nicht gefunden`));
@@ -254,11 +254,11 @@ describe('auth.js authLogin', () => {
   
   it('should log error if token is unknown', async () => {
     mockRequest.body.username = mockUser.userName;
-    mockRequest.body.tokenkey = mockToken.key;
+    mockRequest.body.token = mockToken.key;
     mockingoose(User).toReturn(mockUser, 'findOne');
     mockingoose(AuthToken).toReturn(null, 'findOne');
 
-    await authLogin(mockRequest, mockResponse, mockNext);
+    await authLoginRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Invalid token!`));
@@ -272,7 +272,7 @@ describe('auth.js authLogin', () => {
 
   it('should log error if token is wrong', async () => {
     mockRequest.body.username = mockUser.userName;
-    mockRequest.body.tokenkey = '123123';
+    mockRequest.body.token = '123123';
 
     // change mockToken for this test
     mockToken.userId = "8912381723";
@@ -280,7 +280,7 @@ describe('auth.js authLogin', () => {
     mockingoose(User).toReturn(mockUser, 'findOne');
     mockingoose(AuthToken).toReturn(mockToken, 'findOne');
 
-    await authLogin(mockRequest, mockResponse, mockNext);
+    await authLoginRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Invalid token!`));
@@ -295,12 +295,12 @@ describe('auth.js authLogin', () => {
 
   it('should response with jwt if everything is fine', async () => {
     mockRequest.body.username = mockUser.userName;
-    mockRequest.body.tokenkey = mockToken.key;
+    mockRequest.body.token = mockToken.key;
 
     mockingoose(User).toReturn(mockUser, 'findOne');
     mockingoose(AuthToken).toReturn(mockToken, 'findOne');
 
-    await authLogin(mockRequest, mockResponse, mockNext);
+    await authLoginRequest(mockRequest, mockResponse, mockNext);
 
     expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(1);
     expect((mockResponse.status as jest.Mock).mock.calls[0][0]).toBe(200);

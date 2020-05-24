@@ -1,9 +1,9 @@
-import { ApiError } from "./api.class";
-import { Response, Request, NextFunction } from "express";
+import { ApiError } from './api.class';
+import { Response, Request, NextFunction } from 'express';
 
 
 /**
- * Error handler 
+ * Error handler
  *
  * @export
  * @param {ErrorHandler} err
@@ -20,7 +20,7 @@ export function apiErrorHandler(err: ApiError, req: Request, res: Response, next
       statusCode = 401;
       message = 'Invalid token';
       break;
-  
+
     default:
       statusCode = err.statusCode || 500;
       message = err.message;
@@ -28,7 +28,7 @@ export function apiErrorHandler(err: ApiError, req: Request, res: Response, next
   }
 
   res.status(statusCode).json({
-    status: "error",
+    status: 'error',
     statusCode,
     message
   });
