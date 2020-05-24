@@ -1,0 +1,138 @@
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0.0"
+  title: "Fancy-Moodle-Discord-Bot Settings"
+  license:
+    name: "GNU AFFERO GENERAL PUBLIC LICENSE"
+    url: "https://github.com/tjarbo/discord-moodle-bot/tree/development"
+host: "[your_fmdb_instance]"
+basePath: "/api"
+tags:
+- name: "Login"
+  description: "Everything about the authoriziation"
+  externalDocs:
+    description: "Find out more about jwt"
+    url: "https://jwt.io/#debugger"
+schemes:
+- "https"
+- "http"
+paths:
+  /token:
+    post:
+      tags:
+      - "Login"
+      summary: "Request a new token"
+      description: "Request a OneTime-Token which will be recived discord private message"
+      operationId: "authTokenRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "username#0000 of a registered administator"
+        required: true
+        schema:
+         $ref: "#/definitions/authTokenRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "404":
+          description: "Users seems not to be an administrator"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "409":
+          description: "User not in discord cache. Please send the bot a short message to recives the users id"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /login:
+    post:
+      tags:
+      - "Login"
+      summary: "Request a JSON-Web-Token"
+      description: "Request a JSON-Web-Token"
+      operationId: "authLoginRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "username#0000 and OneTime-token of a registered administator"
+        required: true
+        schema:
+         $ref: "#/definitions/authLoginRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "404":
+          description: "Users seems not to be an administrator"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+
+securityDefinitions:
+  Bearer:
+    type: "apiKey"
+    name: "Authorization"
+    in: header
+definitions:
+  authTokenRequest:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+  authLoginRequest:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      token:
+        type: "number"
+    xml:
+      name: "Category"
+  ApiResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      statusCode:
+        type: "integer"
+        format: "int32"
+      data:
+        type: "array"
+  ApiError:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      statusCode:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+externalDocs:
+  description: "Get source code"
+  url: "https://github.com/tjarbo/discord-moodle-bot/"

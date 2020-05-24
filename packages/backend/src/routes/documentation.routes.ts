@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import swagger from 'swagger-ui-express';
-import documentation from '../docs/rest-api.json';
+import * as YAML from 'yamljs';
+import path from 'path';
+const documentation = YAML.load(path.join(__dirname, '../../../src/docs/rest-api.yml');
 
 export const docRoutes = Router();
 
