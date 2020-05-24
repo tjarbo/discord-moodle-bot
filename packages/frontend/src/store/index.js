@@ -27,7 +27,7 @@ export default new Vuex.Store({
           })
           .catch((err) => {
             context.commit('SET_AUTH', err);
-            reject(err.response.data);
+            reject(err.response.data.message);
           });
       });
     },
@@ -43,7 +43,7 @@ export default new Vuex.Store({
           })
           .catch((err) => {
             context.commit('SET_AUTH', err);
-            reject(err.response.data);
+            reject(err.response.data.message);
           });
       });
     },

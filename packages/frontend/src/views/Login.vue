@@ -67,7 +67,7 @@ export default {
         // create object with login credentials
         const credentials = {
           username: this.form.username,
-          tokenKey: this.form.token,
+          token: this.form.token,
         };
         this.$store.dispatch('loginWithToken', credentials)
           .then(() => {
