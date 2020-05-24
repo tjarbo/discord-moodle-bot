@@ -2,7 +2,8 @@
   <div id="loginview">
     <form class="pure-form pure-form-stacked" @submit="onSubmit">
       <fieldset>
-        <legend>Login - Fancy-Moodle-Discord-Bot</legend>
+        <img class=logo alt="FMDB logo" src="../assets/FMDB_logo.png">
+        <legend id="title">Login - Fancy-Moodle-Discord-Bot</legend>
         <span class="warning-text">{{form.errorText}}</span>
         <label for="discordusername">Discord Username</label>
         <input
@@ -11,7 +12,6 @@
           type="text"
           v-model="form.username"
         />
-
         <label for="token">Zugangstoken</label>
         <input
           id="token"
@@ -20,12 +20,14 @@
           v-model="form.token"
           :disabled="tokenInputDisabled"
         />
+        <div id="button">
         <button
           class="pure-button pure-button-primary"
           type="submit"
         >
         {{form.submitButtonText}}
         </button>
+        </div>
       </fieldset>
     </form>
   </div>
@@ -94,4 +96,39 @@ export default {
 .warning-text {
   color: rgb(202, 60, 60);;
 }
+.logo {
+  width: 300px;
+}
+
+#loginview {
+  text-align: center;
+}
+
+input[type=text] {
+  text-align: center;
+  display: inline-block;
+}
+
+input[type=password] {
+  text-align: center;
+  display: inline-block;
+}
+
+label {
+  margin-top: 20px;
+}
+
+button {
+  margin: 20px;
+}
+legend {
+  color: #414141;
+}
+
+.warning-text {
+  margin: 20px;
+  display: block;
+  text-decoration: underline;
+}
+
 </style>
