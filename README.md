@@ -31,6 +31,10 @@ SERVER_PORT=4040
 ### Start development 🛫
 Run `npm run start` at the root of the directory.
 
+### Links 🔗 (In most cases)
+- The frontend can be opened under http://localhost:8080/
+- The backend and especially the api can be reached at http://localhost:4040/api
+- The api documentation can be found at http://localhost:4040/api/docs
 ## 🦸 Built With MEVN
 
 * [MongoDB](https://www.mongodb.com/) - The database software
