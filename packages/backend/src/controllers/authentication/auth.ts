@@ -19,7 +19,7 @@ const tokenReqeuestSchema = object({
 
 const authRequestSchema = object({
   username: string().required(),
-  tokenKey: number().greater(100000).less(999999),
+  tokenkey: number().greater(100000).less(999999).required(),
 });
 
 
@@ -73,8 +73,8 @@ export async function authRequestToken(req: Request, res: Response, next: NextFu
 
     // 1. check if user exits at the database
     const user = await User.findOne({ 'userName': tokenRequest.value.username })
-    if (!user) throw new ApiError(404 ,`Nutzer ${tokenRequest.value.username} nicht gefunden`);
-    
+    if (!user) throw new ApiError(404, `Nutzer ${tokenRequest.value.username} nicht gefunden`);
+
     // 2. Generate a new Token and save it in the database
     const tokenObj = {
       userId: user.userId,
@@ -88,7 +88,7 @@ export async function authRequestToken(req: Request, res: Response, next: NextFu
 
     discordUser.send(`:key: **Es wurde ein Zugangstoken angefordert**\n Zugangstoken lautet: ${token.key}\n`);
     discordUser.send(`Solltest du den Token nicht angefordert haben-Kein Problem, lösche diese Nachricht einfach`);
-    
+
     // 4. Done
     res.status(200).end();
 
@@ -105,37 +105,26 @@ export async function authRequestToken(req: Request, res: Response, next: NextFu
  * @param {Request} req
  * @param {Response} res
  */
-export function authLogin(req: Request, res: Response) {
+export async function authLogin(req: Request, res: Response, next: NextFunction) {
+  try {
+    // validate user input!
+    const authRequest = authRequestSchema.validate(req.body);
+    if (authRequest.error) throw new ApiError(400, authRequest.error.message);
 
-  // validate user input!
-  const authRequest = authRequestSchema.validate(req.body);
-  if (!!authRequest.error) {
-    res.status(400).send(authRequest.error.message);
-    return;
+     // 1. check if user exits at the database
+     const user = await User.findOne({ 'userName': authRequest.value.username })
+     if (!user) throw new ApiError(404, `Nutzer ${authRequest.value.username} nicht gefunden`);
+
+    // 2. find token in the datase and compare the deposited discord user id
+    const token = await AuthToken.findOne({ key: authRequest.value.tokenkey });
+    if (!token || user.userId !== token.userId) throw new ApiError(401,  'Invalid token!');
+
+    res.status(200).json({ 'accesstoken': generateJWToken(user) });
+
+  } catch (err) {
+    loggerFile.error(err.message);
+    next(err);
   }
-
-  // Find user in the 'admin' collection
-  User.findOne({ userName: authRequest.value.username })
-    .then((user) => {
-      if (!user) {
-        res.status(404).send('User not found');
-        return;
-      }
-      // Find token in the datase and compare the deposited discord user id
-      AuthToken.findOne({ key: authRequest.value.tokenKey })
-        .then((token) => {
-          if (token && user.userId === token.userId) {
-            res.status(200).json({ 'accesstoken': generateJWToken(user) });
-          } else {
-            res.status(401).send('Invalid token');
-            return;
-          }
-        });
-    })
-    .catch((err: Error) => {
-      loggerFile.error(err.message);
-      res.status(500).end();
-    });
 }
 
 export const isAuth = expressjwt({

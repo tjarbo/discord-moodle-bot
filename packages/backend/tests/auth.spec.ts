@@ -54,7 +54,7 @@ describe('auth.js authRequestToken', () => {
     mockToken = {
       key: 123456,
       createdAt: Date.now(),
-      userId: '123123123123',
+      userId: '123456789',
     };
 
     mockNext = jest.fn();
@@ -66,7 +66,7 @@ describe('auth.js authRequestToken', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
-  })
+  });
 
   it('should log error if wrong tokenRequest is provided', () => {
 
@@ -154,3 +154,162 @@ describe('auth.js authRequestToken', () => {
 
   });
 })
+
+describe('auth.js authLogin', () => {
+  let mockRequest: Request;
+  let mockResponse: Response;
+  let mockUser: any;
+  let mockToken: any;
+  let mockNext: jest.Mock;
+  let spyLogger: jest.SpyInstance;
+
+  beforeEach(() => {
+    mockRequest = {
+      headers: {},
+      body: {},
+    } as Request;
+
+    mockResponse = {
+      status: jest.fn(() => mockResponse),
+      json: jest.fn(),
+      send: jest.fn(),
+      end: jest.fn()
+    } as any as Response;
+
+    mockUser = {
+      userName: 'testuser#1234',
+      userId: '123456789',
+      createdAt: Date.now(),
+    };
+
+    mockToken = {
+      key: 123456,
+      createdAt: Date.now(),
+      userId: '123456789',
+    };
+
+    mockNext = jest.fn();
+    spyLogger = jest.spyOn(loggerFile, 'error');
+
+    jest.mock('../src/configuration/discord.ts')
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  
+  it('should log error if wrong authRequest is provided', async () => {
+    // no body
+    await authLogin(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(400, "\"username\" is required"));
+
+    // number as username (userid instead of username)
+    mockRequest.body.username = 12312312312312;
+
+    await authLogin(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(2);
+    expect(mockNext.mock.calls.length).toBe(2);
+    expect(mockNext.mock.calls[1][0]).toEqual(new ApiError(400, "\"username\" must be a string")); 
+    
+    // no token
+    mockRequest.body.username = mockUser.userName;
+
+    await authLogin(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(3);
+    expect(mockNext.mock.calls.length).toBe(3);
+    expect(mockNext.mock.calls[2][0]).toEqual(new ApiError(400, "\"tokenkey\" is required"));
+    
+    // token is too small
+    mockRequest.body.username = mockUser.userName;
+    mockRequest.body.tokenkey = "12312";
+
+    await authLogin(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(4);
+    expect(mockNext.mock.calls.length).toBe(4);
+    expect(mockNext.mock.calls[3][0]).toEqual(new ApiError(400, "\"tokenkey\" must be greater than 100000"));
+
+    // no successfull response
+    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
+    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
+  });
+
+  it('should log error if unkown user is provided', async () => {
+    mockRequest.body.username = "testuser2#123123";
+    mockRequest.body.tokenkey = mockToken.key;
+    mockingoose(User).toReturn(null, 'findOne');
+
+    await authLogin(mockRequest, mockResponse, mockNext);
+
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Nutzer ${mockRequest.body.username} nicht gefunden`));
+    expect(spyLogger.mock.calls.length).toBe(1);
+    expect(spyLogger.mock.calls[0][0]).toBe(`Nutzer ${mockRequest.body.username} nicht gefunden`);
+
+    // no successfull response
+    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
+    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
+  });
+  
+  it('should log error if token is unknown', async () => {
+    mockRequest.body.username = mockUser.userName;
+    mockRequest.body.tokenkey = mockToken.key;
+    mockingoose(User).toReturn(mockUser, 'findOne');
+    mockingoose(AuthToken).toReturn(null, 'findOne');
+
+    await authLogin(mockRequest, mockResponse, mockNext);
+
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Invalid token!`));
+    expect(spyLogger.mock.calls.length).toBe(1);
+    expect(spyLogger.mock.calls[0][0]).toBe('Invalid token!');
+
+    // no successfull response
+    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
+    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
+  });
+
+  it('should log error if token is wrong', async () => {
+    mockRequest.body.username = mockUser.userName;
+    mockRequest.body.tokenkey = '123123';
+
+    // change mockToken for this test
+    mockToken.userId = "8912381723";
+
+    mockingoose(User).toReturn(mockUser, 'findOne');
+    mockingoose(AuthToken).toReturn(mockToken, 'findOne');
+
+    await authLogin(mockRequest, mockResponse, mockNext);
+
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Invalid token!`));
+    expect(spyLogger.mock.calls.length).toBe(1);
+    expect(spyLogger.mock.calls[0][0]).toBe('Invalid token!');
+
+    // no successfull response
+    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
+    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
+
+  });
+
+  it('should response with jwt if everything is fine', async () => {
+    mockRequest.body.username = mockUser.userName;
+    mockRequest.body.tokenkey = mockToken.key;
+
+    mockingoose(User).toReturn(mockUser, 'findOne');
+    mockingoose(AuthToken).toReturn(mockToken, 'findOne');
+
+    await authLogin(mockRequest, mockResponse, mockNext);
+
+    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(1);
+    expect((mockResponse.status as jest.Mock).mock.calls[0][0]).toBe(200);
+    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(1);
+    expect((mockResponse.json as jest.Mock).mock.calls[0][0]).not.toBe(null);
+
+    // no error
+    expect(mockNext.mock.calls.length).toBe(0);
+    expect(spyLogger.mock.calls.length).toBe(0);
+  });
+
+});
