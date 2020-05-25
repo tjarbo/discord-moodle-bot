@@ -3,7 +3,6 @@ import { Schema, model, Model, Document } from 'mongoose';
 interface ILastFetchSchema extends Document {
     [_id: string]: any;
     timestamp: number;
-    name: string;
 }
 
 const lastFetchSchema = new Schema({
