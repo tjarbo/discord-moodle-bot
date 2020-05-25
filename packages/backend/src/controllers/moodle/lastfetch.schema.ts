@@ -7,7 +7,8 @@ interface ILastFetchSchema extends Document {
 }
 
 const lastFetchSchema = new Schema({
-    timestamp: {type: Number, default: (Date.now() / 1000)},
+    // Note that Moodle stores its timestamps in seconds, not in ms!
+    timestamp: {type: Number, default: Math.floor(Date.now() / 1000)},
 });
 
 export const LastFetch: Model<ILastFetchSchema> = model('LastFetch', lastFetchSchema);
