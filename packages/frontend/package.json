@@ -5,6 +5,7 @@
   "scripts": {
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "lint:fix": "vue-cli-service lint --fix",
     "prebuild": "vue-cli-service lint --fix",
     "prestart": "vue-cli-service lint --fix",
     "pretest": "vue-cli-service lint --fix",

@@ -96,7 +96,7 @@ describe('auth.js authTokenRequest', () => {
   });
 
   it('should log error if token creation fails', async () => {
-    const testError = new Error('Fehler!');
+    const testError = new Error('Error!');
 
     mockRequest.body.username = mockUser.userName;
     mockingoose(User).toReturn(mockUser, 'findOne');
