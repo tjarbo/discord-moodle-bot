@@ -35,12 +35,14 @@ const envVarsSchema = object({
   JWT_EXPIRESIN: string().required(),
   MOODLE_BASE_URL: string().required()
   .description('Base URL for Moodle, eg. https://moodle.domain.me'),
+  MOODLE_FETCH_INTERVAL: number().required()
+  .description('Interval in which moodle-fetch should be executed (in ms)'),
   MOODLE_TOKEN: string().required()
   .description('Token to communicate with Moodle-Webservice API'),
-  MOODLE_USERID: number().required()
-  .description('Moodle user Id required to fetch course details'),
   MOODLE_USE_COURSE_SHORTNAME: boolean().default(true)
   .description('Whether to use short- or fullname of the courses in the discord message'),
+  MOODLE_USERID: number().required()
+  .description('Moodle user Id required to fetch course details'),
 }).unknown()
   .required();
 
@@ -67,8 +69,9 @@ export const config = {
   port: envVars.SERVER_PORT,
   moodle: {
     baseURL: envVars.MOODLE_BASE_URL,
+    fetchInterval: envVars.MOODLE_FETCH_INTERVAL,
     token:   envVars.MOODLE_TOKEN,
-    userId:  envVars.MOODLE_USERID,
     useCourseShortname: envVars.MOODLE_USE_COURSE_SHORTNAME,
+    userId:  envVars.MOODLE_USERID,
   },
 };
