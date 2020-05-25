@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
-    "@types/node-fetch": "^2.5.7",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
@@ -39,6 +38,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.9.6",
     "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.6",
@@ -51,6 +51,7 @@
     "@types/method-override": "0.0.31",
     "@types/mongoose": "^5.7.15",
     "@types/node": "^13.13.8",
+    "@types/node-fetch": "^2.5.7",
     "@types/swagger-ui-express": "^4.1.2",
     "@types/ws": "^7.2.4",
     "@types/yamljs": "^0.2.31",
@@ -58,6 +59,7 @@
     "jest": "^26.0.1",
     "mockingoose": "^2.13.2",
     "nodemon": "^2.0.3",
-    "ts-jest": "^26.0.0"
+    "ts-jest": "^26.0.0",
+    "typescript": "^3.9.3"
   }
 }
