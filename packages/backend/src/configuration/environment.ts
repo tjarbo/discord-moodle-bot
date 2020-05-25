@@ -39,8 +39,10 @@ const { error, value: envVars } = envVarsSchema.validate(process.env);
 if (error) throw new Error(`Config validation error: ${error.message}`);
 
 export const config = {
-  adminId: envVars.ADMIN_ID,
-  adminName: envVars.ADMIN_NAME,
+  admin: {
+    id: envVars.ADMIN_ID,
+    name: envVars.ADMIN_NAME,
+  },
   discordToken: envVars.DISCORD_TOKEN,
   env: envVars.NODE_ENV,
   jwt: {

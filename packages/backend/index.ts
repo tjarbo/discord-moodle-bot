@@ -10,13 +10,13 @@ import { User, IUserDocument } from './src/controllers/user/user.schema';
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(() => {
   loggerFile.debug('Mongoose connected');
 
-  User.findOne({'userName': config.adminName}).then((user) => {
+  User.findOne({'userName': config.admin.name}).then((user) => {
     if (user) return; // If env-admin already exits - skip setup
 
     // add env-admin to database
     const userObj = {
-      userName: config.adminName,
-      userId: config.adminId,
+      userName: config.admin.name,
+      userId: config.admin.id,
     };
 
     new User(userObj).save();

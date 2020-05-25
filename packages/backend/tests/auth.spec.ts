@@ -90,9 +90,9 @@ describe('auth.js authTokenRequest', () => {
     await authTokenRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Nutzer ${mockRequest.body.username} nicht gefunden`));
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe(`Nutzer ${mockRequest.body.username} nicht gefunden`);
+    expect(spyLogger.mock.calls[0][0]).toBe(`User ${mockRequest.body.username} not found`);
   });
 
   it('should log error if token creation fails', async () => {
@@ -121,9 +121,9 @@ describe('auth.js authTokenRequest', () => {
     await authTokenRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(409, `${mockUser.userName} nicht im Discord Cache. Schreibe dem Bot eine kleine 'Test' Nachricht (per DM) und versuche es erneut.`));
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(409, `${mockUser.userName} not in discord cache. Write the bot a small 'test' message (via DM) and try again.`));
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe(`${mockUser.userName} nicht im Discord Cache. Schreibe dem Bot eine kleine 'Test' Nachricht (per DM) und versuche es erneut.`);
+    expect(spyLogger.mock.calls[0][0]).toBe(`${mockUser.userName} not in discord cache. Write the bot a small 'test' message (via DM) and try again.`);
   });
 
   it('should send token to user if everything is fine', async () => {
@@ -241,9 +241,9 @@ describe('auth.js authLoginRequest', () => {
     await authLoginRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Nutzer ${mockRequest.body.username} nicht gefunden`));
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe(`Nutzer ${mockRequest.body.username} nicht gefunden`);
+    expect(spyLogger.mock.calls[0][0]).toBe(`User ${mockRequest.body.username} not found`);
 
     // no successfull response
     expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);

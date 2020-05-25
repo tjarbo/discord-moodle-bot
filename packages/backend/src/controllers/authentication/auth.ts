@@ -73,7 +73,7 @@ export async function authTokenRequest(req: Request, res: Response, next: NextFu
 
     // 1. check if user exits at the database
     const user = await User.findOne({ 'userName': tokenRequest.value.username });
-    if (!user) throw new ApiError(404, `Nutzer ${tokenRequest.value.username} nicht gefunden`);
+    if (!user) throw new ApiError(404, `User ${tokenRequest.value.username} not found`);
 
     // 2. Generate a new Token and save it in the database
     const tokenObj = {
@@ -84,7 +84,7 @@ export async function authTokenRequest(req: Request, res: Response, next: NextFu
 
     // 3. Send token to user
     const discordUser = client.users.cache.get(user.userId.toString());
-    if (!discordUser) throw new ApiError(409, `${tokenRequest.value.username} nicht im Discord Cache. Schreibe dem Bot eine kleine 'Test' Nachricht (per DM) und versuche es erneut.`);
+    if (!discordUser) throw new ApiError(409, `${tokenRequest.value.username} not in discord cache. Write the bot a small 'test' message (via DM) and try again.`);
 
     discordUser.send(`:key: **Es wurde ein Zugangstoken angefordert**\n Zugangstoken lautet: ${token.key}\n`);
     discordUser.send(`Solltest du den Token nicht angefordert haben-Kein Problem, lösche diese Nachricht einfach`);
@@ -113,7 +113,7 @@ export async function authLoginRequest(req: Request, res: Response, next: NextFu
 
      // 1. check if user exits at the database
      const user = await User.findOne({ 'userName': authRequest.value.username });
-     if (!user) throw new ApiError(404, `Nutzer ${authRequest.value.username} nicht gefunden`);
+     if (!user) throw new ApiError(404, `User ${authRequest.value.username} not found`);
 
     // 2. find token in the datase and compare the deposited discord user id
     const token = await AuthToken.findOne({ key: authRequest.value.token });

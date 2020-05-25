@@ -44,11 +44,11 @@ paths:
           schema:
             $ref: "#/definitions/ApiError"
         "404":
-          description: "Users seems not to be an administrator"
+          description: "User seems not to be an administrator"
           schema:
             $ref: "#/definitions/ApiError"
         "409":
-          description: "User not in discord cache. Please send the bot a short message to recives the users id"
+          description: "User not in discord cache. Please send the bot a short message and try it again."
           schema:
             $ref: "#/definitions/ApiError"
         "500":
@@ -85,7 +85,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiError"
         "404":
-          description: "Users seems not to be an administrator"
+          description: "User seems not to be an administrator"
           schema:
             $ref: "#/definitions/ApiError"
         "500":
