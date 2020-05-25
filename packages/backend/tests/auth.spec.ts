@@ -145,7 +145,7 @@ describe('auth.js authTokenRequest', () => {
     expect(mockDiscordUser.send.mock.calls[0][0]).toBe(`:key: **Es wurde ein Zugangstoken angefordert**\n Zugangstoken lautet: ${mockToken.key}\n`);
     expect(mockDiscordUser.send.mock.calls[1][0]).toBe(`Solltest du den Token nicht angefordert haben-Kein Problem, lösche diese Nachricht einfach`);
 
-    // no error have to be logged
+    // no error has to be logged
     expect(mockNext.mock.calls.length).toBe(0);
     expect(spyLogger.mock.calls.length).toBe(0);
     expect(mockDiscordUser.send.mock.calls.length).toBe(2);
@@ -305,7 +305,7 @@ describe('auth.js authLoginRequest', () => {
     expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(1);
     expect((mockResponse.json as jest.Mock).mock.calls[0][0]).not.toBe(null);
 
-    // no error
+    // no error has to be logged
     expect(mockNext.mock.calls.length).toBe(0);
     expect(spyLogger.mock.calls.length).toBe(0);
   });
