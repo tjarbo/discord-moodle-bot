@@ -26,12 +26,13 @@ const envVarsSchema = object({
     .default(27017),
   DISCORD_TOKEN: string().required()
   .description('Discord Token for bot'),
+  DISCORD_CHANNEL: string().required().description('Channel ID to revice notifications'),
   ADMIN_ID: string().required()
   .description('Discord ID of the admin'),
   ADMIN_NAME: string().required().regex(/[a-z]+#[0-9]+/)
   .description('Discord username#0000 of the admin'),
   JWT_SECRET: string().required(),
-  JWT_EXPIRESIN: string().required(),
+  JWT_EXPIRESIN: string().required()
 }).unknown()
   .required();
 
@@ -44,6 +45,7 @@ export const config = {
     name: envVars.ADMIN_NAME,
   },
   discordToken: envVars.DISCORD_TOKEN,
+  discordChannel: envVars.DISCORD_CHANNEL,
   env: envVars.NODE_ENV,
   jwt: {
     secret: envVars.JWT_SECRET,
