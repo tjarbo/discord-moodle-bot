@@ -5,6 +5,7 @@ export interface IUserDocument extends Document {
   [_id: string]: any;
   userName: String;
   userId: String;
+  createdAt: Date;
 }
 
 const userSchema = new Schema({

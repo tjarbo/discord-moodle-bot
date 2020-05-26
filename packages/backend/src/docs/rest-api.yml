@@ -23,7 +23,7 @@ paths:
       tags:
       - "Login"
       summary: "Request a new token"
-      description: "Request a OneTime-Token which will be recived discord private message"
+      description: "Request a one-time-token which will be recived discord private message"
       operationId: "authTokenRequest"
       consumes:
       - "application/json"
@@ -69,7 +69,7 @@ paths:
       parameters:
       - name: "body"
         in: "body"
-        description: "username#0000 and OneTime-token of a registered administator"
+        description: "username#0000 and one-time-token of a registered administator"
         required: true
         schema:
          $ref: "#/definitions/authLoginRequest"
