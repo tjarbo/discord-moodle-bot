@@ -2,27 +2,20 @@ import * as moodle from '../src/controllers/moodle/moodle';
 import mockingoose from 'mockingoose';
 import fetch from 'node-fetch';
 import { mocked } from 'ts-jest/utils';
-import { ICourse } from '../src/controllers/moodle/course.interface';
-import { IRessource } from '../src/controllers/moodle/ressource.interface';
 import { loggerFile } from '../src/configuration/logger';
 import { LastFetch } from '../src/controllers/moodle/lastfetch.schema';
 
-jest.mock('node-fetch', () => {
-    return jest.fn();
-  });
-  
- /* beforeEach(() => {
-    mocked(fetch).mockClear();
-  });*/
+jest.mock('node-fetch', () => jest.fn());
+jest.mock('../src/configuration/environment');
 
-jest.mock('../src/configuration/environment', () => ({
-    config: {
-        moodle: {
-            baseURL: "https://moodle.example.com",
-            token:   "MOODLETOKEN123",
-        },
-    },
-}));
+const mockFetch = (res: any) => 
+    mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.resolve({
+        json: () => res,
+    }));
+
+const mockFailedFetch = () =>
+    mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.reject());
+
 
 describe('getBaseUrl', () => {
     it('should build a valid moodle url', () => {       
@@ -105,16 +98,20 @@ describe('fetchAssignments', () => {
         jest.resetAllMocks();
     })
 
+    it('should address the correct moodle wsfunction', async () => {
+        mockFailedFetch();
+        await moodle.fetchAssignments('');
+        expect(mocked(fetch)).toHaveBeenCalledWith('&wsfunction=mod_assign_get_assignments');
+    });
+
     it('should return an array of all courses containing the assignments provided by the moodle API', async () => {
-        mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.resolve({
-            json: () => ({courses: []})
-        }))
-        expect(await moodle.fetchAssignments(null)).toStrictEqual([]);
+        mockFetch({courses: []});
+        expect(await moodle.fetchAssignments('')).toStrictEqual([]);
     })
 
     it('should throw an error if the request fails', async () => {
-        mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.reject());
-        await moodle.fetchAssignments(null);
+        mockFailedFetch();
+        await moodle.fetchAssignments('');
         expect(spyLogger).toHaveBeenCalledTimes(1);
     })
 });
@@ -130,38 +127,61 @@ describe('fetchRessources', () => {
         jest.resetAllMocks();
     })
 
+    it('should address the correct moodle wsfunction', async () => {
+        mockFailedFetch();
+        await moodle.fetchRessources('');
+        expect(mocked(fetch)).toHaveBeenCalledWith('&wsfunction=mod_resource_get_resources_by_courses');
+    });
+
     it('should return an array of all ressources provided by the moodle API', async () => {
-        mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.resolve({
-            json: () => ({resources: []})
-        }));
-        expect(await moodle.fetchRessources(null)).toStrictEqual([]);
+        mockFetch({resources: []});
+        expect(await moodle.fetchRessources('')).toStrictEqual([]);
     })
 
     it('should throw an error if the request fails', async () => {
-        mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.reject());
-        await moodle.fetchRessources(null);
+        mockFailedFetch();
+        await moodle.fetchRessources('');
         expect(spyLogger).toHaveBeenCalledTimes(1);
     })
 });
 
 describe('fetchEnrolledCourses', () => {
-    it('should return an array of all ressources provided by the moodle API', () => {
-        
+    let spyLogger: jest.SpyInstance;
+    
+    beforeEach(() => {
+        spyLogger = jest.spyOn(loggerFile, 'error');
+    });
+    
+    afterEach(() => {
+        jest.resetAllMocks();
     })
 
-    it('should throw an error if the request fails', () => {
+    it('should address the correct moodle wsfunction', async () => {
+        mockFailedFetch();
+        await moodle.fetchEnrolledCourses('');
+        expect(mocked(fetch)).toHaveBeenCalledWith('&wsfunction=core_enrol_get_users_courses&userid=123456');
+    });
 
+    it('should return an array of all ressources provided by the moodle API', async () => {
+        mockFetch([]);
+        expect(await moodle.fetchEnrolledCourses('')).toStrictEqual([]);
+    })
+
+    it('should throw an error if the request fails', async () => {
+        mockFailedFetch();
+        await moodle.fetchEnrolledCourses('');
+        expect(spyLogger).toHaveBeenCalledTimes(1);
     })            
 });
 
 describe('printNewAssignments', () => {
     it('should only print assignments newer than the last fetch timestamp', () => {
-        
+        //TODO: Implement after message function is implemented inside of print Method
     })
 });
 
 describe('printNewRessources', () => {
     it('should only print ressources newer than the last fetch timestamp', () => {
-        
+        //TODO: Implement after message function is implemented inside of print Method
     })        
 });
