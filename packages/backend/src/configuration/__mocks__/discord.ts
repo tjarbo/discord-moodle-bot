@@ -4,4 +4,4 @@ export const client = {
       get: jest.fn()
     }
   }
-}
+};
