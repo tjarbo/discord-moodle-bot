@@ -4,10 +4,6 @@
 name: Node CI
 
 on:
-  push:
-    branches:
-      - 'development'
-      - '**'
   pull_request:
     branches: [ master, development ]
 
