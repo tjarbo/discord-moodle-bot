@@ -17,16 +17,24 @@ Run `npm i` at the root of the repository.
 #### Create .env file 🔐
 The backend will fail, if wrong environments variables are provided. If no .env file is provided, please create `packages/backend/.env` with following content:
 ```
-NODE_ENV=development
-SERVER_PORT=4040
+ADMIN_ID=00000...000
+ADMIN_NAME=usernname#00000
+DISCORD_TOKEN=XXXXXX....XXX
+JWT_SECRET=ChooseTheSecreteWisely
+JWT_EXPIRESIN=1h
 MONGO_HOST=mongodb://localhost:27017/fmdb
 MONGOOSE_DEBUG=true
-DISCORD_TOKEN=XXXXX.....XXXXX
+NODE_ENV=development
+SERVER_PORT=4040
 ```
 
 ### Start development 🛫
 Run `npm run start` at the root of the directory.
 
+### Links 🔗 (In most cases)
+- The frontend can be opened under http://localhost:8080/
+- The backend and especially the api can be reached at http://localhost:4040/api
+- The api documentation can be found at http://localhost:4040/api/docs
 ## 🦸 Built With MEVN
 
 * [MongoDB](https://www.mongodb.com/) - The database software

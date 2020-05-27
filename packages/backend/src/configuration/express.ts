@@ -7,7 +7,6 @@ import { Response, Request } from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import methodOverride from 'method-override';
-
 import { loggerMiddleware } from './logger';
 import { router } from '../routes/index.routes';
 
@@ -23,7 +22,7 @@ app.use(methodOverride());
 app.use(helmet());
 app.use(cors());
 
-// Delimit number of requests er minute
+// Delimit number of requests per minute
 const apiLimiter = rateLimit({
     windowMs: 60 * 1000, // 1 minutes
     max: 100
