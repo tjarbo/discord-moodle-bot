@@ -7,11 +7,12 @@ import { object, string, number } from '@hapi/joi';
 import { User, IUserDocument } from '../user/user.schema';
 import { loggerFile } from '../../configuration/logger';
 import { AuthToken } from './token.schema';
-import { client } from '../../configuration/discord';
 import jwt from 'jsonwebtoken';
 import expressjwt from 'express-jwt';
 import { config } from '../../configuration/environment';
 import { ApiError } from '../error/api.class';
+import { discordSendTo } from '../discord/discord';
+import { TokenRequestMessage } from '../discord/templates/tokenMessage.class';
 
 const authTokenReqeuestSchema = object({
   username: string().required(),
@@ -83,11 +84,7 @@ export async function authTokenRequest(req: Request, res: Response, next: NextFu
     const token = await (new AuthToken(tokenObj)).save();
 
     // 3. Send token to user
-    const discordUser = client.users.cache.get(user.userId.toString());
-    if (!discordUser) throw new ApiError(409, `${tokenRequest.value.username} not in discord cache. Write the bot a small 'test' message (via DM) and try again.`);
-
-    discordUser.send(`:key: **Es wurde ein Zugangstoken angefordert**\n Zugangstoken lautet: ${token.key}\n`);
-    discordUser.send(`Solltest du den Token nicht angefordert haben-Kein Problem, lösche diese Nachricht einfach`);
+    discordSendTo(user.userId.toString(), new TokenRequestMessage(), { key: token.key });
 
     // 4. Done
     res.status(200).end();

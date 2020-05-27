@@ -6,10 +6,9 @@ export class MessageTemplate implements FMDBMessageTemplate {
 
   apply(options: any): string {
     const keys = Object.keys(options);
-    const message = this.template;
+    let message = this.template;
     keys.forEach(key => {
-      message.replace('{' + key + '}', options[key]);
-
+      message = message.replace('{' + key + '}', options[key]);
     });
     return message;
   }

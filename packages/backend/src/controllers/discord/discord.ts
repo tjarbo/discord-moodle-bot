@@ -2,6 +2,7 @@ import { client } from '../../configuration/discord';
 import { FMDBMessageTemplate } from './message.interface';
 import { TextChannel } from 'discord.js';
 import { config } from '../../configuration/environment';
+import { ApiError } from '../error/api.class';
 
 /**
  * Send a templated message to a discord user
@@ -13,7 +14,7 @@ import { config } from '../../configuration/environment';
  */
 export async function discordSendTo(userId: string, messageTemplate: FMDBMessageTemplate, values: object) {
   const discordUser = client.users.cache.get(userId);
-  if (!discordUser) throw new Error(`User nicht im Discord Cache. Schreibe dem Bot eine kleine 'Test' Nachricht (per DM) und versuche es erneut.`);
+  if (!discordUser) throw new ApiError(409, `User not in discord cache. Write the bot a small 'test' message (via DM) and try again.`);
 
   const message = messageTemplate.apply(values);
   if (!message) throw new Error('Internal server error');
