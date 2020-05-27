@@ -8,6 +8,17 @@ import { ApiError } from '../src/controllers/error/api.class';
 import { AuthToken } from '../src/controllers/authentication/token.schema';
 import { client } from '../src/configuration/discord';
 
+jest.mock('../src/configuration/discord.ts', () => ({
+  client: {
+    users: {
+      cache: {
+        get: jest.fn()
+      }
+    }
+  }
+}));
+
+
 describe('auth.ts getTokenFromHeader', () => {
   it('should return the correct jwt', () => {
     let mockRequest = {
@@ -58,8 +69,6 @@ describe('auth.js authTokenRequest', () => {
     mockNext = jest.fn();
     spyLogger = jest.spyOn(loggerFile, 'error');
     spyDiscordClientUsers = jest.spyOn(client.users.cache, 'get');
-
-    jest.mock('../src/configuration/discord.ts');
   });
 
   afterEach(() => {
@@ -189,7 +198,6 @@ describe('auth.js authLoginRequest', () => {
     mockNext = jest.fn();
     spyLogger = jest.spyOn(loggerFile, 'error');
 
-    jest.mock('../src/configuration/discord.ts')
   });
 
   afterEach(() => {
