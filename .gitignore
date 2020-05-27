@@ -50,6 +50,3 @@ yarn-error.log
 # System Files
 .DS_Store
 Thumbs.db
-
-# NPM lock file
-*package-lock.json
