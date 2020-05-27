@@ -44,20 +44,33 @@ export async function getLastFetch(): Promise<number> {
  *
  * @export
  */
-export function fetchMoodleData(): void {
-    const moodleUrl = getBaseUrl();
-    // TODO: Replace placeholder with real blacklist
-    const courseBlacklist: number[] = [];
+export async function fetchMoodleData(): Promise<any[]> {
+    try {
+        const moodleUrl = getBaseUrl();
+        // TODO: Replace placeholder with real blacklist
+        const courseBlacklist: number[] = [];
 
-    getLastFetch().then(lastFetch => {
-        fetchAssignments(moodleUrl)
-          .then(courses => courses.filter(course => !courseBlacklist.includes(course.id)))
-          .then(courses => printNewAssignments(courses, lastFetch));
+        const lastFetch = await getLastFetch();
+        if (!lastFetch) throw new Error('Unable to get timestamp of last fetch');
 
-        fetchRessources(moodleUrl)
-          .then(ressources => ressources.filter(ressource => !courseBlacklist.includes(ressource.course)))
-          .then(ressources => printNewRessources(ressources, moodleUrl, lastFetch));
-    });
+        console.log('askudgvaeöghwöagawrfpwa', getBaseUrl());
+
+        const ass = await fetchAssignments(moodleUrl)
+            .then(courses => courses.filter(course => !courseBlacklist.includes(course.id)))
+            .then(courses => printNewAssignments(courses, lastFetch));
+            
+        console.log('askudgvaeöghwöagawrfpwa', lastFetch);
+
+        const res = await fetchRessources(moodleUrl)
+            .then(ressources => ressources.filter(ressource => !courseBlacklist.includes(ressource.course)))
+            .then(ressources => printNewRessources(ressources, moodleUrl, lastFetch));
+
+        return Promise.all([ass, res]);
+
+    } catch(error) {
+        console.log(error);
+        loggerFile.error('Moodle API request failed', error);
+    };
 }
 
 /**
@@ -99,7 +112,7 @@ export async function fetchRessources(moodleUrl: string): Promise<IRessource[]> 
  * @param {string} moodleUrl - Moodle Web Service Url
  * @returns {Promise<ICourseDetails[]>} A Promise of an array of CourseDetails
  */
-export async function fetchEnroledCourses(moodleUrl: string): Promise<ICourseDetails[]> {
+export async function fetchEnrolledCourses(moodleUrl: string): Promise<ICourseDetails[]> {
     return fetch(moodleUrl + '&wsfunction=core_enrol_get_users_courses&userid='+config.moodle.userId)
 	  .then(res => res.json())
     .catch((error) => {
@@ -130,13 +143,14 @@ export function printNewAssignments(courses: ICourse[], lastFetch: number): void
  *
  * ! export only for unit testing (rewire doesn't work :/ )
  * @param {ICourse[]} courses - The Ressources to filter
+ * @param {string} moodleUrl - Url of the moodle instance to fetch coursedetails from
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
 export function printNewRessources(ressources: IRessource[], moodleUrl: string, lastFetch: number): void {
     if (ressources.length === 0) { return; }
     const courseMap: Map<number, string> = new Map();
 
-    fetchEnroledCourses(moodleUrl)
+    fetchEnrolledCourses(moodleUrl)
       .then(courses => courses.forEach(course => courseMap.set(course.id, course.shortname)))
       .then(map => ressources.forEach(ressource => {
             const coursename = courseMap.get(ressource.course);
