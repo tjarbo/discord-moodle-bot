@@ -16,8 +16,8 @@ export const config = {
     mongooseDebug: true,
     port: 4040,
     moodle: {
-        baseURL: "https://moodle.example.com",
-        token:   "MOODLETOKEN123",
+        baseURL: 'https://moodle.example.com',
+        token:   'MOODLETOKEN123',
         userId: 123456
     },
   };
