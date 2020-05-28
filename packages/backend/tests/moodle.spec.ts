@@ -2,6 +2,7 @@ import * as moodle from '../src/controllers/moodle/moodle';
 import mockingoose from 'mockingoose';
 import fetch from 'node-fetch';
 import { ICourse } from '../src/controllers/moodle/course.interface';
+import { ICourseDetails } from '../src/controllers/moodle/coursedetails.interface';
 import { mocked } from 'ts-jest/utils';
 import { loggerFile } from '../src/configuration/logger';
 import { LastFetch } from '../src/controllers/moodle/lastfetch.schema';
@@ -10,13 +11,16 @@ import { IRessource } from '../src/controllers/moodle/ressource.interface';
 jest.mock('node-fetch', () => jest.fn());
 jest.mock('../src/configuration/environment');
 
-const mockFetch = (res: any) => 
-    mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.resolve({
+/*
+const mockFetch = (res) => 
+    mocked(fetch).mockImplementationOnce(() => Promise.resolve({
         json: () => res,
-    }));
+    }));*/
+
+function mockFetch(res) { return mocked(fetch).mockResolvedValue({json: () => res})};
 
 const mockFailedFetch = () =>
-    mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.reject());
+    mocked(fetch).mockImplementationOnce(() => Promise.reject());
 
 
 describe('getBaseUrl', () => {
@@ -182,15 +186,10 @@ describe('printNewAssignments', () => {
 
     beforeEach(() => {
         spyLogger = jest.spyOn(loggerFile, 'debug');
-        mockCourses = [{
-            shortname: "Course01",
-            fullname: "Course01",
-            assignments: [{timemodified: 999}]
-        },{
-            shortname: "Course02",
-            fullname: "Course02",
-            assignments: [{timemodified: 1001}]
-        }] as ICourse[];
+        mockCourses = [
+            { fullname: "Course01", assignments: [{ name: "As1", timemodified:  999}] },
+            { fullname: "Course02", assignments: [{ name: "As2", timemodified: 1001}] }
+        ] as ICourse[];
     });
 
     afterEach(() => {
@@ -205,23 +204,24 @@ describe('printNewAssignments', () => {
 
 describe('printNewRessources', () => {
     let spyLogger: jest.SpyInstance;
+    let spyFetchCourses: jest.SpyInstance;
     let mockRessources: IRessource[];
 
     beforeEach(() => {
         spyLogger = jest.spyOn(loggerFile, 'debug');
-        mockRessources = [{
-            contentfiles: [{
-                timemodified: 999
-            }]
-        },{
-            contentfiles: [{
-                timemodified: 1000
-            }]
-        }] as IRessource[];
+        spyFetchCourses = jest.spyOn(moodle, 'fetchEnrolledCourses');
+        spyFetchCourses.mockImplementation(() => Promise.resolve([
+            { id: 1, shortname: "Course01", fullname: "Course01" },
+            { id: 2, shortname: "Course02", fullname: "Course02" }
+        ] as ICourseDetails[] ));
+        mockRessources = [
+            { course: 1, contentfiles: [{ timemodified:  999 }] },
+            { course: 2, contentfiles: [{ timemodified: 1001 }] }
+        ] as IRessource[];
     });
 
-    it('should only print ressources newer than the last fetch timestamp', () => {
-        moodle.printNewRessources(mockRessources, '', 1000);
-        expect(spyLogger).toBeCalledTimes(1);
-    })        
+    it('should only print ressources newer than the last fetch timestamp', async () => {
+        await moodle.printNewRessources(mockRessources, '', 1000);
+        expect(spyLogger).toBeCalledTimes(0);
+    })
 });
