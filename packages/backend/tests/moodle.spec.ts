@@ -1,9 +1,11 @@
 import * as moodle from '../src/controllers/moodle/moodle'; 
 import mockingoose from 'mockingoose';
 import fetch from 'node-fetch';
+import { ICourse } from '../src/controllers/moodle/course.interface';
 import { mocked } from 'ts-jest/utils';
 import { loggerFile } from '../src/configuration/logger';
 import { LastFetch } from '../src/controllers/moodle/lastfetch.schema';
+import { IRessource } from '../src/controllers/moodle/ressource.interface';
 
 jest.mock('node-fetch', () => jest.fn());
 jest.mock('../src/configuration/environment');
@@ -175,13 +177,51 @@ describe('fetchEnrolledCourses', () => {
 });
 
 describe('printNewAssignments', () => {
+    let spyLogger: jest.SpyInstance;
+    let mockCourses: ICourse[];
+
+    beforeEach(() => {
+        spyLogger = jest.spyOn(loggerFile, 'debug');
+        mockCourses = [{
+            shortname: "Course01",
+            fullname: "Course01",
+            assignments: [{timemodified: 999}]
+        },{
+            shortname: "Course02",
+            fullname: "Course02",
+            assignments: [{timemodified: 1001}]
+        }] as ICourse[];
+    });
+
+    afterEach(() => {
+        jest.resetAllMocks();
+    })
+
     it('should only print assignments newer than the last fetch timestamp', () => {
-        //TODO: Implement after message function is implemented inside of print Method
+        moodle.printNewAssignments(mockCourses, 1000);
+        expect(spyLogger).toBeCalledTimes(1);
     })
 });
 
 describe('printNewRessources', () => {
+    let spyLogger: jest.SpyInstance;
+    let mockRessources: IRessource[];
+
+    beforeEach(() => {
+        spyLogger = jest.spyOn(loggerFile, 'debug');
+        mockRessources = [{
+            contentfiles: [{
+                timemodified: 999
+            }]
+        },{
+            contentfiles: [{
+                timemodified: 1000
+            }]
+        }] as IRessource[];
+    });
+
     it('should only print ressources newer than the last fetch timestamp', () => {
-        //TODO: Implement after message function is implemented inside of print Method
+        moodle.printNewRessources(mockRessources, '', 1000);
+        expect(spyLogger).toBeCalledTimes(1);
     })        
 });
