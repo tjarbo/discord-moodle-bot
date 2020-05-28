@@ -11,7 +11,7 @@ import { Response, Request, NextFunction } from 'express';
  * @param {Response} res
  * @param {NextFunction} next
  */
-export function apiErrorHandler(err: ApiError, req: Request, res: Response, next: NextFunction): void {
+export function apiErrorHandler(err: Error, req: Request, res: Response, next: NextFunction): void {
   let statusCode: number;
   let message: string;
 
@@ -22,7 +22,7 @@ export function apiErrorHandler(err: ApiError, req: Request, res: Response, next
       break;
 
     default:
-      statusCode = err.statusCode || 500;
+      statusCode = (err as ApiError).statusCode || 500;
       message = err.message;
       break;
   }
