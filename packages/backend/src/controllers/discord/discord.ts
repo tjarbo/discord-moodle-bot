@@ -14,7 +14,7 @@ import { ApiError } from '../error/api.class';
  */
 export async function discordSendTo(userId: string, messageTemplate: FMDBMessageTemplate, values: object) {
   const discordUser = client.users.cache.get(userId);
-  if (!discordUser) throw new ApiError(409, `User not in discord cache. Write the bot a small 'test' message (via DM) and try again.`);
+  if (!discordUser) throw new ApiError(409, `User not in discord cache. Send the bot a small 'test' message (via DM) and try again.`);
 
   const message = messageTemplate.apply(values);
   if (!message) throw new Error('Internal server error');
@@ -31,7 +31,7 @@ export async function discordSendTo(userId: string, messageTemplate: FMDBMessage
  */
 export async function discordPublish(messageTemplate: FMDBMessageTemplate, values: object) {
   const discordChannel = await client.channels.cache.get(config.discordChannel);
-  if (!discordChannel) throw new Error(`Channel nicht im Discord Cache. Schreibe in dem Channel eine kleine 'Test' Nachricht und versuche es erneut.`);
+  if (!discordChannel) throw new Error(`Channel not in discord cache. Send a small 'test' message to the channel and try again.`);
 
   const message = messageTemplate.apply(values);
   if (!message) throw new Error('Internal server error');

@@ -1,3 +1,5 @@
+/* ts-lint:prefer-const: off */
+
 import { apiErrorHandler } from '../src/controllers/error/handler';
 import { Request, Response } from 'express';
 import { UnauthorizedError, ErrorCode } from 'express-jwt';
@@ -19,7 +21,7 @@ describe('handler.ts apiErrorHandler', () => {
   });
 
   it('should handle UnauthorizedError', () => {
-    const unauthorizedError = new UnauthorizedError('invalid_token' as ErrorCode, {message: "test"})
+    const unauthorizedError = new UnauthorizedError('invalid_token' as ErrorCode, {message: 'test'});
 
     apiErrorHandler(unauthorizedError, mockRequest, mockResponse, mockNext);
     expect(mockResponse.status).toHaveBeenLastCalledWith(401);
@@ -31,7 +33,7 @@ describe('handler.ts apiErrorHandler', () => {
   });
 
   it('should handle ApiError', () => {
-    const apiError = new ApiError(404, 'User not found')
+    const apiError = new ApiError(404, 'User not found');
 
     apiErrorHandler(apiError, mockRequest, mockResponse, mockNext);
     expect(mockResponse.status).toHaveBeenLastCalledWith(404);
