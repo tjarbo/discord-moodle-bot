@@ -7,7 +7,7 @@ import { loggerFile } from '../src/configuration/logger';
 import { ApiError } from '../src/controllers/error/api.class';
 import { AuthToken } from '../src/controllers/authentication/token.schema';
 import * as discord from '../src/controllers/discord';
-import { TokenRequestMessage } from '../src/controllers/discord/templates/tokenMessage.class';
+import { TokenRequestMessage } from '../src/controllers/discord/templates';
 
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/configuration/discord.ts');

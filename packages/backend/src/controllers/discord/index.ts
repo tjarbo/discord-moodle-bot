@@ -1,3 +1,6 @@
+/**
+ * discord.js provides an interface to interact with the discord.js libary on an easy way.
+ */
 import { client } from '../../configuration/discord';
 import { FMDBMessageTemplate } from './message.interface';
 import { TextChannel } from 'discord.js';

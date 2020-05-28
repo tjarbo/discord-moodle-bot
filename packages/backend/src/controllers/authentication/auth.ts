@@ -12,7 +12,7 @@ import expressjwt from 'express-jwt';
 import { config } from '../../configuration/environment';
 import { ApiError } from '../error/api.class';
 import { sendTo } from '../discord';
-import { TokenRequestMessage } from '../discord/templates/tokenMessage.class';
+import { TokenRequestMessage } from '../discord/templates';
 
 const authTokenReqeuestSchema = object({
   username: string().required(),

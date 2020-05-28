@@ -3,7 +3,7 @@ import { Response, Request, NextFunction } from 'express';
 
 
 /**
- * Error handler
+ * Error handler middleware for express
  *
  * @export
  * @param {ErrorHandler} err
