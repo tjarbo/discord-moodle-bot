@@ -12,7 +12,7 @@ import { ApiError } from '../error/api.class';
  * @param {FMDBMessageTemplate} messageTemplate Message template
  * @param {object} values
  */
-export async function discordSendTo(userId: string, messageTemplate: FMDBMessageTemplate, values: object) {
+export async function sendTo(userId: string, messageTemplate: FMDBMessageTemplate, values: object) {
   const discordUser = client.users.cache.get(userId);
   if (!discordUser) throw new ApiError(409, `User not in discord cache. Send the bot a small 'test' message (via DM) and try again.`);
 
@@ -29,7 +29,7 @@ export async function discordSendTo(userId: string, messageTemplate: FMDBMessage
  * @param {FMDBMessageTemplate} messageTemplate Message template
  * @param {object} value
  */
-export async function discordPublish(messageTemplate: FMDBMessageTemplate, values: object) {
+export async function publish(messageTemplate: FMDBMessageTemplate, values: object) {
   const discordChannel = await client.channels.cache.get(config.discordChannel);
   if (!discordChannel) throw new Error(`Channel not in discord cache. Send a small 'test' message to the channel and try again.`);
 

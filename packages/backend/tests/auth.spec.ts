@@ -6,7 +6,7 @@ import mockingoose from 'mockingoose';
 import { loggerFile } from '../src/configuration/logger';
 import { ApiError } from '../src/controllers/error/api.class';
 import { AuthToken } from '../src/controllers/authentication/token.schema';
-import * as discord from '../src/controllers/discord/discord';
+import * as discord from '../src/controllers/discord';
 import { TokenRequestMessage } from '../src/controllers/discord/templates/tokenMessage.class';
 
 jest.mock('../src/configuration/environment.ts');
@@ -62,7 +62,7 @@ describe('auth.js authTokenRequest', () => {
 
     mockNext = jest.fn();
     spyLogger = jest.spyOn(loggerFile, 'error');
-    spyDiscord = jest.spyOn(discord, 'discordSendTo');
+    spyDiscord = jest.spyOn(discord, 'sendTo');
   });
 
   afterEach(() => {

@@ -11,7 +11,7 @@ import jwt from 'jsonwebtoken';
 import expressjwt from 'express-jwt';
 import { config } from '../../configuration/environment';
 import { ApiError } from '../error/api.class';
-import { discordSendTo } from '../discord/discord';
+import { sendTo } from '../discord';
 import { TokenRequestMessage } from '../discord/templates/tokenMessage.class';
 
 const authTokenReqeuestSchema = object({
@@ -84,7 +84,7 @@ export async function authTokenRequest(req: Request, res: Response, next: NextFu
     const token = await (new AuthToken(tokenObj)).save();
 
     // 3. Send token to user
-    discordSendTo(user.userId.toString(), new TokenRequestMessage(), { key: token.key });
+    sendTo(user.userId.toString(), new TokenRequestMessage(), { key: token.key });
 
     // 4. Done
     res.status(200).end();
