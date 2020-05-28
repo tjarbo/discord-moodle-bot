@@ -4,8 +4,7 @@ import * as util from 'util';
 import { config } from './src/configuration/environment';
 import { app } from './src/configuration/express';
 import { loggerFile } from './src/configuration/logger';
-import { client } from './src/configuration/discord';
-import { User, IUserDocument } from './src/controllers/user/user.schema';
+import { User } from './src/controllers/user/user.schema';
 
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(() => {
   loggerFile.debug('Mongoose connected');

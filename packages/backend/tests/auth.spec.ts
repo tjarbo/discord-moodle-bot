@@ -8,15 +8,8 @@ import { ApiError } from '../src/controllers/error/api.class';
 import { AuthToken } from '../src/controllers/authentication/token.schema';
 import { client } from '../src/configuration/discord';
 
-jest.mock('../src/configuration/discord.ts', () => ({
-  client: {
-    users: {
-      cache: {
-        get: jest.fn()
-      }
-    }
-  }
-}));
+jest.mock('../src/configuration/environment.ts');
+jest.mock('../src/configuration/discord.ts');
 
 
 describe('auth.ts getTokenFromHeader', () => {
