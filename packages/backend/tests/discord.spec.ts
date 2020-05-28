@@ -27,7 +27,7 @@ describe('discord.ts discordSendTo', () => {
     const mockDiscordUser = { send: jest.fn() };
     spyDiscordClientUsers.mockImplementation(() => mockDiscordUser);
 
-    await sendTo('BalBalBlub', new TokenRequestMessage(), { key: 123123 });
+    await sendTo('1234657890', new TokenRequestMessage(), { key: 123123 });
     expect(mockDiscordUser.send).toHaveBeenCalled();
   });
 

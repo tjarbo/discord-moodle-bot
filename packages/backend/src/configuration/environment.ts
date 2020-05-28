@@ -26,7 +26,7 @@ const envVarsSchema = object({
     .default(27017),
   DISCORD_TOKEN: string().required()
   .description('Discord Token for bot'),
-  DISCORD_CHANNEL: string().required().description('Channel ID to reveice notifications'),
+  DISCORD_CHANNEL: string().required().description('Channel ID to receive notifications'),
   ADMIN_ID: string().required()
   .description('Discord ID of the admin'),
   ADMIN_NAME: string().required().regex(/[a-z]+#[0-9]+/)
