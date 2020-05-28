@@ -128,14 +128,9 @@ export async function fetchEnrolledCourses(moodleUrl: string): Promise<ICourseDe
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
 export function printNewAssignments(courses: ICourse[], lastFetch: number): void {
-    courses.forEach(course => {
-        course.assignments.forEach( assignment => {
-            if (assignment.timemodified > lastFetch) {
-                // TODO: Call Message Function
-                loggerFile.debug(course.fullname + ' --> ' + assignment.name);
-            }
-        });
-    });
+    courses.forEach(course => course.assignments
+        .filter(assignment => assignment.timemodified > lastFetch)
+        .forEach(assignment => loggerFile.debug(course.fullname + ' --> ' + assignment.name)));
 }
 
 /**
@@ -146,20 +141,16 @@ export function printNewAssignments(courses: ICourse[], lastFetch: number): void
  * @param {string} moodleUrl - Url of the moodle instance to fetch coursedetails from
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
-export function printNewRessources(ressources: IRessource[], moodleUrl: string, lastFetch: number): void {
+export async function printNewRessources(ressources: IRessource[], moodleUrl: string, lastFetch: number): Promise<void> {
     if (ressources.length === 0) { return; }
     const courseMap: Map<number, string> = new Map();
 
-    fetchEnrolledCourses(moodleUrl)
-      .then(courses => courses.forEach(course => courseMap.set(course.id, course.shortname)))
-      .then(map => ressources.forEach(ressource => {
-            const coursename = courseMap.get(ressource.course);
-            ressource.contentfiles.forEach(content => {
-                if (content.timemodified > lastFetch) {
-                    // TODO: Call Message Function
-                    loggerFile.debug(coursename + ' --> ' + content.filename);
-                }
-            });
-        })
-      );
+    await fetchEnrolledCourses(moodleUrl).then(courses => 
+        courses.forEach(course => courseMap.set(course.id, course.shortname)));
+    
+    ressources.forEach(ressource => {
+        const coursename = courseMap.get(ressource.course);
+        ressource.contentfiles.filter(content => content.timemodified > lastFetch)
+            .forEach(content => loggerFile.debug(coursename + ' --> ' + content.filename));
+    });
 }
