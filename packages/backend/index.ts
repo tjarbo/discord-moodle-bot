@@ -6,7 +6,7 @@ import { app } from './src/configuration/express';
 import { loggerFile } from './src/configuration/logger';
 import { User } from './src/controllers/user/user.schema';
 
-import { fetchMoodleData } from './src/controllers/moodle/moodle';
+import { fetchAndNotify } from './src/controllers/moodle/moodle';
 
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(() => {
   loggerFile.debug('Mongoose connected');
@@ -24,8 +24,8 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
   });
 
   const interval = config.moodle.fetchInterval;
-  setInterval(() => fetchMoodleData(), interval);
-  fetchMoodleData();
+  setInterval(() => fetchAndNotify(), interval);
+  // fetchAndNotify();
 }).catch((error) => {
   loggerFile.error('Mongoose NOT Connected', error);
 });

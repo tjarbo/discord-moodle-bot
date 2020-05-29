@@ -5,6 +5,9 @@ import { ICourse } from './course.interface';
 import { IRessource } from './ressource.interface';
 import { ICourseDetails } from './coursedetails.interface';
 import { LastFetch } from './lastfetch.schema';
+import { publish } from '../discord';
+import { AssignmentMessage, AssignmentReminderMessage, RessourceMessage  } from '../discord/templates';
+import { Reminder } from './reminder.schema';
 
 /**
  * Builds a string representing the moodle
@@ -33,7 +36,7 @@ export function getBaseUrl(): string {
  */
 export async function getLastFetch(): Promise<number> {
     const now = Math.floor(Date.now() / 1000);
-    return LastFetch.findOneAndUpdate({}, {$set: {timestamp: now}})
+    return await LastFetch.findOneAndUpdate({}, {$set: {timestamp: now}})
             .then(query => query == null ? new LastFetch({timestamp: now}).save() : query)
             .then(query => query.timestamp);
 }
@@ -44,7 +47,7 @@ export async function getLastFetch(): Promise<number> {
  *
  * @export
  */
-export async function fetchMoodleData(): Promise<any[]> {
+export async function fetchAndNotify(): Promise<void> {
     try {
         const moodleUrl = getBaseUrl();
         // TODO: Replace placeholder with real blacklist
@@ -53,24 +56,19 @@ export async function fetchMoodleData(): Promise<any[]> {
         const lastFetch = await getLastFetch();
         if (!lastFetch) throw new Error('Unable to get timestamp of last fetch');
 
-        console.log('askudgvaeöghwöagawrfpwa', getBaseUrl());
+        const courselist = await fetchAssignments(moodleUrl).then(courses =>
+            courses.filter(course => !courseBlacklist.includes(course.id)));
 
-        const ass = await fetchAssignments(moodleUrl)
-            .then(courses => courses.filter(course => !courseBlacklist.includes(course.id)))
-            .then(courses => printNewAssignments(courses, lastFetch));
-            
-        console.log('askudgvaeöghwöagawrfpwa', lastFetch);
+        const ressourcelist = await fetchRessources(moodleUrl).then(ressources =>
+            ressources.filter(ressource => !courseBlacklist.includes(ressource.course)));
 
-        const res = await fetchRessources(moodleUrl)
-            .then(ressources => ressources.filter(ressource => !courseBlacklist.includes(ressource.course)))
-            .then(ressources => printNewRessources(ressources, moodleUrl, lastFetch));
-
-        return Promise.all([ass, res]);
+        handleAssignments(courselist, lastFetch);
+        handleRessources(ressourcelist, moodleUrl, lastFetch);
 
     } catch(error) {
         console.log(error);
         loggerFile.error('Moodle API request failed', error);
-    };
+    }
 }
 
 /**
@@ -81,9 +79,9 @@ export async function fetchMoodleData(): Promise<any[]> {
  * @returns {Promise<ICourse[]>} A Promise of an array of Courses containing the Assignments
  */
 export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
-    return fetch(moodleUrl + '&wsfunction=mod_assign_get_assignments')
-      .then(res => res.json())
-      .then(json => json.courses)
+    return await fetch(moodleUrl + '&wsfunction=mod_assign_get_assignments')
+        .then(res => res.json())
+        .then(json => json.courses)
     .catch((error) => {
         loggerFile.error('Moodle API request failed', error);
     });
@@ -97,7 +95,7 @@ export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
  * @returns {Promise<IRessource[]>} A Promise of an array of Ressources
  */
 export async function fetchRessources(moodleUrl: string): Promise<IRessource[]> {
-    return fetch(moodleUrl + '&wsfunction=mod_resource_get_resources_by_courses')
+    return await fetch(moodleUrl + '&wsfunction=mod_resource_get_resources_by_courses')
       .then(res => res.json())
       .then(json => json.resources)
     .catch((error) => {
@@ -113,24 +111,49 @@ export async function fetchRessources(moodleUrl: string): Promise<IRessource[]> 
  * @returns {Promise<ICourseDetails[]>} A Promise of an array of CourseDetails
  */
 export async function fetchEnrolledCourses(moodleUrl: string): Promise<ICourseDetails[]> {
-    return fetch(moodleUrl + '&wsfunction=core_enrol_get_users_courses&userid='+config.moodle.userId)
-	  .then(res => res.json())
+    return await fetch(moodleUrl + '&wsfunction=core_enrol_get_users_courses&userid='+config.moodle.userId)
+	    .then(res => res.json())
     .catch((error) => {
         loggerFile.error('Moodle API request failed', error);
     });
 }
 
 /**
- * Filters assignments by timestamp and notifies about changes
+ * Filters assignments by timestamp and notifies about changes and upcoming deadline
  *
  * ! export only for unit testing (rewire doesn't work :/ )
  * @param {ICourse[]} courses - The courses containing the Assignments
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
-export function printNewAssignments(courses: ICourse[], lastFetch: number): void {
-    courses.forEach(course => course.assignments
-        .filter(assignment => assignment.timemodified > lastFetch)
-        .forEach(assignment => loggerFile.debug(course.fullname + ' --> ' + assignment.name)));
+export async function handleAssignments(courses: ICourse[], lastFetch: number): Promise<void> {
+    
+    for (const course of courses) {
+        for (const assignment of course.assignments) {
+            const coursename = config.moodle.useCourseShortname ? course.shortname : course.fullname;
+            
+            // check if assignment was newly created or has been modified
+            if (assignment.timemodified > lastFetch) {
+                await publish(new AssignmentMessage(), {
+                    course: coursename,
+                    title: assignment.name,
+                    dueDate: new Date(assignment.duedate * 1000)
+                });
+            }
+
+            // check if new deadline is incoming that hasn`t been notified about
+            const timeUntilDueDate = assignment.duedate - Math.floor(Date.now() / 1000);
+            const isWithinDeadline = timeUntilDueDate > 0 && timeUntilDueDate < config.moodle.reminderTimeLeft;
+            const query = await Reminder.findOne({assignment_id: assignment.id});
+
+            if (isWithinDeadline && query == null) {
+                await new Reminder({assignment_id: assignment.id}).save();
+                await publish(new AssignmentReminderMessage(), {
+                    course: coursename,
+                    title: assignment.name
+                });
+            }
+        }
+    }
 }
 
 /**
@@ -141,16 +164,20 @@ export function printNewAssignments(courses: ICourse[], lastFetch: number): void
  * @param {string} moodleUrl - Url of the moodle instance to fetch coursedetails from
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
-export async function printNewRessources(ressources: IRessource[], moodleUrl: string, lastFetch: number): Promise<void> {
+export async function handleRessources(ressources: IRessource[], moodleUrl: string, lastFetch: number): Promise<void> {
     if (ressources.length === 0) { return; }
-    const courseMap: Map<number, string> = new Map();
 
-    await fetchEnrolledCourses(moodleUrl).then(courses => 
+    // map course IDs to course names
+    const courseMap: Map<number, string> = new Map();
+    await fetchEnrolledCourses(moodleUrl).then(courses =>
         courses.forEach(course => courseMap.set(course.id, course.shortname)));
-    
-    ressources.forEach(ressource => {
-        const coursename = courseMap.get(ressource.course);
-        ressource.contentfiles.filter(content => content.timemodified > lastFetch)
-            .forEach(content => loggerFile.debug(coursename + ' --> ' + content.filename));
-    });
+
+    // publish new files
+    ressources.forEach(ressource => ressource.contentfiles.forEach(
+        file => publish(new RessourceMessage(), {
+            course: courseMap.get(ressource.course),
+            title: file.filename,
+            link: file.fileurl.replace('/webservice', '')
+        })
+    ));
 }
