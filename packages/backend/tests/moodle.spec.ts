@@ -1,9 +1,15 @@
 import * as moodle from '../src/controllers/moodle/';
+import * as moodleFetch from '../src/controllers/moodle/fetch';
+import * as moodleHandle from '../src/controllers/moodle/handle';
 import mockingoose from 'mockingoose';
+import { loggerFile } from '../src/configuration/logger';
 import { LastFetch } from '../src/controllers/moodle/schemas/lastfetch.schema';
+import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
+import { IRessource } from '../src/controllers/moodle/interfaces/ressource.interface';
 
-//jest.mock('../src/controllers/discord', () => jest.fn());
-jest.mock('../src/configuration/environment');
+jest.mock('../src/configuration/environment.ts');
+jest.mock('../src/controllers/moodle/fetch.ts');
+jest.mock('../src/configuration/discord.ts');
 
 describe('getBaseUrl', () => {
     it('should build a valid moodle url', () => {
@@ -28,7 +34,7 @@ describe('getLastFetch', () => {
 
         expect(await moodle.getLastFetch()).toBe(123);
         expect(spyLastFetchSave).toHaveBeenCalledTimes(0);
-     })
+     });
 
     it ('should create a new timestamp and return the current date if this is the first fetch', async () => {
         mockingoose(LastFetch).toReturn(null, 'findOneAndUpdate');
@@ -36,10 +42,63 @@ describe('getLastFetch', () => {
 
         expect(await moodle.getLastFetch()).toBeGreaterThanOrEqual(currentTime);
         expect(spyLastFetchSave).toHaveBeenCalledTimes(1);
-    })
+    });
 
 });
 
 describe('fetchAndNotify', () => {
-    // TODO
+    let spyLogger: jest.SpyInstance;
+    let spyFetchAssignments: jest.SpyInstance;
+    let spyFetchRessources: jest.SpyInstance;
+
+    beforeEach(() => {
+        spyLogger = jest.spyOn(loggerFile, 'error');
+        spyFetchAssignments = jest.spyOn(moodleFetch, 'fetchAssignments');
+        spyFetchRessources = jest.spyOn(moodleFetch, 'fetchRessources');
+
+        jest.spyOn(moodleHandle, 'handleAssignments').mockImplementation(jest.fn());
+        jest.spyOn(moodleHandle, 'handleRessources').mockImplementation(jest.fn());
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+    
+    it('should log error if lastFetch doesn`t return any value', async () => {
+        mockingoose(LastFetch).toReturn(new Error(), 'findOneAndUpdate');
+        await moodle.fetchAndNotify();
+
+        expect(spyLogger).toHaveBeenCalledTimes(1);
+        expect(spyLogger).toHaveBeenCalledWith('Moodle API request failed', new Error());
+    });
+
+    it('should log error if fetchAssignments fails', async () => {
+        mockingoose(LastFetch).toReturn({timestamp: 1}, 'findOneAndUpdate');
+        spyFetchAssignments.mockRejectedValueOnce(new Error('Failed1'));
+        spyFetchRessources.mockResolvedValue([] as IRessource[]);
+        await moodle.fetchAndNotify();
+
+        expect(spyLogger).toHaveBeenCalledTimes(1);
+        expect(spyLogger).toHaveBeenCalledWith('Moodle API request failed', new Error('Failed1'));
+    })
+
+    it('should log error if fetchRessources fails', async () => {
+        mockingoose(LastFetch).toReturn({timestamp: 1}, 'findOneAndUpdate');
+        spyFetchAssignments.mockResolvedValue([] as ICourse[]);
+        spyFetchRessources.mockRejectedValue(new Error('Failed2'));
+        await moodle.fetchAndNotify();
+
+        expect(spyLogger).toHaveBeenCalledTimes(1);
+        expect(spyLogger).toHaveBeenCalledWith('Moodle API request failed', new Error('Failed2'));
+    })
+
+    it('should log no error if everything is fine', async () => {
+        mockingoose(LastFetch).toReturn({timestamp: 1}, 'findOneAndUpdate');
+        spyFetchAssignments.mockResolvedValueOnce([] as ICourse[]);
+        spyFetchRessources.mockResolvedValueOnce([] as IRessource[]);
+        await moodle.fetchAndNotify();
+
+        expect(spyLogger).toHaveBeenCalledTimes(0);
+    });
+
 });

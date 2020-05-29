@@ -61,7 +61,6 @@ export async function fetchAndNotify(): Promise<void> {
         handleRessources(ressourcelist, moodleUrl, lastFetch);
 
     } catch(error) {
-        console.log(error);
         loggerFile.error('Moodle API request failed', error);
     }
 }
