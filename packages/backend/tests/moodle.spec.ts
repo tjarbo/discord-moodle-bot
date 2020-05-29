@@ -11,13 +11,13 @@ import { IRessource } from '../src/controllers/moodle/ressource.interface';
 jest.mock('node-fetch', () => jest.fn());
 jest.mock('../src/configuration/environment');
 
-/*
-const mockFetch = (res) => 
-    mocked(fetch).mockImplementationOnce(() => Promise.resolve({
-        json: () => res,
-    }));*/
 
-function mockFetch(res) { return mocked(fetch).mockResolvedValue({json: () => res})};
+const mockFetch = (res: any) => 
+    mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.resolve({
+        json: () => res,
+    }));
+
+//function mockFetch(res: any) { return mocked(fetch).mockResolvedValue({json: () => res} as fetch.Response)};
 
 const mockFailedFetch = () =>
     mocked(fetch).mockImplementationOnce(() => Promise.reject());
@@ -187,8 +187,8 @@ describe('printNewAssignments', () => {
     beforeEach(() => {
         spyLogger = jest.spyOn(loggerFile, 'debug');
         mockCourses = [
-            { fullname: "Course01", assignments: [{ name: "As1", timemodified:  999}] },
-            { fullname: "Course02", assignments: [{ name: "As2", timemodified: 1001}] }
+            { fullname: "Course01", assignments: [{ name: "As1", timemodified:  999 }] },
+            { fullname: "Course02", assignments: [{ name: "As2", timemodified: 1001 }] }
         ] as ICourse[];
     });
 
