@@ -14,7 +14,7 @@ import { Reminder } from './schemas/reminder.schema';
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
 export async function handleAssignments(courses: ICourse[], lastFetch: number): Promise<void> {
-    
+
     const dateOptions = {
         weekday: 'long',
         year: 'numeric',
@@ -27,14 +27,14 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
     for (const course of courses) {
         for (const assignment of course.assignments) {
             const coursename = config.moodle.useCourseShortname ? course.shortname : course.fullname;
-            
+
             // check if assignment was newly created or has been modified
             if (assignment.timemodified > lastFetch) {
                 const options: AssignmentMessageOptions = {
                     course: coursename,
                     title: assignment.name,
                     dueDate: new Date(assignment.duedate * 1000).toLocaleString('de-DE', dateOptions)
-                }
+                };
 
                 await publish(new AssignmentMessage(), options);
             }
@@ -75,13 +75,13 @@ export async function handleRessources(ressources: IRessource[], moodleUrl: stri
     // publish new files
     for (const ressource of ressources) {
         for (const file of ressource.contentfiles) {
-            if (file.timemodified <= lastFetch) continue; 
+            if (file.timemodified <= lastFetch) continue;
 
             const options: RessourceMessageOptions = {
                 course: courseMap.get(ressource.course),
                 title: file.filename,
                 link: file.fileurl.replace('/webservice', '')
-            }
+            };
             publish(new RessourceMessage(), options);
         }
     }
