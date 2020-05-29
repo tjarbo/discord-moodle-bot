@@ -4,13 +4,12 @@ import { mocked } from 'ts-jest/utils';
 import { loggerFile } from '../src/configuration/logger';
 
 jest.mock('node-fetch', () => jest.fn());
+jest.mock('../src/configuration/environment.ts');
 
 const mockFetch = (res: any) =>
     mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.resolve({
         json: () => res,
     }));
-
-//function mockFetch(res: any) { return mocked(fetch).mockResolvedValue({json: () => res} as fetch.Response)};
 
 const mockFailedFetch = () =>
     mocked(fetch).mockImplementationOnce(() => Promise.reject());
@@ -24,7 +23,7 @@ const mockFailedFetch = () =>
     
         afterEach(() => {
             jest.resetAllMocks();
-        })
+        });
     
         it('should address the correct moodle wsfunction', async () => {
             mockFailedFetch();
@@ -35,13 +34,13 @@ const mockFailedFetch = () =>
         it('should return an array of all courses containing the assignments provided by the moodle API', async () => {
             mockFetch({courses: []});
             expect(await moodle.fetchAssignments('')).toStrictEqual([]);
-        })
+        });
     
         it('should throw an error if the request fails', async () => {
             mockFailedFetch();
             await moodle.fetchAssignments('');
             expect(spyLogger).toHaveBeenCalledTimes(1);
-        })
+        });
     });
     
     describe('fetchRessources', () => {
@@ -53,7 +52,7 @@ const mockFailedFetch = () =>
     
         afterEach(() => {
             jest.resetAllMocks();
-        })
+        });
     
         it('should address the correct moodle wsfunction', async () => {
             mockFailedFetch();
@@ -64,13 +63,13 @@ const mockFailedFetch = () =>
         it('should return an array of all ressources provided by the moodle API', async () => {
             mockFetch({resources: []});
             expect(await moodle.fetchRessources('')).toStrictEqual([]);
-        })
+        });
     
         it('should throw an error if the request fails', async () => {
             mockFailedFetch();
             await moodle.fetchRessources('');
             expect(spyLogger).toHaveBeenCalledTimes(1);
-        })
+        });
     });
     
     describe('fetchEnrolledCourses', () => {
@@ -82,7 +81,7 @@ const mockFailedFetch = () =>
     
         afterEach(() => {
             jest.resetAllMocks();
-        })
+        });
     
         it('should address the correct moodle wsfunction', async () => {
             mockFailedFetch();
@@ -93,11 +92,11 @@ const mockFailedFetch = () =>
         it('should return an array of all ressources provided by the moodle API', async () => {
             mockFetch([]);
             expect(await moodle.fetchEnrolledCourses('')).toStrictEqual([]);
-        })
+        });
     
         it('should throw an error if the request fails', async () => {
             mockFailedFetch();
             await moodle.fetchEnrolledCourses('');
             expect(spyLogger).toHaveBeenCalledTimes(1);
-        })
+        });
     });
