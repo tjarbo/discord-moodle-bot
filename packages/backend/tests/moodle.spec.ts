@@ -1,18 +1,22 @@
-import * as moodle from '../src/controllers/moodle/moodle'; 
+import * as moodle from '../src/controllers/moodle/moodle';
 import mockingoose from 'mockingoose';
 import fetch from 'node-fetch';
 import { ICourse } from '../src/controllers/moodle/course.interface';
 import { ICourseDetails } from '../src/controllers/moodle/coursedetails.interface';
 import { mocked } from 'ts-jest/utils';
+import * as discord from '../src/controllers/discord';
 import { loggerFile } from '../src/configuration/logger';
 import { LastFetch } from '../src/controllers/moodle/lastfetch.schema';
+import { Reminder } from '../src/controllers/moodle/reminder.schema';
+import { AssignmentMessage, AssignmentReminderMessage, RessourceMessage  } from '../src/controllers/discord/templates';
 import { IRessource } from '../src/controllers/moodle/ressource.interface';
 
 jest.mock('node-fetch', () => jest.fn());
+//jest.mock('../src/controllers/discord', () => jest.fn());
 jest.mock('../src/configuration/environment');
 
 
-const mockFetch = (res: any) => 
+const mockFetch = (res: any) =>
     mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.resolve({
         json: () => res,
     }));
@@ -24,15 +28,15 @@ const mockFailedFetch = () =>
 
 
 describe('getBaseUrl', () => {
-    it('should build a valid moodle url', () => {       
+    it('should build a valid moodle url', () => {
         let url = 'https://moodle.example.com/webservice/rest/server.php?wstoken=MOODLETOKEN123&moodlewsrestformat=json';
         expect(moodle.getBaseUrl()).toBe(url);
-    })
+    });
 });
 
 describe('getLastFetch', () => {
     let spyLastFetchSave: jest.SpyInstance;
-    
+
     beforeEach(() => {
         spyLastFetchSave = jest.spyOn(new LastFetch(), 'save');
     });
@@ -45,61 +49,30 @@ describe('getLastFetch', () => {
         mockingoose(LastFetch).toReturn({timestamp: 123}, 'findOneAndUpdate');
 
         expect(await moodle.getLastFetch()).toBe(123);
-        expect(spyLastFetchSave.mock.calls.length).toBe(0);
+        expect(spyLastFetchSave).toHaveBeenCalledTimes(0);
      })
 
     it ('should create a new timestamp and return the current date if this is the first fetch', async () => {
-        mockingoose(LastFetch).toReturn(() => null, 'findOneAndUpdate');
+        mockingoose(LastFetch).toReturn(null, 'findOneAndUpdate');
         let currentTime = Math.floor(Date.now() / 1000);
-        
+
         expect(await moodle.getLastFetch()).toBeGreaterThanOrEqual(currentTime);
-        expect(spyLastFetchSave.mock.calls.length).toBe(1);
+        expect(spyLastFetchSave).toHaveBeenCalledTimes(1);
     })
 
 });
-/*
-describe('fetchMoodleData', () => {
-    let spyGetLastFetch: jest.SpyInstance;
-    let spyFetchAssignments: jest.SpyInstance;
-    let spyFetchRessources: jest.SpyInstance;
-    let spyPrintNewAssignments: jest.SpyInstance;
-    let spyPrintNewRessources: jest.SpyInstance;
 
-    beforeEach(() => {
-        spyGetLastFetch = jest.spyOn(moodle, 'getLastFetch');
-        spyGetLastFetch.mockResolvedValue(123);
-
-        let mockAssignments: ICourse[] = [{id: 0, assignments: []}, {id: 1, assignments: []}] as ICourse[];
-        spyFetchAssignments = jest.spyOn(moodle, 'fetchAssignments');
-        spyFetchAssignments.mockResolvedValue(mockAssignments);
-
-        let mockRessources: IRessource[] = [{course: 0}, {course: 1}] as IRessource[];
-        spyFetchRessources = jest.spyOn(moodle, 'fetchRessources');
-        spyFetchRessources.mockResolvedValue(mockRessources);
-
-        spyPrintNewAssignments = jest.spyOn(moodle, 'printNewAssignments');
-        spyPrintNewRessources = jest.spyOn(moodle, 'printNewRessources');
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    it('should only print new Ressources and Assignments that aren´t blacklisted', async () => {
-        let data = await moodle.fetchMoodleData();
-        console.log(data);
-        expect(spyFetchAssignments.mock.calls.length).toBe(1);
-        expect(spyFetchRessources).toHaveBeenCalledTimes(1);
-    })
+describe('fetchAndNotify', () => {
+    // TODO
 });
-*/
+
 describe('fetchAssignments', () => {
     let spyLogger: jest.SpyInstance;
 
     beforeEach(() => {
         spyLogger = jest.spyOn(loggerFile, 'error');
     });
-    
+
     afterEach(() => {
         jest.resetAllMocks();
     })
@@ -124,11 +97,11 @@ describe('fetchAssignments', () => {
 
 describe('fetchRessources', () => {
     let spyLogger: jest.SpyInstance;
-    
+
     beforeEach(() => {
         spyLogger = jest.spyOn(loggerFile, 'error');
     });
-    
+
     afterEach(() => {
         jest.resetAllMocks();
     })
@@ -153,11 +126,11 @@ describe('fetchRessources', () => {
 
 describe('fetchEnrolledCourses', () => {
     let spyLogger: jest.SpyInstance;
-    
+
     beforeEach(() => {
         spyLogger = jest.spyOn(loggerFile, 'error');
     });
-    
+
     afterEach(() => {
         jest.resetAllMocks();
     })
@@ -177,38 +150,57 @@ describe('fetchEnrolledCourses', () => {
         mockFailedFetch();
         await moodle.fetchEnrolledCourses('');
         expect(spyLogger).toHaveBeenCalledTimes(1);
-    })            
+    })
 });
 
-describe('printNewAssignments', () => {
-    let spyLogger: jest.SpyInstance;
+describe('handleAssignments', () => {
+    let spyPublish: jest.SpyInstance;
+    let spyReminderSave: jest.SpyInstance;
     let mockCourses: ICourse[];
 
     beforeEach(() => {
-        spyLogger = jest.spyOn(loggerFile, 'debug');
+        spyPublish = jest.spyOn(discord, 'publish').mockImplementation(jest.fn());
+        spyReminderSave = jest.spyOn(new Reminder(), 'save');
         mockCourses = [
-            { fullname: "Course01", assignments: [{ name: "As1", timemodified:  999 }] },
-            { fullname: "Course02", assignments: [{ name: "As2", timemodified: 1001 }] }
+            { fullname: "Course01", assignments: [{ id: 0, name: "As1", duedate: 0, timemodified:  999 }] },
+            { fullname: "Course02", assignments: [{ id: 1, name: "As2", duedate: 0, timemodified: 1001 }] }
         ] as ICourse[];
     });
 
     afterEach(() => {
         jest.resetAllMocks();
-    })
+        mockingoose.resetAll();
+    });
 
-    it('should only print assignments newer than the last fetch timestamp', () => {
-        moodle.printNewAssignments(mockCourses, 1000);
-        expect(spyLogger).toBeCalledTimes(1);
-    })
+    it('should only print assignments newer than the last fetch timestamp', async () => {
+        await moodle.handleAssignments(mockCourses, 1000);
+        expect(spyPublish).toBeCalledTimes(1);
+    });
+
+    it('should write new reminders to the database', async () => {
+        mockCourses[0].assignments[0].duedate = Math.floor(Date.now() / 1000) + 3000;
+        mockingoose(Reminder).toReturn(null, 'findOne');
+        await moodle.handleAssignments(mockCourses, 2000);
+
+        expect(spyPublish).toHaveBeenCalledTimes(1);
+        expect(spyReminderSave).toHaveBeenCalledTimes(1);
+    });
+
+    it('should only print new reminders', async () => {
+        mockCourses[0].assignments[0].duedate = Math.floor(Date.now() / 1000) + 3000;
+        mockingoose(Reminder).toReturn({assignment_id: 0}, 'findOne');
+        //await moodle.handleAssignments(mockCourses, 2000);
+        expect(spyPublish).toHaveBeenCalledTimes(0);
+    });
 });
 
-describe('printNewRessources', () => {
+describe('handleRessources', () => {
     let spyLogger: jest.SpyInstance;
     let spyFetchCourses: jest.SpyInstance;
     let mockRessources: IRessource[];
 
     beforeEach(() => {
-        spyLogger = jest.spyOn(loggerFile, 'debug');
+        spyLogger = jest.spyOn(discord, 'publish').mockImplementation(jest.fn());
         spyFetchCourses = jest.spyOn(moodle, 'fetchEnrolledCourses');
         spyFetchCourses.mockImplementation(() => Promise.resolve([
             { id: 1, shortname: "Course01", fullname: "Course01" },
@@ -221,7 +213,7 @@ describe('printNewRessources', () => {
     });
 
     it('should only print ressources newer than the last fetch timestamp', async () => {
-        await moodle.printNewRessources(mockRessources, '', 1000);
+        moodle.handleRessources(mockRessources, '', 1000);
         expect(spyLogger).toBeCalledTimes(0);
     })
 });
