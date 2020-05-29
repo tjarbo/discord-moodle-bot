@@ -6,7 +6,7 @@ import { app } from './src/configuration/express';
 import { loggerFile } from './src/configuration/logger';
 import { User } from './src/controllers/user/user.schema';
 
-import { fetchAndNotify } from './src/controllers/moodle/moodle';
+import { fetchAndNotify } from './src/controllers/moodle';
 
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(() => {
   loggerFile.debug('Mongoose connected');
