@@ -15,7 +15,10 @@ import { ICourseDetails } from './interfaces/coursedetails.interface';
 export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
     return fetch(moodleUrl + '&wsfunction=mod_assign_get_assignments')
         .then(res => res.json())
-        .then(json => json.courses);
+        .then(json => json.courses)
+    .catch((error) => {
+        loggerFile.error('Moodle API request failed', error);
+    });
 }
 
 /**
@@ -28,7 +31,10 @@ export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
 export async function fetchRessources(moodleUrl: string): Promise<IRessource[]> {
     return fetch(moodleUrl + '&wsfunction=mod_resource_get_resources_by_courses')
       .then(res => res.json())
-      .then(json => json.resources);
+      .then(json => json.resources)
+    .catch((error) => {
+        loggerFile.error('Moodle API request failed', error);
+    });
 }
 
 /**
