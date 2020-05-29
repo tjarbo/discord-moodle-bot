@@ -31,7 +31,7 @@ export function getBaseUrl(): string {
  */
 export async function getLastFetch(): Promise<number> {
     const now = Math.floor(Date.now() / 1000);
-    return await LastFetch.findOneAndUpdate({}, {$set: {timestamp: now}})
+    return LastFetch.findOneAndUpdate({}, {$set: {timestamp: now}})
             .then(query => query == null ? new LastFetch({timestamp: now}).save() : query)
             .then(query => query.timestamp);
 }

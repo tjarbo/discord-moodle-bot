@@ -19,6 +19,7 @@ export const config = {
         baseURL: 'https://moodle.example.com',
         reminderTimeLeft: 86400,
         token: 'MOODLETOKEN123',
+        useCourseShortname: true,
         userId: 123456
     },
   };

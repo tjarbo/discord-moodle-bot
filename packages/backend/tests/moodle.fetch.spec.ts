@@ -5,6 +5,7 @@ import { loggerFile } from '../src/configuration/logger';
 
 jest.mock('node-fetch', () => jest.fn());
 jest.mock('../src/configuration/environment.ts');
+jest.mock('../src/configuration/discord.ts');
 
 const mockFetch = (res: any) =>
     mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.resolve({
@@ -22,7 +23,7 @@ describe('fetchAssignments', () => {
     });
 
     afterEach(() => {
-        jest.resetAllMocks();
+        jest.clearAllMocks();
     });
 
     it('should address the correct moodle wsfunction', async () => {
@@ -51,7 +52,7 @@ describe('fetchRessources', () => {
     });
 
     afterEach(() => {
-        jest.resetAllMocks();
+        jest.clearAllMocks();
     });
 
     it('should address the correct moodle wsfunction', async () => {
