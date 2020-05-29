@@ -39,7 +39,7 @@ export async function fetchRessources(moodleUrl: string): Promise<IRessource[]> 
  * @returns {Promise<ICourseDetails[]>} A Promise of an array of CourseDetails
  */
 export async function fetchEnrolledCourses(moodleUrl: string): Promise<ICourseDetails[]> {
-    return await fetch(moodleUrl + '&wsfunction=core_enrol_get_users_courses&userid='+config.moodle.userId)
+    return fetch(moodleUrl + '&wsfunction=core_enrol_get_users_courses&userid='+config.moodle.userId)
 	    .then(res => res.json())
     .catch((error) => {
         loggerFile.error('Moodle API request failed', error);

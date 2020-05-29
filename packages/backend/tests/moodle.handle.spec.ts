@@ -9,6 +9,7 @@ import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
 import { Reminder } from '../src/controllers/moodle/schemas/reminder.schema';
 
 jest.mock('../src/configuration/discord.ts');
+jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/controllers/discord/index.ts');
 jest.mock('../src/controllers/moodle/fetch.ts');
 
@@ -37,7 +38,7 @@ describe('moodle/handle.ts handleAssignments', () => {
             new AssignmentMessage(),
             {
                 "course": "C2",
-                "dueDate": "Thu Jan 01 1970 01:00:00 GMT+0100 (GMT+01:00)",
+                "dueDate": "Donnerstag, 1. Januar 1970, 01:00",
                 "title": "As2",
             }
         ]

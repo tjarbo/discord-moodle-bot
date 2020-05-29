@@ -15,6 +15,15 @@ import { Reminder } from './schemas/reminder.schema';
  */
 export async function handleAssignments(courses: ICourse[], lastFetch: number): Promise<void> {
     
+    const dateOptions = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+    };
+
     for (const course of courses) {
         for (const assignment of course.assignments) {
             const coursename = config.moodle.useCourseShortname ? course.shortname : course.fullname;
@@ -24,7 +33,7 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
                 const options: AssignmentMessageOptions = {
                     course: coursename,
                     title: assignment.name,
-                    dueDate: new Date(assignment.duedate * 1000).toString()
+                    dueDate: new Date(assignment.duedate * 1000).toLocaleString('de-DE', dateOptions)
                 }
 
                 await publish(new AssignmentMessage(), options);
