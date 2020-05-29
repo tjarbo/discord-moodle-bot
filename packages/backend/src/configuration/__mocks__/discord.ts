@@ -3,5 +3,10 @@ export const client = {
     cache: {
       get: jest.fn()
     }
+  },
+  channels: {
+    cache: {
+      get: jest.fn()
+    }
   }
 };
