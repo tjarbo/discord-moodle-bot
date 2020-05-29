@@ -13,12 +13,9 @@ import { ICourseDetails } from './interfaces/coursedetails.interface';
  * @returns {Promise<ICourse[]>} A Promise of an array of Courses containing the Assignments
  */
 export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
-    return await fetch(moodleUrl + '&wsfunction=mod_assign_get_assignments')
+    return fetch(moodleUrl + '&wsfunction=mod_assign_get_assignments')
         .then(res => res.json())
-        .then(json => json.courses)
-    .catch((error) => {
-        loggerFile.error('Moodle API request failed', error);
-    });
+        .then(json => json.courses);
 }
 
 /**
@@ -29,12 +26,9 @@ export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
  * @returns {Promise<IRessource[]>} A Promise of an array of Ressources
  */
 export async function fetchRessources(moodleUrl: string): Promise<IRessource[]> {
-    return await fetch(moodleUrl + '&wsfunction=mod_resource_get_resources_by_courses')
+    return fetch(moodleUrl + '&wsfunction=mod_resource_get_resources_by_courses')
       .then(res => res.json())
-      .then(json => json.resources)
-    .catch((error) => {
-        loggerFile.error('Moodle API request failed', error);
-    });
+      .then(json => json.resources);
 }
 
 /**
