@@ -17,7 +17,8 @@ export const config = {
     port: 4040,
     moodle: {
         baseURL: 'https://moodle.example.com',
-        token:   'MOODLETOKEN123',
+        reminderTimeLeft: 86400,
+        token: 'MOODLETOKEN123',
         userId: 123456
     },
   };
