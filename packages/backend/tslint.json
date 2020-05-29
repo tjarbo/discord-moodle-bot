@@ -21,5 +21,10 @@
     "no-console": false,
     "eofline": true
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": [
+        "tests/*"
+    ]
+  }
 }

@@ -19,8 +19,9 @@ The backend will fail, if wrong environments variables are provided. If no .env 
 ```
 ADMIN_ID=00000...000
 ADMIN_NAME=usernname#00000
+DISCORD_CHANNEL=00000...000
 DISCORD_TOKEN=XXXXXX....XXX
-JWT_SECRET=ChooseTheSecreteWisely
+JWT_SECRET=ChooseTheSecretWisely
 JWT_EXPIRESIN=1h
 MONGO_HOST=mongodb://localhost:27017/fmdb
 MONGOOSE_DEBUG=true
