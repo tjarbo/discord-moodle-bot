@@ -18,6 +18,7 @@ describe('moodle/handle.ts handleAssignments', () => {
     let spyDiscordPublish: jest.SpyInstance;
     let spyReminderSave: jest.SpyInstance;
     let mockCourses: ICourse[];
+    let dateOptions: any;
 
     beforeEach(() => {
         spyDiscordPublish = jest.spyOn(discord, 'publish');
@@ -26,6 +27,7 @@ describe('moodle/handle.ts handleAssignments', () => {
             { fullname: "Course01", shortname: "C1", assignments: [{ id: 0, name: "As1", duedate: 0, timemodified: 999 }] },
             { fullname: "Course02", shortname: "C2", assignments: [{ id: 1, name: "As2", duedate: 0, timemodified: 1001 }] }
         ] as ICourse[];
+        dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     });
 
     afterEach(() => {
@@ -38,7 +40,7 @@ describe('moodle/handle.ts handleAssignments', () => {
             new AssignmentMessage(),
             {
                 "course": "C2",
-                "dueDate": "Donnerstag, 1. Januar 1970, 01:00",
+                "dueDate": new Date(0).toLocaleString('de-DE', dateOptions),
                 "title": "As2",
             }
         ]
