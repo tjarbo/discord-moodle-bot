@@ -25,7 +25,6 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
 
   const interval = config.moodle.fetchInterval;
   setInterval(() => fetchAndNotify(), interval);
-  // fetchAndNotify();
 }).catch((error) => {
   loggerFile.error('Mongoose NOT Connected', error);
 });

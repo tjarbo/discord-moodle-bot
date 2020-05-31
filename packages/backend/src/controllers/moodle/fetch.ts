@@ -15,10 +15,7 @@ import { ICourseDetails } from './interfaces/coursedetails.interface';
 export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
     return fetch(moodleUrl + '&wsfunction=mod_assign_get_assignments')
         .then(res => res.json())
-        .then(json => json.courses)
-    .catch((error) => {
-        loggerFile.error('Moodle API request failed', error);
-    });
+        .then(json => json.courses);
 }
 
 /**
@@ -31,10 +28,7 @@ export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
 export async function fetchRessources(moodleUrl: string): Promise<IRessource[]> {
     return fetch(moodleUrl + '&wsfunction=mod_resource_get_resources_by_courses')
       .then(res => res.json())
-      .then(json => json.resources)
-    .catch((error) => {
-        loggerFile.error('Moodle API request failed', error);
-    });
+      .then(json => json.resources);
 }
 
 /**
@@ -46,8 +40,5 @@ export async function fetchRessources(moodleUrl: string): Promise<IRessource[]> 
  */
 export async function fetchEnrolledCourses(moodleUrl: string): Promise<ICourseDetails[]> {
     return fetch(moodleUrl + '&wsfunction=core_enrol_get_users_courses&userid='+config.moodle.userId)
-	    .then(res => res.json())
-    .catch((error) => {
-        loggerFile.error('Moodle API request failed', error);
-    });
+	    .then(res => res.json());
 }
