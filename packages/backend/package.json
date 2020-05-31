@@ -37,8 +37,6 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.10.0",
-    "@babel/preset-typescript": "^7.9.0",
     "@types/compression": "^1.7.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.6",
