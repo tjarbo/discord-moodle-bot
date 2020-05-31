@@ -32,7 +32,19 @@ const envVarsSchema = object({
   ADMIN_NAME: string().required().regex(/[a-z]+#[0-9]+/)
   .description('Discord username#0000 of the admin'),
   JWT_SECRET: string().required(),
-  JWT_EXPIRESIN: string().required()
+  JWT_EXPIRESIN: string().required(),
+  MOODLE_BASE_URL: string().required()
+  .description('URL of your Moodle instance, eg. https://moodle.domain.me'),
+  MOODLE_FETCH_INTERVAL: number().required()
+  .description('Interval to look for updates on moodle (in ms)'),
+  MOODLE_REMINDER_TIME_LEFT: number().required()
+  .description('Send notification if deadline is within given time (in seconds)'),
+  MOODLE_TOKEN: string().required()
+  .description('Token to communicate with Moodle-Webservice API'),
+  MOODLE_USE_COURSE_SHORTNAME: boolean().default(true)
+  .description('Whether to use short- or fullname of the courses in the discord message'),
+  MOODLE_USERID: number().required()
+  .description('Moodle user Id required to fetch course details'),
 }).unknown()
   .required();
 
@@ -57,4 +69,12 @@ export const config = {
   },
   mongooseDebug: envVars.MONGOOSE_DEBUG,
   port: envVars.SERVER_PORT,
+  moodle: {
+    baseURL: envVars.MOODLE_BASE_URL,
+    fetchInterval: envVars.MOODLE_FETCH_INTERVAL,
+    reminderTimeLeft: envVars.MOODLE_REMINDER_TIME_LEFT,
+    token:   envVars.MOODLE_TOKEN,
+    useCourseShortname: envVars.MOODLE_USE_COURSE_SHORTNAME,
+    userId:  envVars.MOODLE_USERID,
+  },
 };
