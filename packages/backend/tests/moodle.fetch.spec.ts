@@ -12,9 +12,6 @@ const mockFetch = (res: any) =>
         json: () => res,
     }));
 
-const mockFailedFetch = () =>
-    mocked(fetch).mockImplementationOnce(() => Promise.reject());
-
 describe('fetchAssignments', () => {
     let spyLogger: jest.SpyInstance;
 
@@ -35,15 +32,6 @@ describe('fetchAssignments', () => {
     it('should return an array of all courses containing the assignments provided by the moodle API', async () => {
         mockFetch({ courses: [] });
         expect(await moodle.fetchAssignments('')).toStrictEqual([]);
-    });
-
-    it('should throw an error if the request fails', async () => {
-        mockFailedFetch();
-        try {
-            await moodle.fetchAssignments('');
-        } catch {
-            expect('Failed').toBe('Failed');
-        }
     });
 });
 
@@ -68,15 +56,6 @@ describe('fetchRessources', () => {
         mockFetch({ resources: [] });
         expect(await moodle.fetchRessources('')).toStrictEqual([]);
     });
-
-    it('should throw an error if the request fails', async () => {
-        mockFailedFetch();
-        try {
-            await moodle.fetchRessources('');
-        } catch {
-            expect('Failed').toBe('Failed');
-        }
-    });
 });
 
 describe('fetchEnrolledCourses', () => {
@@ -99,14 +78,5 @@ describe('fetchEnrolledCourses', () => {
     it('should return an array of all ressources provided by the moodle API', async () => {
         mockFetch([]);
         expect(await moodle.fetchEnrolledCourses('')).toStrictEqual([]);
-    });
-
-    it('should log error if the request fails', async () => {
-        mockFailedFetch();
-        try {
-            await moodle.fetchEnrolledCourses('');
-        } catch {
-            expect('Failed').toBe('Failed');
-        }
     });
 });
