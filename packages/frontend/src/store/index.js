@@ -21,6 +21,7 @@ export default new Vuex.Store({
   state: {
     auth: StoreUtil.state(token || null),
     result: StoreUtil.state(),
+    administartors:StoreUtil.state(),
   },
   mutations: {
     SET_AUTH(state, payload) {
@@ -31,6 +32,9 @@ export default new Vuex.Store({
       state.result = StoreUtil.updateState(state.result, payload);
     },
 
+    SET_ADMINISTRATORS(state, payload) {
+      state.administartors = StoreUtil.updateState(state.administartors, payload);
+    },
   },
   actions: {
 

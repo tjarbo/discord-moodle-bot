@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Login from '../views/Login.vue';
 import Dashboard from '../views/Dashboard.vue';
 import store from '../store';
+import addAdmin from '../components/inputs.vue';
 
 Vue.use(VueRouter);
 
@@ -19,6 +20,11 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
+  },
+  {
+    path: '/AddAdmin',
+    mame: 'AddAdmin',
+    component: addAdmin,
   },
 ];
 
