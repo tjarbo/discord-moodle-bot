@@ -18,7 +18,7 @@ describe('moodle/handle.ts handleAssignments', () => {
     let spyDiscordPublish: jest.SpyInstance;
     let spyReminderSave: jest.SpyInstance;
     let mockCourses: ICourse[];
-    let dateOptions: any;
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 
     beforeEach(() => {
         spyDiscordPublish = jest.spyOn(discord, 'publish');
@@ -27,7 +27,6 @@ describe('moodle/handle.ts handleAssignments', () => {
             { fullname: "Course01", shortname: "C1", assignments: [{ id: 0, name: "As1", duedate: 0, timemodified: 999 }] },
             { fullname: "Course02", shortname: "C2", assignments: [{ id: 1, name: "As2", duedate: 0, timemodified: 1001 }] }
         ] as ICourse[];
-        dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
     });
 
     afterEach(() => {
@@ -35,7 +34,7 @@ describe('moodle/handle.ts handleAssignments', () => {
     });
 
     it('should only print assignments newer than the last fetch timestamp', async () => {
-        // expected are the Course with course.assignments[0].timemodified > 1000
+        // expected are the Courses with course.assignments[0].timemodified > 1000
         const expectedParameters = [
             new AssignmentMessage(),
             {

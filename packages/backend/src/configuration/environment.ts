@@ -34,9 +34,9 @@ const envVarsSchema = object({
   JWT_SECRET: string().required(),
   JWT_EXPIRESIN: string().required(),
   MOODLE_BASE_URL: string().required()
-  .description('Base URL for Moodle, eg. https://moodle.domain.me'),
+  .description('URL of your Moodle instance, eg. https://moodle.domain.me'),
   MOODLE_FETCH_INTERVAL: number().required()
-  .description('Interval in which moodle-fetch should be executed (in ms)'),
+  .description('Interval to look for updates on moodle (in ms)'),
   MOODLE_REMINDER_TIME_LEFT: number().required()
   .description('Send notification if deadline is within given time (in seconds)'),
   MOODLE_TOKEN: string().required()

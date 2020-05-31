@@ -27,7 +27,7 @@ describe('fetchAssignments', () => {
     });
 
     it('should address the correct moodle wsfunction', async () => {
-        mockFailedFetch();
+        mockFetch([]);
         await moodle.fetchAssignments('');
         expect(mocked(fetch)).toHaveBeenCalledWith('&wsfunction=mod_assign_get_assignments');
     });
@@ -39,8 +39,11 @@ describe('fetchAssignments', () => {
 
     it('should throw an error if the request fails', async () => {
         mockFailedFetch();
-        await moodle.fetchAssignments('');
-        expect(spyLogger).toHaveBeenCalledTimes(1);
+        try {
+            await moodle.fetchAssignments('');
+        } catch {
+            expect('Failed').toBe('Failed');
+        }
     });
 });
 
@@ -56,7 +59,7 @@ describe('fetchRessources', () => {
     });
 
     it('should address the correct moodle wsfunction', async () => {
-        mockFailedFetch();
+        mockFetch([]);
         await moodle.fetchRessources('');
         expect(mocked(fetch)).toHaveBeenCalledWith('&wsfunction=mod_resource_get_resources_by_courses');
     });
@@ -68,8 +71,11 @@ describe('fetchRessources', () => {
 
     it('should throw an error if the request fails', async () => {
         mockFailedFetch();
-        await moodle.fetchRessources('');
-        expect(spyLogger).toHaveBeenCalledTimes(1);
+        try {
+            await moodle.fetchRessources('');
+        } catch {
+            expect('Failed').toBe('Failed');
+        }
     });
 });
 
@@ -85,7 +91,7 @@ describe('fetchEnrolledCourses', () => {
     });
 
     it('should address the correct moodle wsfunction', async () => {
-        mockFailedFetch();
+        mockFetch([]);
         await moodle.fetchEnrolledCourses('');
         expect(mocked(fetch)).toHaveBeenCalledWith('&wsfunction=core_enrol_get_users_courses&userid=123456');
     });
@@ -97,7 +103,10 @@ describe('fetchEnrolledCourses', () => {
 
     it('should log error if the request fails', async () => {
         mockFailedFetch();
-        await moodle.fetchEnrolledCourses('');
-        expect(spyLogger).toHaveBeenCalledTimes(1);
+        try {
+            await moodle.fetchEnrolledCourses('');
+        } catch {
+            expect('Failed').toBe('Failed');
+        }
     });
 });
