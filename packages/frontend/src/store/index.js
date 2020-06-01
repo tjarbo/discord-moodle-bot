@@ -27,6 +27,26 @@ export default new Vuex.Store({
     },
   },
   actions: {
+
+    verifyToken(context) {
+      if (!context.getters.isLoggedIn) return Promise.resolve();
+
+      context.commit('SET_AUTH');
+      return new Promise((resolve, reject) => {
+        api.post('/verify')
+          .then(() => {
+            context.commit('SET_AUTH', null);
+            resolve();
+          })
+          .catch((err) => {
+            api.defaults.headers.common.Authorization = '';
+            localStorage.removeItem('token');
+            context.commit('SET_AUTH', err);
+            reject();
+          });
+      });
+    },
+
     requestToken(context, username) {
       context.commit('SET_AUTH');
 

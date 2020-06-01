@@ -113,8 +113,8 @@ export async function authLoginRequest(req: Request, res: Response, next: NextFu
      if (!user) throw new ApiError(404, `User ${authRequest.value.username} not found`);
 
     // 2. find token in the datase and compare the deposited discord user id
-    const token = await AuthToken.findOneAndDelete({ key: authRequest.value.token });
-    if (!token || user.userId !== token.userId) throw new ApiError(401,  'Invalid token!');
+    const token = await AuthToken.findOneAndDelete({ key: authRequest.value.token, userId: user.userId });
+    if (!token) throw new ApiError(401,  'Invalid token!');
 
     res.status(200).json({ 'accesstoken': generateJWToken(user) });
 
@@ -122,6 +122,14 @@ export async function authLoginRequest(req: Request, res: Response, next: NextFu
     loggerFile.error(err.message);
     next(err);
   }
+}
+
+export function authVerify(req: Request, res: Response) {
+  res.json({
+    status: 'verify',
+    statusCode: 200,
+    message: 'Valid token!'
+  });
 }
 
 export const isAuth = expressjwt({
