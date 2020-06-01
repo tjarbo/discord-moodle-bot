@@ -3,9 +3,9 @@ export default class StoreUtil {
    * init the state.
    * @return {Object} default state
    */
-  static state() {
+  static state(data = null) {
     return {
-      data: null,
+      data,
       status: {
         pending: false,
         success: false,
@@ -20,10 +20,10 @@ export default class StoreUtil {
    * @returns {Object} state after update
    */
 
-  static updateState(state, data = null) {
+  static updateState(state, data = undefined) {
     if (!state) throw new Error('state object is missing');
 
-    if (data === null) {
+    if (data === undefined) {
       // PENDING
       return this._mutationPending({ ...state });
     }
