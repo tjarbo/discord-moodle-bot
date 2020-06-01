@@ -109,6 +109,18 @@ export default new Vuex.Store({
       api.defaults.headers.common.Authorization = '';
       localStorage.removeItem('token');
     },
+    
+    // addAdministrator(context, administratorObject){
+    // context.commit('SET_ADMINISTRATORS');
+    // axios.post(`${URL}/settings/administrators`, administratorObject)
+    // .then((data) => {
+    // TODO: Date aufarbeiten und speichern
+    // Speichern: context.commit('SET_ADMINISTRATORS', data);
+    // })
+    // .catch((err) => {
+    // context.commit('SET_ADMINISTRATORS', err);
+    // })
+    // }
 
     getCourseList() {
       return new Promise((resolve, reject) => {

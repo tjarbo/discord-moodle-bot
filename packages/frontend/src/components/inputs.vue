@@ -6,7 +6,8 @@
       <label>Username: </label>
       <input type="text" v-model="userName" required/><br><br>
       <lable>User-ID: </lable>
-      <input type="text" v-model="userId" required/>
+      <input type="text" v-model="userId" required/><br><br>
+      <button type="button" id="button" v-on:click="onPress">Add Admin</button>
     </form>
 
     <br>
@@ -21,11 +22,23 @@
 <script>
 export default {
   name: 'addAdmin',
-  data() {
-    return {
-      userName: '',
-      userId: '',
-    };
+
+  methods: {
+    onPress(event) {
+      event.preventDefault();
+
+      const administrator = {
+        userId: this.userId,
+        userName: this.userName,
+      };
+
+      this.$store.dispatch('addAdministrator', administrator);
+
+      return {
+        userName: '',
+        userId: '',
+      };
+    },
   },
 };
 </script>
