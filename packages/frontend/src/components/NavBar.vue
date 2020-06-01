@@ -1,8 +1,6 @@
 <template>
   <div id="navbar">
-    <button type="button" id="button" v-on:click="onClick">LOG OUT</button>
-
-
+    <button type="button" id="buttonLogOut" v-on:click="onClick">LOG-OUT</button>
   </div>
 </template>
 
@@ -16,3 +14,17 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+  #buttonLogOut{
+    background-color: #e2001a;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+
+</style>
