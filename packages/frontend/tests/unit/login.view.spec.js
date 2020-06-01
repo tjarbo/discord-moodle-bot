@@ -1,13 +1,29 @@
 import { expect } from 'chai';
-import { mount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
+import Vuex from 'vuex';
 import Login from '@/views/Login.vue';
+
+const localVue = createLocalVue();
+localVue.use(Vuex);
 
 describe('Login.view', () => {
   let wrapper = null;
+  let getters;
+  let store;
 
   beforeEach(() => {
-    // runs before each test in this block
-    wrapper = mount(Login);
+    getters = {
+      authGetError: () => null,
+      authGetStatus: () => ({
+        fail: false,
+      }),
+    };
+
+    store = new Vuex.Store({
+      getters,
+    });
+
+    wrapper = mount(Login, { store, localVue });
   });
 
   it('renders a form', () => {
