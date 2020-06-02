@@ -231,11 +231,11 @@ describe('auth.js authLoginRequest', () => {
     expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
   });
 
-  it('should log error if token is unknown', async () => {
+  it('should log error if token is unknown cause of filter options', async () => {
     mockRequest.body.username = mockUser.userName;
     mockRequest.body.token = mockToken.key;
     mockingoose(User).toReturn(mockUser, 'findOne');
-    mockingoose(AuthToken).toReturn(null, 'findOne');
+    mockingoose(AuthToken).toReturn(null, 'findOneAndDelete');
 
     await authLoginRequest(mockRequest, mockResponse, mockNext);
 
@@ -247,29 +247,6 @@ describe('auth.js authLoginRequest', () => {
     // no successfull response
     expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
     expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
-  });
-
-  it('should log error if token is wrong', async () => {
-    mockRequest.body.username = mockUser.userName;
-    mockRequest.body.token = '123123';
-
-    // change mockToken for this test
-    mockToken.userId = '8912381723';
-
-    mockingoose(User).toReturn(mockUser, 'findOne');
-    mockingoose(AuthToken).toReturn(mockToken, 'findOne');
-
-    await authLoginRequest(mockRequest, mockResponse, mockNext);
-
-    expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Invalid token!`));
-    expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe('Invalid token!');
-
-    // no successfull response
-    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
-    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
-
   });
 
   it('should response with jwt if everything is fine', async () => {
@@ -277,7 +254,7 @@ describe('auth.js authLoginRequest', () => {
     mockRequest.body.token = mockToken.key;
 
     mockingoose(User).toReturn(mockUser, 'findOne');
-    mockingoose(AuthToken).toReturn(mockToken, 'findOne');
+    mockingoose(AuthToken).toReturn(mockToken, 'findOneAndDelete');
 
     await authLoginRequest(mockRequest, mockResponse, mockNext);
 
