@@ -1,6 +1,6 @@
 // mock relevant imports
 import { getTokenFromHeader, authLoginRequest, authTokenRequest } from '../src/controllers/authentication/auth';
-import { User } from '../src/controllers/user/user.schema';
+import { Administrator } from '../src/controllers/administrator/administrator.schema';
 import { Request, Response } from 'express';
 import mockingoose from 'mockingoose';
 import { loggerFile } from '../src/configuration/logger';
@@ -88,7 +88,7 @@ describe('auth.js authTokenRequest', () => {
 
   it('should log error if unkown user is provided', async () => {
     mockRequest.body.username = 'testuser2#123123';
-    mockingoose(User).toReturn(null, 'findOne');
+    mockingoose(Administrator).toReturn(null, 'findOne');
 
     await authTokenRequest(mockRequest, mockResponse, mockNext);
 
@@ -102,7 +102,7 @@ describe('auth.js authTokenRequest', () => {
     const testError = new Error('Error!');
 
     mockRequest.body.username = mockUser.userName;
-    mockingoose(User).toReturn(mockUser, 'findOne');
+    mockingoose(Administrator).toReturn(mockUser, 'findOne');
     mockingoose(AuthToken).toReturn(testError, 'save');
 
     await authTokenRequest(mockRequest, mockResponse, mockNext);
@@ -115,7 +115,7 @@ describe('auth.js authTokenRequest', () => {
 
   it('should send token to user if everything is fine', async () => {
     mockRequest.body.username = mockUser.userName;
-    mockingoose(User).toReturn(mockUser, 'findOne');
+    mockingoose(Administrator).toReturn(mockUser, 'findOne');
     mockingoose(AuthToken).toReturn(mockToken, 'save');
     const expectedParameters = [
       mockUser.userId,
@@ -217,7 +217,7 @@ describe('auth.js authLoginRequest', () => {
   it('should log error if unkown user is provided', async () => {
     mockRequest.body.username = 'testuser2#123123';
     mockRequest.body.token = mockToken.key;
-    mockingoose(User).toReturn(null, 'findOne');
+    mockingoose(Administrator).toReturn(null, 'findOne');
 
     await authLoginRequest(mockRequest, mockResponse, mockNext);
 
@@ -234,7 +234,7 @@ describe('auth.js authLoginRequest', () => {
   it('should log error if token is unknown cause of filter options', async () => {
     mockRequest.body.username = mockUser.userName;
     mockRequest.body.token = mockToken.key;
-    mockingoose(User).toReturn(mockUser, 'findOne');
+    mockingoose(Administrator).toReturn(mockUser, 'findOne');
     mockingoose(AuthToken).toReturn(null, 'findOneAndDelete');
 
     await authLoginRequest(mockRequest, mockResponse, mockNext);
@@ -253,7 +253,7 @@ describe('auth.js authLoginRequest', () => {
     mockRequest.body.username = mockUser.userName;
     mockRequest.body.token = mockToken.key;
 
-    mockingoose(User).toReturn(mockUser, 'findOne');
+    mockingoose(Administrator).toReturn(mockUser, 'findOne');
     mockingoose(AuthToken).toReturn(mockToken, 'findOneAndDelete');
 
     await authLoginRequest(mockRequest, mockResponse, mockNext);

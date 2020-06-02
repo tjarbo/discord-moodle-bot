@@ -4,13 +4,13 @@ import { config } from './src/configuration/environment';
 import { app } from './src/configuration/express';
 import { loggerFile } from './src/configuration/logger';
 import { getRefreshRate } from './src/controllers/refreshRate/refreshRate';
-import { User } from './src/controllers/user/user.schema';
+import { Administrator } from './src/controllers/administrator/administrator.schema';
 import { fetchAndNotify } from './src/controllers/moodle';
 
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(async() => {
   loggerFile.debug('Mongoose connected');
 
-  User.findOne({'userName': config.admin.name}).then((user) => {
+  Administrator.findOne({'userName': config.admin.name}).then((user) => {
     if (user) return; // If env-admin already exits - skip setup
 
     // add env-admin to database
@@ -19,7 +19,7 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
       userId: config.admin.id,
     };
 
-    new User(userObj).save();
+    new Administrator(userObj).save();
   });
 
   const interval = await getRefreshRate();
