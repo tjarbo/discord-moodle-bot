@@ -112,7 +112,7 @@ export async function authLoginRequest(req: Request, res: Response, next: NextFu
      const user = await User.findOne({ 'userName': authRequest.value.username });
      if (!user) throw new ApiError(404, `User ${authRequest.value.username} not found`);
 
-    // 2. find token in the datase and compare the deposited discord user id
+    // 2. find token in the database and compare the deposited discord user id
     const token = await AuthToken.findOneAndDelete({ key: authRequest.value.token, userId: user.userId });
     if (!token) throw new ApiError(401,  'Invalid token!');
 
