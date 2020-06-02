@@ -1,6 +1,7 @@
 <template>
-  <div id="navbar">
-    <button type="button" id="buttonLogOut" v-on:click="onClick">LOG-OUT</button>
+  <div id="navbar" class="navbar">
+    <div id="title">Fancy Moodle Discord Bot</div>
+    <a type="button" id="buttonLogOut" @click="onClick">Abmelden</a>
   </div>
 </template>
 
@@ -10,21 +11,41 @@ export default {
   methods: {
     onClick() {
       this.$store.dispatch('logout');
+      this.$router.push('/');
     },
   },
 };
 </script>
 <style scoped>
 
-  #buttonLogOut{
-    background-color: #e2001a;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-  }
+.navbar {
+  overflow: hidden;
+  background-color: #4e5f67;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#title {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 16px 30px;
+  text-decoration: none;
+}
+
+.navbar a {
+  float: right;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 16px 30px;
+  text-decoration: none;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #e2001a;
+  color: white;
+}
+
 
 </style>

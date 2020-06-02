@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Login from '../views/Login.vue';
 import Dashboard from '../views/Dashboard.vue';
+import store from '../store';
 
 Vue.use(VueRouter);
 
@@ -15,9 +16,9 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
-    meta:{
-      requiresAuth: true
-    }
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 
@@ -26,15 +27,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
-      next()
-      return
-    }
-    next('/')
+  if (!to.matched.some((record) => record.meta.requiresAuth)) next();
+
+  if (store.getters.isLoggedIn) {
+    next();
   } else {
-    next()
+    next('/');
   }
-})
+});
 
 export default router;
