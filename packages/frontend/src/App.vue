@@ -10,7 +10,7 @@ export default {
   mounted() {
     console.log('Hi');
     this.$store.dispatch('verifyToken')
-      .then(() => this.$router.push('/dashbaord'))
+      .then(() => this.$router.push('/dashboard'))
       .catch(() => this.$router.push('/'));
   },
 };
