@@ -117,6 +117,9 @@ paths:
           description: "Invalid request body"
           schema:
             $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema:
         "500":
           description: "Internal server error"
           schema:

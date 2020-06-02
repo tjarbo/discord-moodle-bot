@@ -17,7 +17,7 @@ const administratorRequestSchema = object({
  * @param next NextFunction
  */
 export async function addAdministratorRequest(req: Request, res: Response, next: NextFunction) {
-    
+
     try {
         const administratorRequest = administratorRequestSchema.validate(req.body);
         if (administratorRequest.error) throw new ApiError(400, administratorRequest.error.message);
@@ -40,7 +40,7 @@ export async function addAdministratorRequest(req: Request, res: Response, next:
         const adminObj = {
             userId: administratorRequest.value.userid,
             userName: administratorRequest.value.username,
-        }
+        };
 
         await new Administrator(adminObj).save();
         res.status(201).end();
