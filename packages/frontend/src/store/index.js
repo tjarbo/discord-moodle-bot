@@ -20,11 +20,17 @@ if (token) api.defaults.headers.common.Authorization = `Bearer ${token}`;
 export default new Vuex.Store({
   state: {
     auth: StoreUtil.state(token || null),
+    result: StoreUtil.state(),
   },
   mutations: {
     SET_AUTH(state, payload) {
       state.auth = StoreUtil.updateState(state.auth, payload);
     },
+
+    REFRESH_RATE(state, payload) {
+      state.result = StoreUtil.updateState(state.result, payload);
+    },
+
   },
   actions: {
 
@@ -49,7 +55,6 @@ export default new Vuex.Store({
 
     requestToken(context, username) {
       context.commit('SET_AUTH');
-
       return new Promise((resolve, reject) => {
         api.post('/token', { username })
           .then(() => {
@@ -80,7 +85,22 @@ export default new Vuex.Store({
           });
       });
     },
+
+    refreshRate(context, update) {
+      return new Promise((resolve, reject) => {
+        api.put('/settings/refreshRate', update)
+          .then((response) => {
+            context.commit('REFRESH_RATE', response);
+            resolve(response);
+          })
+          .catch((error) => {
+            context.commit('REFRESH_RATE', error);
+            reject(error);
+          });
+      });
+    },
   },
+
   getters: {
     isLoggedIn: (state) => !!state.auth.data,
     authGetError: (state) => state.auth.status.error.response.data.message,

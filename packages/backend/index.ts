@@ -1,14 +1,13 @@
 import { connect, set } from 'mongoose';
 import * as util from 'util';
-
 import { config } from './src/configuration/environment';
 import { app } from './src/configuration/express';
 import { loggerFile } from './src/configuration/logger';
+import { getRefreshRate } from './src/controllers/refreshRate/refreshRate';
 import { User } from './src/controllers/user/user.schema';
-
 import { fetchAndNotify } from './src/controllers/moodle';
 
-connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(() => {
+connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(async() => {
   loggerFile.debug('Mongoose connected');
 
   User.findOne({'userName': config.admin.name}).then((user) => {
@@ -23,7 +22,7 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
     new User(userObj).save();
   });
 
-  const interval = config.moodle.fetchInterval;
+  const interval = await getRefreshRate();
   setInterval(() => fetchAndNotify(), interval);
 }).catch((error) => {
   loggerFile.error('Mongoose NOT Connected', error);
