@@ -4,7 +4,10 @@
       <fieldset>
         <img class=logo alt="FMDB logo" src="../assets/FMDB_logo.png">
         <legend id="title">Login - Fancy-Moodle-Discord-Bot</legend>
-        <span class="warning-text">{{form.errorText}}</span>
+        <span
+          class="warning-text"
+          v-if="authGetStatus.fail"
+        >{{authGetError}}</span>
         <label for="discordusername">Discord Username</label>
         <input
           id="discordusername"
@@ -24,6 +27,7 @@
         <button
           class="pure-button pure-button-primary"
           type="submit"
+          :disabled="authGetStatus.pending"
         >
         {{form.submitButtonText}}
         </button>
@@ -34,11 +38,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'LoginView',
   data: () => ({
     form: {
-      errorText: '',
       token: '',
       username: '',
       submitButtonText: 'Token anfordern',
@@ -53,16 +58,13 @@ export default {
         this.$store.dispatch('requestToken', this.form.username)
           .then(() => {
             // token request was successful
-            this.form.errorText = '';
-            this.form.submitButtonText = 'Anmelden';
             this.tokenInputDisabled = false;
+            this.form.submitButtonText = 'Anmelden';
           })
-          .catch((err) => {
+          .catch(() => {
             // token request failed
-            console.log(err);
-            this.form.errorText = err;
-            this.form.submitButtonText = 'Token anfordern';
             this.tokenInputDisabled = true;
+            this.form.submitButtonText = 'Token anfordern';
           });
       // login with token in the other case
       } else {
@@ -74,20 +76,18 @@ export default {
         this.$store.dispatch('loginWithToken', credentials)
           .then(() => {
             // login was successful
-            this.form.errorText = '';
-            this.form.submitButtonText = 'Token anfordern';
             this.tokenInputDisabled = true;
             this.$router.push('dashboard');
           })
-          .catch((err) => {
+          .catch(() => {
             // login failed
-            console.log(err);
-            this.form.errorText = err;
-            this.form.submitButtonText = 'Anmelden';
             this.tokenInputDisabled = false;
           });
       }
     },
+  },
+  computed: {
+    ...mapGetters(['authGetError', 'authGetStatus']),
   },
 };
 </script>

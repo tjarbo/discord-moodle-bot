@@ -7,9 +7,19 @@ Vue.use(Vuex);
 
 const URL = 'http://localhost:4040/api';
 
+const api = axios.create({
+  baseURL: URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+const token = localStorage.getItem('token');
+if (token) api.defaults.headers.common.Authorization = `Bearer ${token}`;
+
 export default new Vuex.Store({
   state: {
-    auth: StoreUtil.state(),
+    auth: StoreUtil.state(token || null),
   },
   mutations: {
     SET_AUTH(state, payload) {
@@ -17,17 +27,38 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    requestToken(context, username) {
+
+    verifyToken(context) {
+      if (!context.getters.isLoggedIn) return Promise.resolve();
+
       context.commit('SET_AUTH');
       return new Promise((resolve, reject) => {
-        axios.post(`${URL}/token`, { username })
+        api.post('/verify')
           .then(() => {
-            context.commit('SET_AUTH', undefined);
-            resolve({});
+            context.commit('SET_AUTH', null);
+            resolve();
+          })
+          .catch((err) => {
+            api.defaults.headers.common.Authorization = '';
+            localStorage.removeItem('token');
+            context.commit('SET_AUTH', err);
+            reject();
+          });
+      });
+    },
+
+    requestToken(context, username) {
+      context.commit('SET_AUTH');
+
+      return new Promise((resolve, reject) => {
+        api.post('/token', { username })
+          .then(() => {
+            context.commit('SET_AUTH', null);
+            resolve();
           })
           .catch((err) => {
             context.commit('SET_AUTH', err);
-            reject(err.response.data.message);
+            reject();
           });
       });
     },
@@ -35,22 +66,24 @@ export default new Vuex.Store({
     loginWithToken(context, creds) {
       context.commit('SET_AUTH');
       return new Promise((resolve, reject) => {
-        axios.post(`${URL}/login`, creds)
+        api.post('/login', creds)
           .then((data) => {
-            const jwt = data.data;
+            const jwt = data.data.accesstoken;
+            api.defaults.headers.common.Authorization = `Bearer ${jwt}`;
+            localStorage.setItem('token', jwt);
             context.commit('SET_AUTH', jwt);
-            resolve(jwt);
+            resolve();
           })
           .catch((err) => {
             context.commit('SET_AUTH', err);
-            reject(err.response.data.message);
+            reject();
           });
       });
     },
   },
   getters: {
     isLoggedIn: (state) => !!state.auth.data,
-  },
-  modules: {
+    authGetError: (state) => state.auth.status.error.response.data.message,
+    authGetStatus: (state) => state.auth.status,
   },
 });
