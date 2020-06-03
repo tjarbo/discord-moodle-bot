@@ -4,6 +4,7 @@
       <RefreshRateInput></RefreshRateInput>
       <DiscordChannelInput></DiscordChannelInput>
       <CourseSelection></CourseSelection>
+      <AddAdministrator></AddAdministrator>
     </div>
 </template>
 
@@ -12,11 +13,16 @@ import RefreshRateInput from '../components/RefreshRateInput.vue';
 import NavBar from '../components/NavBar.vue';
 import CourseSelection from '../components/CourseSelection.vue';
 import DiscordChannelInput from '../components/DiscordChannelInput.vue';
+import AddAdministrator from '../components/AddAdministrator.vue';
 
 export default {
   name: 'DashboardView',
-  components: {
-    RefreshRateInput, NavBar, CourseSelection, DiscordChannelInput,
+  components: { 
+    RefreshRateInput,
+    NavBar,
+    AddAdministrator,
+    CourseSelection,
+    DiscordChannelInput,
   },
 };
 </script>
