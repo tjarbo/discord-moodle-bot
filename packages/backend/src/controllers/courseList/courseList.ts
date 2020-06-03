@@ -104,7 +104,7 @@ export async function setCourseRequest(req: Request, res: Response, next: NextFu
         });
 
         // Check if course exists
-        if (!(courseIds.includes(courseId))) throw new ApiError(400, 'Course not found');
+        if (!(courseIds.includes(courseId))) throw new ApiError(404, 'Course not found');
 
         // Method call and exit
         await setCourse(courseId, isActive);
