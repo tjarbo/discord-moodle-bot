@@ -94,7 +94,7 @@ describe('administrator/index.ts addAdministratorRequest',() => {
     expect(mockNext.mock.calls[1][0]).toEqual(new ApiError(400, `Administrator with ID ${mockUser.userid} already exists`));
   });
 
-  it('should save new Administrator and send resonse if everything is fine', async () => { 
+  it('should save new Administrator and send response if everything is fine', async () => { 
     
     mockRequest.body = mockUser;
     mockingoose(Administrator).toReturn(null, 'findOne');
