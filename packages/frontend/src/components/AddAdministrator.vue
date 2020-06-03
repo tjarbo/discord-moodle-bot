@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style scoped>
-#addadministrator {
+#addAdministrator {
   margin: 10px;
 }
 
