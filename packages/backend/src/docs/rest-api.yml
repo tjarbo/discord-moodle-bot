@@ -92,6 +92,38 @@ paths:
           description: "Internal server error"
           schema:
             $ref: "#/definitions/ApiError"
+  /settings/administrator:
+    post:
+      tags:
+      - "Create Admin"
+      summary: "Creates Administrator"
+      description: "Creates a new Administrator"
+      operationId: "addAdministratorRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - username: "body"
+        in: "body"
+        description: "Username and ID of the administrator"
+        required: true
+        schema:
+         $ref: "#/definitions/addAdministratorRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema:
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
 
 securityDefinitions:
   Bearer:
@@ -99,6 +131,13 @@ securityDefinitions:
     name: "Authorization"
     in: header
 definitions:
+  addAdministratorRequest:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      userid:
+        type: "string"
   authTokenRequest:
     type: "object"
     properties:

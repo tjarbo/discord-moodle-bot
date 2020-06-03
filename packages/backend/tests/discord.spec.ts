@@ -2,6 +2,7 @@ import { client } from '../src/configuration/discord';
 import { TokenRequestMessage } from '../src/controllers/discord/templates';
 import { publish, sendTo } from '../src/controllers/discord';
 import { ApiError } from '../src/controllers/error/api.class';
+import * as discordChannel from '../src/controllers/discordChannel/discordChannel';
 
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/configuration/discord.ts');
@@ -35,12 +36,16 @@ describe('discord.ts discordSendTo', () => {
 
 describe('discord.ts discordPublish', () => {
   let spyDiscordClientChannels: jest.SpyInstance;
+  let spyDiscordChannel: jest.SpyInstance;
+
   beforeEach(() => {
     spyDiscordClientChannels = jest.spyOn(client.channels.cache, 'get');
+    spyDiscordChannel = jest.spyOn(discordChannel, 'getDiscordChannel');
   });
 
   it('should throw error if channel is not in cache', async () => {
     spyDiscordClientChannels.mockImplementation(() => null);
+    spyDiscordChannel.mockImplementation(() => null);
     const compareError = new Error(`Channel not in discord cache. Send a small 'test' message to the channel and try again.`);
     try {
       await publish(new TokenRequestMessage(), { key: 123123 });
@@ -52,6 +57,7 @@ describe('discord.ts discordPublish', () => {
   it('should send message if everything is fine', async () => {
     const mockDiscordChannel = { send: jest.fn() };
     spyDiscordClientChannels.mockImplementation(() => mockDiscordChannel);
+    spyDiscordChannel.mockResolvedValue(() => 123123123);
 
     await publish(new TokenRequestMessage(), { key: 123123 });
     expect(mockDiscordChannel.send).toHaveBeenCalled();
