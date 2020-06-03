@@ -99,13 +99,36 @@ export default new Vuex.Store({
           });
       });
     },
-    
+
     logout(context) {
       context.commit('SET_AUTH', null);
       api.defaults.headers.common.Authorization = '';
       localStorage.removeItem('token');
     },
 
+    getCourseList() {
+      return new Promise((resolve, reject) => {
+        api.get('/settings/courses')
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+
+    setCourse(_, update) {
+      return new Promise((resolve, reject) => {
+        api.put(`/settings/courses/${update.courseId}`, { isActive: update.isActive })
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
   },
 
   getters: {
