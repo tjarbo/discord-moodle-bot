@@ -13,8 +13,7 @@ import CourseSelection from '../components/CourseSelection.vue';
 
 export default {
   name: 'DashboardView',
-  components: { RefreshRateInput, NavBar },
-  components: { RefreshRateInput, CourseSelection },
+  components: { RefreshRateInput, NavBar, CourseSelection },
 };
 </script>
 

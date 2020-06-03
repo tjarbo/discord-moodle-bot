@@ -99,13 +99,12 @@ export default new Vuex.Store({
           });
       });
     },
-    
+
     logout(context) {
       context.commit('SET_AUTH', null);
       api.defaults.headers.common.Authorization = '';
       localStorage.removeItem('token');
     },
-
 
     courseList() {
       return new Promise((resolve, reject) => {
