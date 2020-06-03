@@ -28,6 +28,7 @@ export async function getCourseBlacklist():Promise<number[]>{
  */
 export async function getCourseList():Promise<ICourseListSchema[]>{
     const moodleCourses = await fetchEnrolledCourses(getBaseUrl());
+    if (moodleCourses.exception === "moodle_exception") throw new ApiError(500,  'Courses could not be loaded.');
     const result:any[] = [];
     for (const element of moodleCourses){
         const courseName = (config.moodle.useCourseShortname ? element.shortname : element.fullname);
