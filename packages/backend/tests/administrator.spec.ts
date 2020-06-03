@@ -5,6 +5,7 @@ import { Request, Response } from "express";
 import { ApiError } from "../src/controllers/error/api.class";
 import { Administrator } from "../src/controllers/administrator/administrator.schema";
 
+jest.mock('../src/configuration/environment.ts');
 
 describe('administrator/index.ts addAdministratorRequest',() => {
 
