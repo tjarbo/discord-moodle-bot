@@ -10,6 +10,7 @@ localVue.use(Vuex);
 describe('Dashboard.view', () => {
   let wrapper = null;
   let getters;
+  let actions;
   let store;
 
   beforeEach(() => {
@@ -23,8 +24,13 @@ describe('Dashboard.view', () => {
       }),
     };
 
+    actions = {
+      getCourseList: () => [],
+    };
+
     store = new Vuex.Store({
       getters,
+      actions,
     });
 
     wrapper = mount(Dashboard, { store, localVue });

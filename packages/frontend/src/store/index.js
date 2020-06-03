@@ -142,8 +142,8 @@ export default new Vuex.Store({
           })
           .catch((error) => {
             reject(error);
-          })
-        })
+          });
+      });
     },
 
     addAdministrator(context, administratorObject) {

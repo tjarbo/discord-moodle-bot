@@ -17,7 +17,7 @@ import AddAdministrator from '../components/AddAdministrator.vue';
 
 export default {
   name: 'DashboardView',
-  components: { 
+  components: {
     RefreshRateInput,
     NavBar,
     AddAdministrator,

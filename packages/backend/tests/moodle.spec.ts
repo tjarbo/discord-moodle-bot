@@ -6,6 +6,7 @@ import { loggerFile } from '../src/configuration/logger';
 import { LastFetch } from '../src/controllers/moodle/schemas/lastfetch.schema';
 import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
 import { IRessource } from '../src/controllers/moodle/interfaces/ressource.interface';
+import * as courseList from '../src/controllers/courseList/courseList';
 
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/controllers/moodle/fetch.ts');
@@ -57,7 +58,8 @@ describe('fetchAndNotify', () => {
         spyLogger = jest.spyOn(loggerFile, 'error');
         spyFetchAssignments = jest.spyOn(moodleFetch, 'fetchAssignments');
         spyFetchRessources = jest.spyOn(moodleFetch, 'fetchRessources');
-
+        
+        jest.spyOn(courseList, 'getCourseBlacklist').mockResolvedValue([]);
         jest.spyOn(moodleHandle, 'handleAssignments').mockImplementation(jest.fn());
         jest.spyOn(moodleHandle, 'handleRessources').mockImplementation(jest.fn());
     });
