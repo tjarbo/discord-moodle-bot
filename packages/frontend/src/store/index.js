@@ -129,6 +129,18 @@ export default new Vuex.Store({
           });
       });
     },
+
+    setDiscordChannel(_, update) {
+      return new Promise((resolve, reject) => {
+        api.put('/settings/discordChannel', update)
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
   },
 
   getters: {

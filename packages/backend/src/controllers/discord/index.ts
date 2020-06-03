@@ -4,8 +4,8 @@
 import { client } from '../../configuration/discord';
 import { FMDBMessageTemplate } from './message.interface';
 import { TextChannel } from 'discord.js';
-import { config } from '../../configuration/environment';
 import { ApiError } from '../error/api.class';
+import { getDiscordChannel } from '../discordChannel/discordChannel';
 
 /**
  * Send a templated message to a discord user
@@ -33,7 +33,8 @@ export async function sendTo(userId: string, messageTemplate: FMDBMessageTemplat
  * @param {object} value
  */
 export async function publish(messageTemplate: FMDBMessageTemplate, values: object) {
-  const discordChannel = await client.channels.cache.get(config.discordChannel);
+  const channelId = await getDiscordChannel();
+  const discordChannel = await client.channels.cache.get(channelId);
   if (!discordChannel) throw new Error(`Channel not in discord cache. Send a small 'test' message to the channel and try again.`);
 
   const message = messageTemplate.apply(values);
