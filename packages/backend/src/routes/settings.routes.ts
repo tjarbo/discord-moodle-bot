@@ -6,7 +6,7 @@ export const settingsRoutes = Router();
 
 // register routes
 settingsRoutes.get('/refreshRate', getRefreshRateRequest);
-settingsRoutes.put('/reFreshRate', setRefreshRateRequest);
+settingsRoutes.put('/refreshRate', setRefreshRateRequest);
 settingsRoutes.get('/courses', getCourseListRequest);
 settingsRoutes.put('/courses/:id', setCourseRequest);
 
