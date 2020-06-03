@@ -35,6 +35,10 @@ NODE_ENV=development
 SERVER_PORT=4040
 ```
 
+Attention: For coding use get functions first if defined!
+Example: getDiscordChannel() and getRefreshRate() instead of
+config constants discordChannel and fetchInterval.
+
 ### Start development 🛫
 Run `npm run start` at the root of the directory.
 
