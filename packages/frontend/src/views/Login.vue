@@ -1,9 +1,11 @@
 <template>
   <div id="loginview">
+    <div id="navbar" class="navbar">
+      <div id="title">Fancy Moodle Discord Bot</div>
+    </div>
     <form class="pure-form pure-form-stacked" @submit="onSubmit">
       <fieldset>
         <img class=logo alt="FMDB logo" src="../assets/FMDB_logo.png">
-        <legend id="title">Login - Fancy-Moodle-Discord-Bot</legend>
         <span
           class="warning-text"
           v-if="authGetStatus.fail"
@@ -131,4 +133,18 @@ legend {
   text-decoration: underline;
 }
 
+.navbar {
+  overflow: hidden;
+  background-color: #4e5f67;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#title {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 16px 30px;
+  text-decoration: none;
+}
 </style>
