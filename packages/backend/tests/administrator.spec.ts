@@ -84,7 +84,7 @@ describe('administrator/index.ts addAdministratorRequest',() => {
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(400, `Administrator ${mockUser.username} already exists`));
     
     // Same userid
-    mockAdministrator.userName = "testuser#9999"
+    mockAdministrator.userName = 'testuser#9999'
     mockAdministrator.userId = mockUser.userid; 
     mockingoose(Administrator).toReturn(mockAdministrator, 'findOne');
 
