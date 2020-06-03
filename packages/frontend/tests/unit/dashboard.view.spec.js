@@ -41,7 +41,7 @@ describe('Dashboard.view', () => {
   });
 
   it('should render \'Add Administrator\'', () => {
-    expect(wrapper.contains('#addadministrator')).is.true;
+    expect(wrapper.contains('#addAdministrator')).is.true;
   });
 
   it('should render \'set Refreshrate\'', () => {
