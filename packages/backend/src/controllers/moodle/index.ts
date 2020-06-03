@@ -3,6 +3,7 @@ import { loggerFile } from '../../configuration/logger';
 import { LastFetch } from './schemas/lastfetch.schema';
 import { fetchAssignments , fetchRessources } from './fetch';
 import { handleAssignments, handleRessources } from './handle';
+import { getCourseBlacklist } from '../courseList/courseList';
 
 /**
  * Builds a string representing the moodle
@@ -45,8 +46,7 @@ export async function getLastFetch(): Promise<number> {
 export async function fetchAndNotify(): Promise<void> {
     try {
         const moodleUrl = getBaseUrl();
-        // TODO: Replace placeholder with real blacklist
-        const courseBlacklist: number[] = [];
+        const courseBlacklist: number[] = await getCourseBlacklist();
 
         const lastFetch = await getLastFetch();
         if (!lastFetch) throw new Error('Unable to get timestamp of last fetch');
