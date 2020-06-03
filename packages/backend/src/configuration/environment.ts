@@ -51,6 +51,11 @@ const envVarsSchema = object({
 const { error, value: envVars } = envVarsSchema.validate(process.env);
 if (error) throw new Error(`Config validation error: ${error.message}`);
 
+/**
+ * Attention: For coding use get functions first if defined!
+ * Example: getDiscordChannel() and getRefreshRate() instead of
+ * constants discordChannel and fetchInterval.
+ */
 export const config = {
   admin: {
     id: envVars.ADMIN_ID,

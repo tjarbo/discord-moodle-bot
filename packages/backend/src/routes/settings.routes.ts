@@ -13,3 +13,7 @@ settingsRoutes.put('/courses/:id', setCourseRequest);
 
 
 settingsRoutes.use(apiErrorHandler);
+
+settingsRoutes.get('/discordChannel', getDiscordChannelRequest);
+settingsRoutes.put('/discordChannel', setDiscordChannelRequest);
+import { setDiscordChannelRequest, getDiscordChannelRequest } from '../controllers/discordChannel/discordChannel';

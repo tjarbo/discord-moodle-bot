@@ -129,10 +129,22 @@ export default new Vuex.Store({
           });
       });
     },
+    setDiscordChannel(_, update) {
+      return new Promise((resolve, reject) => {
+        api.put('/settings/discordChannel', update)
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
   },
 
   getters: {
     isLoggedIn: (state) => !!state.auth.data,
+    token: (state) => ((state.auth.data) ? state.auth.data[0].accesstoken : 'No token'),
     authGetError: (state) => state.auth.status.error.response.data.message,
     authGetStatus: (state) => state.auth.status,
   },

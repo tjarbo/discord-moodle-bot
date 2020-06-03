@@ -20,3 +20,7 @@ export default {
 <style scoped>
 
 </style>
+
+      <DiscordChannelInput></DiscordChannelInput>
+import DiscordChannelInput from '../components/DiscordChannelInput.vue';
+  components: { DiscordChannelInput },
