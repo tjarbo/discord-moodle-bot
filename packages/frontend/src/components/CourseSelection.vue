@@ -16,7 +16,7 @@
 export default {
   created() {
     // Import course array at loading time
-    this.$store.dispatch('courseList')
+    this.$store.dispatch('getCourseList')
       .then((response) => {
         this.courses = response.data;
       })

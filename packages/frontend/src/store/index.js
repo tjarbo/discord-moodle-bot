@@ -106,7 +106,7 @@ export default new Vuex.Store({
       localStorage.removeItem('token');
     },
 
-    courseList() {
+    getCourseList() {
       return new Promise((resolve, reject) => {
         api.get('/settings/courses')
           .then((response) => {
