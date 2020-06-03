@@ -21,7 +21,7 @@ export default new Vuex.Store({
   state: {
     auth: StoreUtil.state(token || null),
     refreshRate: StoreUtil.state(),
-    administartors: StoreUtil.state(),
+    administrators: StoreUtil.state(),
   },
   mutations: {
     SET_AUTH(state, payload) {
@@ -33,7 +33,7 @@ export default new Vuex.Store({
     },
 
     SET_ADMINISTRATORS(state, payload) {
-      state.administartors = StoreUtil.updateState(state.administartors, payload);
+      state.administartors = StoreUtil.updateState(state.administrators, payload);
     },
   },
   actions: {
@@ -168,7 +168,7 @@ export default new Vuex.Store({
     isLoggedIn: (state) => !!state.auth.data,
     authGetError: (state) => state.auth.status.error.response.data.message,
     authGetStatus: (state) => state.auth.status,
-    administartorsGetError: (state) => state.administartors.status.error.response.data.message,
+    administratorsGetError: (state) => state.administartors.status.error.response.data.message,
     administratorGetStatus: (state) => state.administartors.status,
   },
 });

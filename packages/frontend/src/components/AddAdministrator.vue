@@ -4,7 +4,7 @@
       <h3>Administrator hinzufügen</h3>
         <span
           v-if="administratorGetStatus.fail"
-        >{{administartorsGetError}}</span>
+        >{{administratorsGetError}}</span>
       <fieldset>
         <label for="discord-username">Discord-Name</label>
         <input
@@ -52,7 +52,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['administartorsGetError', 'administratorGetStatus']),
+    ...mapGetters(['administratorsGetError', 'administratorGetStatus']),
   },
 };
 </script>
