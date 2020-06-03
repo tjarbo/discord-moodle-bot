@@ -1,5 +1,5 @@
 <template>
-  <div id="addadministrator">
+  <div id="addAdministrator">
     <form class="pure-form pure-form-stacked" @submit="onSubmit">
       <h3>Administrator hinzufügen</h3>
         <span
