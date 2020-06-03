@@ -1,9 +1,14 @@
 <template>
   <div id="discordChannelInput">
-    <h3>Discord Channel ändern:</h3>
-    <input id="input" v-model="newDiscordChannel" placeholder="Neue Channel-ID" />
-    <button type="button" id="button" v-on:click="onClick">Aktualisieren</button>
-    <label id="label" v-bind:class="{error}" for="button">{{ result }}</label>
+    <form class="pure-form pure-form-stacked">
+      <h3>Discord Channel ändern:</h3>
+      <input id="discordChannelInputField" v-model="newDiscordChannel"
+        placeholder="Neue Channel-ID" />
+      <button type="button" class="pure-button" id="discordChannelInputButton"
+        v-on:click="onClick">Aktualisieren</button>
+      <label id="discordChannelInputLabel" v-bind:class="{error}"
+        for="discordChannelInputButton">{{ result }}</label>
+    </form>
   </div>
 </template>
 
@@ -24,15 +29,15 @@ export default {
           const msg = `Aktualisierung erfolgreich! (Code ${response.status})`;
           this.error = false;
           this.result = msg;
-          // Delete result message after 2 seconds
-          setTimeout(() => { this.result = ''; }, 2000);
+          // Delete result message after 3 seconds
+          setTimeout(() => { this.result = ''; }, 3000);
         })
         .catch((err) => {
           const msg = `Error: ${err.response.data.message} (Code ${err.response.status})`;
           this.error = true;
           this.result = msg;
-          // Delete result message after 2 seconds
-          setTimeout(() => { this.result = ''; }, 2000);
+          // Delete result message after 3 seconds
+          setTimeout(() => { this.result = ''; }, 3000);
         });
     },
   },
@@ -40,9 +45,9 @@ export default {
 </script>
 
 <style scoped>
-#button,
-#label,
-#input {
+#discordChannelInputButton,
+#discordChannelInputLabel,
+#discordChannelInputField {
     margin: 10px;
 }
 .error {

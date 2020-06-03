@@ -1,7 +1,7 @@
 <template>
   <div id="CourseSelection">
     <h3>Kurse mit aktivierten Benachrichtigungen</h3>
-    <form>
+    <form class="pure-form">
         <div v-for="course in courses" :key="course.courseId">
             <input type="checkbox" v-model="course.isActive" v-bind:id="course.name"
             v-bind:value="course.courseId" v-on:change="onChange(course.courseId, $event)">
@@ -46,15 +46,15 @@ export default {
           const msg = `Aktualisierung erfolgreich! (Code ${response.status})`;
           this.error = false;
           this.result = msg;
-          // Delete Message after 2 seconds
-          setTimeout(() => { this.result = ''; }, 2000);
+          // Delete Message after 3 seconds
+          setTimeout(() => { this.result = ''; }, 3000);
         })
         .catch((err) => {
           const msg = `Error: ${err.response.data.message} (Code ${err.response.status})`;
           this.error = true;
           this.result = msg;
-          // Delete Message after 2 seconds
-          setTimeout(() => { this.result = ''; }, 2000);
+          // Delete Message after 3 seconds
+          setTimeout(() => { this.result = ''; }, 3000);
         });
     },
   },

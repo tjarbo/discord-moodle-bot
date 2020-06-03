@@ -1,9 +1,14 @@
 <template>
   <div id="refreshRateInput">
-    <h3>Aktualisierungsintervall ändern:</h3>
-    <input id="input" v-model="newRefreshRate" placeholder="Neues Intervall in ms" />
-    <button type="button" id="button" v-on:click="onClick">Update</button>
-    <label id="label" v-bind:class="{error}" for="button">{{ result }}</label>
+    <form class="pure-form pure-form-stacked">
+      <h3>Aktualisierungsintervall ändern:</h3>
+      <input id="refreshRateInputField" v-model="newRefreshRate"
+        placeholder="Neues Intervall in ms" />
+      <button class="pure-button" type="button" id="refreshRateInputButton"
+        v-on:click="onClick">Update</button>
+      <label id="refreshRateInputLabel" v-bind:class="{error}"
+        for="refreshRateInputButton">{{ result }}</label>
+    </form>
   </div>
 </template>
 
@@ -24,15 +29,15 @@ export default {
           const msg = `Success! (Code ${response.status})`;
           this.error = false;
           this.result = msg;
-          // Delete Message after 2 seconds
-          setTimeout(() => { this.result = ''; }, 2000);
+          // Delete Message after 3 seconds
+          setTimeout(() => { this.result = ''; }, 3000);
         })
         .catch((err) => {
           const msg = `Error: ${err.response.data.message} (Code ${err.response.status})`;
           this.error = true;
           this.result = msg;
-          // Delete Message after 2 seconds
-          setTimeout(() => { this.result = ''; }, 2000);
+          // Delete Message after 3 seconds
+          setTimeout(() => { this.result = ''; }, 3000);
         });
     },
   },
@@ -40,9 +45,9 @@ export default {
 </script>
 
 <style scoped>
-#button,
-#label,
-#input {
+#refreshRateInputButton,
+#refreshRateInputLabel,
+#refreshRateInputField {
     margin: 10px;
 }
 .error {
