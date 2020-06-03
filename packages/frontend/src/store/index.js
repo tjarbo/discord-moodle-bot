@@ -106,11 +106,36 @@ export default new Vuex.Store({
       localStorage.removeItem('token');
     },
 
+
+    courseList() {
+      return new Promise((resolve, reject) => {
+        api.get('/settings/courses')
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+
+    setCourse(_, update) {
+      return new Promise((resolve, reject) => {
+        api.put(`/settings/courses/${update.courseId}`, { isActive: update.isActive })
+          .then((response) => {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
   },
 
   getters: {
     isLoggedIn: (state) => !!state.auth.data,
     authGetError: (state) => state.auth.status.error.response.data.message,
     authGetStatus: (state) => state.auth.status,
+    token: (state) => ((state.auth.data) ? state.auth.data[0].accesstoken : 'No token'),
   },
 });
