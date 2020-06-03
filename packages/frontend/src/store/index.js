@@ -135,6 +135,5 @@ export default new Vuex.Store({
     isLoggedIn: (state) => !!state.auth.data,
     authGetError: (state) => state.auth.status.error.response.data.message,
     authGetStatus: (state) => state.auth.status,
-    token: (state) => ((state.auth.data) ? state.auth.data[0].accesstoken : 'No token'),
   },
 });
