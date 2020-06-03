@@ -4,7 +4,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { object, string, number } from '@hapi/joi';
-import { User, IUserDocument } from '../user/user.schema';
+import { Administrator, IAdministratorDocument } from '../administrator/administrator.schema';
 import { loggerFile } from '../../configuration/logger';
 import { AuthToken } from './token.schema';
 import jwt from 'jsonwebtoken';
@@ -31,7 +31,7 @@ const authLoginRequestSchema = object({
  * @param {IUserDocument} user
  * @returns jwt
  */
-function generateJWToken(user: IUserDocument) {
+function generateJWToken(user: IAdministratorDocument) {
   const data = {
     _id: user._id,
     name: user.name,
@@ -73,7 +73,7 @@ export async function authTokenRequest(req: Request, res: Response, next: NextFu
     if (tokenRequest.error) throw new ApiError(400, tokenRequest.error.message);
 
     // 1. check if user exits at the database
-    const user = await User.findOne({ 'userName': tokenRequest.value.username });
+    const user = await Administrator.findOne({ 'userName': tokenRequest.value.username });
     if (!user) throw new ApiError(404, `User ${tokenRequest.value.username} not found`);
 
     // 2. Generate a new Token and save it in the database
@@ -108,8 +108,8 @@ export async function authLoginRequest(req: Request, res: Response, next: NextFu
     const authRequest = authLoginRequestSchema.validate(req.body);
     if (authRequest.error) throw new ApiError(400, authRequest.error.message);
 
-     // 1. check if user exits at the database
-     const user = await User.findOne({ 'userName': authRequest.value.username });
+     // 1. check if user exists at the database
+     const user = await Administrator.findOne({ 'userName': authRequest.value.username });
      if (!user) throw new ApiError(404, `User ${authRequest.value.username} not found`);
 
     // 2. find token in the database and compare the deposited discord user id

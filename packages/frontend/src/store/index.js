@@ -20,7 +20,8 @@ if (token) api.defaults.headers.common.Authorization = `Bearer ${token}`;
 export default new Vuex.Store({
   state: {
     auth: StoreUtil.state(token || null),
-    result: StoreUtil.state(),
+    refreshRate: StoreUtil.state(),
+    administrators: StoreUtil.state(),
   },
   mutations: {
     SET_AUTH(state, payload) {
@@ -28,9 +29,12 @@ export default new Vuex.Store({
     },
 
     REFRESH_RATE(state, payload) {
-      state.result = StoreUtil.updateState(state.result, payload);
+      state.refreshRate = StoreUtil.updateState(state.refreshRate, payload);
     },
 
+    SET_ADMINISTRATORS(state, payload) {
+      state.administartors = StoreUtil.updateState(state.administrators, payload);
+    },
   },
   actions: {
 
@@ -141,11 +145,30 @@ export default new Vuex.Store({
           });
       });
     },
+
+    addAdministrator(context, administratorObject) {
+      context.commit('SET_ADMINISTRATORS');
+      return new Promise((resolve, reject) => {
+        api.post('/settings/administrator', administratorObject)
+          .then((response) => {
+            console.log(response);
+            context.commit('SET_ADMINISTRATORS', response.data);
+            resolve();
+          })
+          .catch((err) => {
+            console.log(err);
+            context.commit('SET_ADMINISTRATORS', err);
+            reject();
+          });
+      });
+    },
   },
 
   getters: {
     isLoggedIn: (state) => !!state.auth.data,
     authGetError: (state) => state.auth.status.error.response.data.message,
     authGetStatus: (state) => state.auth.status,
+    administratorsGetError: (state) => state.administartors.status.error.response.data.message,
+    administratorGetStatus: (state) => state.administartors.status,
   },
 });
