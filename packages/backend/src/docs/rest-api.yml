@@ -131,7 +131,7 @@ securityDefinitions:
     name: "Authorization"
     in: header
 definitions:
-  addAdminstratorRequest:
+  addAdministratorRequest:
     type: "object"
     properties:
       username:
