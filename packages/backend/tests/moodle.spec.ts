@@ -10,6 +10,8 @@ import { IRessource } from '../src/controllers/moodle/interfaces/ressource.inter
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/controllers/moodle/fetch.ts');
 jest.mock('../src/configuration/discord.ts');
+jest.mock('../src/controllers/discord/index.ts');
+
 
 describe('getBaseUrl', () => {
     it('should build a valid moodle url', () => {

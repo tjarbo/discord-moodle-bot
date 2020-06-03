@@ -6,6 +6,8 @@ import { loggerFile } from '../src/configuration/logger';
 jest.mock('node-fetch', () => jest.fn());
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/configuration/discord.ts');
+jest.mock('../src/controllers/discord/index.ts');
+
 
 const mockFetch = (res: any) =>
     mocked(fetch).mockImplementationOnce((): Promise<any> => Promise.resolve({

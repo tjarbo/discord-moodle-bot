@@ -11,6 +11,8 @@ import { TokenRequestMessage } from '../src/controllers/discord/templates';
 
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/configuration/discord.ts');
+jest.mock('../src/controllers/discord/index.ts');
+
 
 
 describe('auth.ts getTokenFromHeader', () => {
