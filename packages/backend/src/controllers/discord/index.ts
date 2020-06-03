@@ -33,7 +33,8 @@ export async function sendTo(userId: string, messageTemplate: FMDBMessageTemplat
  * @param {object} value
  */
 export async function publish(messageTemplate: FMDBMessageTemplate, values: object) {
-  const discordChannel = await client.channels.cache.get(await getDiscordChannel());
+  const channelId = await getDiscordChannel();
+  const discordChannel = await client.channels.cache.get(channelId);
   if (!discordChannel) throw new Error(`Channel not in discord cache. Send a small 'test' message to the channel and try again.`);
 
   const message = messageTemplate.apply(values);
