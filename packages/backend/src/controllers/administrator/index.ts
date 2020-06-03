@@ -5,7 +5,7 @@ import { loggerFile } from '../../configuration/logger';
 import { Administrator } from './administrator.schema';
 
 const administratorRequestSchema = object({
-    username: string().required().regex(/[a-z]+#[0-9]+/),
+    username: string().required().regex(/[\w\s]+#[0-9]+/),
     userid: string().required(),
 });
 
