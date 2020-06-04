@@ -7,6 +7,7 @@ import { LastFetch } from '../src/controllers/moodle/schemas/lastfetch.schema';
 import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
 import { IRessource } from '../src/controllers/moodle/interfaces/ressource.interface';
 import * as courseList from '../src/controllers/courseList/courseList';
+import { ICourseDetails } from '../src/controllers/moodle/interfaces/coursedetails.interface';
 
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/controllers/moodle/fetch.ts');
@@ -53,6 +54,7 @@ describe('fetchAndNotify', () => {
     let spyLogger: jest.SpyInstance;
     let spyFetchAssignments: jest.SpyInstance;
     let spyFetchRessources: jest.SpyInstance;
+    let spyFetchEnrolledCourses: jest.SpyInstance;
 
     beforeEach(() => {
         spyLogger = jest.spyOn(loggerFile, 'error');
@@ -60,7 +62,14 @@ describe('fetchAndNotify', () => {
         spyFetchRessources = jest.spyOn(moodleFetch, 'fetchRessources');
         
         jest.spyOn(courseList, 'getCourseBlacklist').mockResolvedValue([]);
+        spyFetchEnrolledCourses = jest.spyOn(moodleFetch, 'fetchEnrolledCourses')
+        spyFetchEnrolledCourses.mockResolvedValue([
+            { id: 1, shortname: "Course01", fullname: "Course01" },
+            { id: 2, shortname: "Course02", fullname: "Course02" }
+        ] as ICourseDetails[]);
+
         jest.spyOn(moodleHandle, 'handleAssignments').mockImplementation(jest.fn());
+        jest.spyOn(moodleHandle, 'handleContents').mockImplementation(jest.fn());
         jest.spyOn(moodleHandle, 'handleRessources').mockImplementation(jest.fn());
     });
 
