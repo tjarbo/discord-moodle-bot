@@ -54,7 +54,7 @@ export async function fetchAndNotify(): Promise<void> {
         // get all course IDs and map them to corresponding course names
         const courseDetails = await fetchEnrolledCourses(moodleUrl);
         const courseMap: Map<number, string> = new Map();
-        coursedetails.forEach(course => courseMap.set(course.id, course.shortname));
+        courseDetails.forEach(course => courseMap.set(course.id, course.shortname));
 
         // fetch and handle course contents
         for (const courseId of courseMap.keys()) {
