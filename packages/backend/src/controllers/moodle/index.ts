@@ -58,6 +58,7 @@ export async function fetchAndNotify(): Promise<void> {
 
         // fetch and handle course contents
         for (const courseId of courseMap.keys()) {
+            if (courseBlacklist.includes(courseId)) continue;
             const content = await fetchCourseContents(moodleUrl, courseId);
             handleContents(content, courseMap.get(courseId), lastFetch);
         }
