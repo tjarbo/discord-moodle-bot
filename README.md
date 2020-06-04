@@ -1,6 +1,20 @@
 # 🤖 Fancy-Moodle-Discord-Bot 
 
-The FMDB notifies you on a discord server about new acitivities on the moodle platform.
+![Discord](https://img.shields.io/badge/build%20for-discord-blueviolet)
+![Node CI](https://github.com/tjarbo/discord-moodle-bot/workflows/Node%20CI/badge.svg?branch=master)
+![GitHub issues](https://img.shields.io/github/issues/tjarbo/discord-moodle-bot)
+![GitHub](https://img.shields.io/github/license/tjarbo/discord-moodle-bot)
+
+The FMDB notifies you on a discord server about new activities on the Moodle platform. The current implementation includes:
+
+- Notification of new or changed files 
+- Notification of new assignments
+- Notification of assignments due soon 
+
+## ✈️ Get started
+
+The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](#). 
+> ⚠️ According to the current status, the article could unfortunately not yet be created. 
 
 ## ⚒️ Development
 
@@ -18,7 +32,7 @@ Run `npm i` at the root of the repository.
 The backend will fail, if wrong environments variables are provided. If no .env file is provided, please create `packages/backend/.env` with following content:
 ```
 ADMIN_ID=00000...000
-ADMIN_NAME=usernname#00000
+ADMIN_NAME=username#00000
 DISCORD_CHANNEL=00000...000
 DISCORD_TOKEN=XXXXXX....XXX
 JWT_SECRET=ChooseTheSecretWisely
@@ -51,19 +65,12 @@ Run `npm run start` at the root of the directory.
 * [MongoDB](https://www.mongodb.com/) - The database software
 * [Express](https://expressjs.com/) - The web framework used at the backend
 * [vue.js](https://vuejs.org/) - The web framework used at the frontend
-* [node.js](https://rometools.github.io/rome/) - Framework at the 
+* [node.js](https://rometools.github.io/rome/) - The power of the backend 
 
 ## 🏆 Contributing
 
 Right now, this project is part of a web engineering course. So the development is limited to a few people. After completion of the course, however, every contribution is welcome!
 
-<!--
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
--->
 ## ⚖️ License
 
 This project is licensed under the AGPL-3.0 License - see the [LICENSE.md](LICENSE.md) file for details
