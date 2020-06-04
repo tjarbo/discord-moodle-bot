@@ -65,16 +65,19 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
 function extractContentFiles(contents: any): IContentfile[] {
     // extract files from array
     function extractObject(input:any) {
+        if (Object.keys(input).includes('type') && input.type === 'file') {
+            fileArray.push(input as IContentfile);
+            return;
+        }
         for (const value of Object.values(input)){
-            if (value === 'file') fileArray.push(input as IContentfile);
-            if (value instanceof Object) extractObject(value);
             if (value instanceof Array) extractArray(value);
+            else if (value instanceof Object) extractObject(value);
         }
     }
     function extractArray(input:any){
         for (const element of input){
-            if (element instanceof Object) extractObject(element);
             if (element instanceof Array) extractArray(element);
+            else if (element instanceof Object) extractObject(element);
         }
     }
     const fileArray:IContentfile[] = [];
@@ -92,19 +95,16 @@ function extractContentFiles(contents: any): IContentfile[] {
  */
 export async function handleContents(contents: any, courseName: string, lastFetch: number): Promise<void> {
     const fileArray = extractContentFiles(contents);
-    // this is currently used as a workaround, because for
-    // some reason every file would be published twice
-    const published: string[] = [];
+
     for (const file of fileArray) {
-        if (file.timemodified <= lastFetch || published.includes(file.fileurl)) continue;
+        if (file.timemodified <= lastFetch) continue;
 
         const options: RessourceMessageOptions = {
             course: courseName,
             title: file.filename,
             link: file.fileurl.replace('/webservice', '')
         };
-        published.push(file.fileurl);
-        publish(new RessourceMessage(), options);
+        await publish(new RessourceMessage(), options);
     }
 }
 
