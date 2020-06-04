@@ -40,3 +40,16 @@ export async function fetchEnrolledCourses(moodleUrl: string): Promise<ICourseDe
     const res = await fetch(moodleUrl + '&wsfunction=core_enrol_get_users_courses&userid='+config.moodle.userId);
 	return await res.json();
 }
+
+/**
+ * Fetches all contents of one course from the moodle instance
+ *
+ * ! export only for unit testing (rewire doesn't work :/ )
+ * @param {string} moodleUrl - Moodle Web Service Url
+ * @param {number} courseId - The course to fetch contents from
+ * @returns {Promise<ICourseDetails[]>} A Promise of an array of CourseDetails
+ */
+export async function fetchCourseContents(moodleUrl: string, courseId: number): Promise<ICourseDetails[]> {
+    const res = await fetch(moodleUrl + '&wsfunction=core_course_get_contents&courseid='+courseId);
+	return await res.json();
+}

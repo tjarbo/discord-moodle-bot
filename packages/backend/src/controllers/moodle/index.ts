@@ -1,9 +1,9 @@
 import { config } from '../../configuration/environment';
 import { loggerFile } from '../../configuration/logger';
 import { LastFetch } from './schemas/lastfetch.schema';
-import { fetchAssignments , fetchRessources } from './fetch';
-import { handleAssignments, handleRessources } from './handle';
 import { getCourseBlacklist } from '../courseList/courseList';
+import { fetchAssignments, fetchRessources, fetchEnrolledCourses, fetchCourseContents } from './fetch';
+import { handleAssignments, handleRessources, handleContents } from './handle';
 
 /**
  * Builds a string representing the moodle
@@ -51,6 +51,17 @@ export async function fetchAndNotify(): Promise<void> {
         const lastFetch = await getLastFetch();
         if (!lastFetch) throw new Error('Unable to get timestamp of last fetch');
 
+        // get all course IDs and map them to corresponding course names
+        const coursedetails = await fetchEnrolledCourses(moodleUrl);
+        const courseMap: Map<number, string> = new Map();
+        coursedetails.forEach(course => courseMap.set(course.id, course.shortname));
+
+        // fetch and handle course contents
+        for (const courseId of courseMap.keys()) {
+            const content = await fetchCourseContents(moodleUrl, courseId);
+            handleContents(content, courseMap.get(courseId), lastFetch);
+        }
+
         const courselist = await fetchAssignments(moodleUrl).then(courses =>
             courses.filter(course => !courseBlacklist.includes(course.id)));
 
@@ -58,7 +69,7 @@ export async function fetchAndNotify(): Promise<void> {
             ressources.filter(ressource => !courseBlacklist.includes(ressource.course)));
 
         handleAssignments(courselist, lastFetch);
-        handleRessources(ressourcelist, moodleUrl, lastFetch);
+        handleRessources(ressourcelist, courseMap, lastFetch);
 
     } catch(error) {
         loggerFile.error('Moodle API request failed', error);

@@ -1,10 +1,10 @@
 import { config } from '../../configuration/environment';
-import { fetchEnrolledCourses } from './fetch';
 import { ICourse } from './interfaces/course.interface';
 import { IRessource } from './interfaces/ressource.interface';
 import { publish } from '../discord';
-import { AssignmentMessage, AssignmentReminderMessage, RessourceMessage, AssignmentMessageOptions, AssignmentReminderMessageOptions, RessourceMessageOptions  } from '../discord/templates';
+import { AssignmentMessage, AssignmentMessageOptions, AssignmentReminderMessage, AssignmentReminderMessageOptions, RessourceMessage, RessourceMessageOptions  } from '../discord/templates';
 import { Reminder } from './schemas/reminder.schema';
+import { IContentfile } from './interfaces/contentfile.interface';
 
 /**
  * Filters assignments by timestamp and notifies about changes and upcoming deadline
@@ -57,22 +57,66 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
 }
 
 /**
- * Filters Ressources by timestamp and notifies about changes
+ * Recursively extracts the files of the contents object
+ * 
+ * @param contents - The contents to extract
+ * @returns {IContentfile[]} - The contentfiles
+ */
+function extractContentfiles(contents: any): IContentfile[] {
+    // extract files from array
+    function extractObject(input:any) {
+        for (const value of Object.values(input)){
+            if (value === 'file') fileArray.push(input as IContentfile);
+            if (value instanceof Object) extractObject(value);
+            if (value instanceof Array) extractArray(value);
+        }
+    }
+    function extractArray(input:any){
+        for (const element of input){
+            if (element instanceof Object) extractObject(element);
+            if (element instanceof Array) extractArray(element);
+        }
+    }
+    const fileArray:IContentfile[] = [];
+    extractArray(contents);
+    return fileArray;
+}
+
+/**
+ * Extracts contents, filters them by timestamp and notifies about changes
  *
  * ! export only for unit testing (rewire doesn't work :/ )
  * @param {ICourse[]} courses - The Ressources to filter
- * @param {string} moodleUrl - Url of the moodle instance to fetch coursedetails from
+ * @param {string} courseName - Maps course Ids to course names
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
-export async function handleRessources(ressources: IRessource[], moodleUrl: string, lastFetch: number): Promise<void> {
-    if (ressources.length === 0) { return; }
+export async function handleContents(contents: any, courseName: string, lastFetch: number): Promise<void> {
+    const fileArray = extractContentfiles(contents);
+    // this is currently used as a workaround, because for
+    // some reason every file would be published twice
+    const published: string[] = [];
+    for (const file of fileArray) {
+        if (file.timemodified <= lastFetch || published.includes(file.fileurl)) continue;
 
-    // map course IDs to course names
-    const courses = await fetchEnrolledCourses(moodleUrl);
-    const courseMap: Map<number, string> = new Map();
-    courses.forEach(course => courseMap.set(course.id, course.shortname));
+        const options: RessourceMessageOptions = {
+            course: courseName,
+            title: file.filename,
+            link: file.fileurl.replace('/webservice', '')
+        };
+        published.push(file.fileurl);
+        publish(new RessourceMessage(), options);
+    }
+}
 
-    // publish new files
+/**
+ * Filters Ressources by timestamp and notifies about changes
+ *
+ * ! export only for unit testing (rewire doesn't work :/ )
+ * @param {IRessource[]} ressources - The Ressources to filter
+ * @param courseMap - Maps course Ids to course names
+ * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
+ */
+export async function handleRessources(ressources: IRessource[], courseMap: any, lastFetch: number): Promise<void> {
     for (const ressource of ressources) {
         for (const file of ressource.contentfiles) {
             if (file.timemodified <= lastFetch) continue;
