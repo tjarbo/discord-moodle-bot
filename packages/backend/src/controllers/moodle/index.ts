@@ -69,7 +69,7 @@ export async function fetchAndNotify(): Promise<void> {
         const ressourceList = await fetchRessources(moodleUrl).then(ressources =>
             ressources.filter(ressource => !courseBlacklist.includes(ressource.course)));
 
-        handleAssignments(courselist, lastFetch);
+        handleAssignments(courseList, lastFetch);
         handleRessources(ressourcelist, courseMap, lastFetch);
 
     } catch(error) {
