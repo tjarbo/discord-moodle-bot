@@ -52,7 +52,7 @@ export async function fetchAndNotify(): Promise<void> {
         if (!lastFetch) throw new Error('Unable to get timestamp of last fetch');
 
         // get all course IDs and map them to corresponding course names
-        const coursedetails = await fetchEnrolledCourses(moodleUrl);
+        const courseDetails = await fetchEnrolledCourses(moodleUrl);
         const courseMap: Map<number, string> = new Map();
         coursedetails.forEach(course => courseMap.set(course.id, course.shortname));
 
