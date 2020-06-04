@@ -70,7 +70,7 @@ export async function fetchAndNotify(): Promise<void> {
             ressources.filter(ressource => !courseBlacklist.includes(ressource.course)));
 
         handleAssignments(courseList, lastFetch);
-        handleRessources(ressourcelist, courseMap, lastFetch);
+        handleRessources(ressourceList, courseMap, lastFetch);
 
     } catch(error) {
         loggerFile.error('Moodle API request failed', error);
