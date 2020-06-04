@@ -62,7 +62,7 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
  * @param contents - The contents to extract
  * @returns {IContentfile[]} - The contentfiles
  */
-function extractContentfiles(contents: any): IContentfile[] {
+function extractContentFiles(contents: any): IContentfile[] {
     // extract files from array
     function extractObject(input:any) {
         for (const value of Object.values(input)){
