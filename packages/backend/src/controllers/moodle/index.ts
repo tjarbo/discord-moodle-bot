@@ -66,7 +66,7 @@ export async function fetchAndNotify(): Promise<void> {
         const courselist = await fetchAssignments(moodleUrl).then(courses =>
             courses.filter(course => !courseBlacklist.includes(course.id)));
 
-        const ressourcelist = await fetchRessources(moodleUrl).then(ressources =>
+        const ressourceList = await fetchRessources(moodleUrl).then(ressources =>
             ressources.filter(ressource => !courseBlacklist.includes(ressource.course)));
 
         handleAssignments(courselist, lastFetch);
