@@ -1,6 +1,5 @@
 import fetch from 'node-fetch';
 import { config } from '../../configuration/environment';
-import { loggerFile } from '../../configuration/logger';
 import { ICourse } from './interfaces/course.interface';
 import { IRessource } from './interfaces/ressource.interface';
 import { ICourseDetails } from './interfaces/coursedetails.interface';

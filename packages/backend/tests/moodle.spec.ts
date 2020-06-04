@@ -69,6 +69,7 @@ describe('fetchAndNotify', () => {
         ] as ICourseDetails[]);
 
         jest.spyOn(moodleHandle, 'handleAssignments').mockImplementation(jest.fn());
+        jest.spyOn(moodleHandle, 'handleContents').mockImplementation(jest.fn());
         jest.spyOn(moodleHandle, 'handleRessources').mockImplementation(jest.fn());
     });
 
