@@ -104,7 +104,7 @@ export async function handleContents(contents: any, courseName: string, lastFetc
             title: file.filename,
             link: file.fileurl.replace('/webservice', '')
         };
-        publish(new RessourceMessage(), options);
+        await publish(new RessourceMessage(), options);
     }
 }
 
