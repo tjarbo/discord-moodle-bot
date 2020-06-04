@@ -58,7 +58,7 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
 
 /**
  * Recursively extracts the files of the contents object
- * 
+ *
  * @param contents - The contents to extract
  * @returns {IContentfile[]} - The contentfiles
  */
@@ -113,10 +113,10 @@ export async function handleContents(contents: any, courseName: string, lastFetc
  *
  * ! export only for unit testing (rewire doesn't work :/ )
  * @param {IRessource[]} ressources - The Ressources to filter
- * @param courseMap - Maps course Ids to course names
+ * @param {Map<number, string>} courseMap - Maps course Ids to course names
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
-export async function handleRessources(ressources: IRessource[], courseMap: any, lastFetch: number): Promise<void> {
+export async function handleRessources(ressources: IRessource[], courseMap: Map<number, string>, lastFetch: number): Promise<void> {
     for (const ressource of ressources) {
         for (const file of ressource.contentfiles) {
             if (file.timemodified <= lastFetch) continue;

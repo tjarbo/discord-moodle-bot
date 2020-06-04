@@ -1,8 +1,6 @@
-import * as moodleFetch from '../src/controllers/moodle/fetch';
 import * as discord from '../src/controllers/discord';
 import mockingoose from 'mockingoose';
 import { handleRessources, handleAssignments } from '../src/controllers/moodle/handle';
-import { ICourseDetails } from '../src/controllers/moodle/interfaces/coursedetails.interface';
 import { IRessource } from '../src/controllers/moodle/interfaces/ressource.interface';
 import { RessourceMessage, AssignmentMessage } from '../src/controllers/discord/templates';
 import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
@@ -68,18 +66,12 @@ describe('moodle/handle.ts handleAssignments', () => {
 
 describe('moodle/handle.ts handleRessources', () => {
 
-    let spyFetchEnrolledCourses: jest.SpyInstance;
     let spyDiscordPublish: jest.SpyInstance;
     let mockRessources: IRessource[];
+    const courseMap = new Map().set(1, 'Course01').set(2, 'Course02');
 
     beforeEach(() => {
         spyDiscordPublish = jest.spyOn(discord, 'publish');
-        spyFetchEnrolledCourses = jest.spyOn(moodleFetch, 'fetchEnrolledCourses')
-        spyFetchEnrolledCourses.mockResolvedValue([
-            { id: 1, shortname: "Course01", fullname: "Course01" },
-            { id: 2, shortname: "Course02", fullname: "Course02" }
-        ] as ICourseDetails[]);
-
         mockRessources = [
             { course: 1, contentfiles: [{ timemodified: 999 }] },
             { course: 2, contentfiles: [{ timemodified: 1001, fileurl: 'test/webservice', filename: 'testname' }] }
@@ -100,7 +92,7 @@ describe('moodle/handle.ts handleRessources', () => {
             }
         ]
 
-        await handleRessources(mockRessources, '', 1000);
+        await handleRessources(mockRessources, courseMap, 1000);
         expect(spyDiscordPublish).toBeCalledTimes(1);
         expect(spyDiscordPublish).toBeCalledWith(...expectedParameters)
     });
