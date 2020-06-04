@@ -1,9 +1,9 @@
 import { config } from '../../configuration/environment';
 import { loggerFile } from '../../configuration/logger';
 import { LastFetch } from './schemas/lastfetch.schema';
-import { fetchAssignments , fetchRessources } from './fetch';
-import { handleAssignments, handleRessources } from './handle';
 import { getCourseBlacklist } from '../courseList/courseList';
+import { fetchAssignments, fetchRessources, fetchEnrolledCourses, fetchCourseContents } from './fetch';
+import { handleAssignments, handleRessources, handleContents } from './handle';
 
 /**
  * Builds a string representing the moodle
@@ -51,14 +51,26 @@ export async function fetchAndNotify(): Promise<void> {
         const lastFetch = await getLastFetch();
         if (!lastFetch) throw new Error('Unable to get timestamp of last fetch');
 
-        const courselist = await fetchAssignments(moodleUrl).then(courses =>
+        // get all course IDs and map them to corresponding course names
+        const courseDetails = await fetchEnrolledCourses(moodleUrl);
+        const courseMap: Map<number, string> = new Map();
+        courseDetails.forEach(course => courseMap.set(course.id, course.shortname));
+
+        // fetch and handle course contents
+        for (const courseId of courseMap.keys()) {
+            if (courseBlacklist.includes(courseId)) continue;
+            const content = await fetchCourseContents(moodleUrl, courseId);
+            handleContents(content, courseMap.get(courseId), lastFetch);
+        }
+
+        const courseList = await fetchAssignments(moodleUrl).then(courses =>
             courses.filter(course => !courseBlacklist.includes(course.id)));
 
-        const ressourcelist = await fetchRessources(moodleUrl).then(ressources =>
+        const ressourceList = await fetchRessources(moodleUrl).then(ressources =>
             ressources.filter(ressource => !courseBlacklist.includes(ressource.course)));
 
-        handleAssignments(courselist, lastFetch);
-        handleRessources(ressourcelist, moodleUrl, lastFetch);
+        handleAssignments(courseList, lastFetch);
+        handleRessources(ressourceList, courseMap, lastFetch);
 
     } catch(error) {
         loggerFile.error('Moodle API request failed', error);
