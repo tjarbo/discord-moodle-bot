@@ -91,7 +91,7 @@ function extractContentFiles(contents: any): IContentfile[] {
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
 export async function handleContents(contents: any, courseName: string, lastFetch: number): Promise<void> {
-    const fileArray = extractContentfiles(contents);
+    const fileArray = extractContentFiles(contents);
     // this is currently used as a workaround, because for
     // some reason every file would be published twice
     const published: string[] = [];
