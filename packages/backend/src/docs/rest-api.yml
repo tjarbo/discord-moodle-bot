@@ -95,7 +95,7 @@ paths:
   /settings/administrator:
     post:
       tags:
-      - "Create Admin"
+      - "Administrator"
       summary: "Creates Administrator"
       description: "Creates a new Administrator"
       operationId: "addAdministratorRequest"
@@ -104,7 +104,7 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - username: "body"
+      - name: "body"
         in: "body"
         description: "Username and ID of the administrator"
         required: true
@@ -119,18 +119,251 @@ paths:
             $ref: "#/definitions/ApiError"
         "401":
           description: "Invalid token!"
-          schema:
+          schema: 
+            $ref: "#/definitions/ApiError"
         "500":
           description: "Internal server error"
           schema:
             $ref: "#/definitions/ApiError"
-
+  /settings/refreshRate:
+    get:
+      tags:
+      - "Moodle refresh rate"
+      summary: "Gets moodle pull intervall"
+      description: "Gets the moodle pull intervall from the database"
+      operationId: "getRefreshRateRequest"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/refreshRateRequest"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "503":
+          description: "Service Unavailable"
+          schema: 
+            $ref: "#/definitions/ApiError"
+    post:
+      tags:
+      - "Moodle refresh rate"
+      summary: "Sets moodle pull intervall"
+      description: "Sets the moodle pull intervall on the database"
+      operationId: "setRefreshRateRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "New refresh rate in milliseconds"
+        required: true
+        schema:
+         $ref: "#/definitions/refreshRateRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /settings/discordChannel:
+    get:
+      tags:
+      - "Discord channel id"
+      summary: "Gets discord channel id"
+      description: "Gets the discord channel id from the database"
+      operationId: "getDiscordChannelRequest"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/discordChannelRequest"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "503":
+          description: "Service Unavailable"
+          schema: 
+            $ref: "#/definitions/ApiError"
+    post:
+      tags:
+      - "Discord channel id"
+      summary: "Sets discord channel id"
+      description: "Sets the discord channel id on the database"
+      operationId: "setDiscordChannelRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "New discord channel id"
+        required: true
+        schema:
+         $ref: "#/definitions/discordChannelRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /settings/courses:
+    get:
+      tags:
+      - "Course"
+      summary: "Gets course list"
+      description: "Gets the course list from the database/moodle"
+      operationId: "getCourseListRequest"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/getCourseListRequest"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "404":
+          description: "No courses found"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /settings/courses/{id}:
+    post:
+      tags:
+      - "Course"
+      summary: "Sets single course status"
+      description: "Sets a single course status to active/inactive (for notifications)"
+      operationId: "setCourseRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Course id"
+        required: true
+        type: "number"
+        minimum: 0
+        maximum: 2147483647
+      - name: "body"
+        in: "body"
+        description: "Course active status"
+        required: true
+        schema:
+         $ref: "#/definitions/setCourseRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "404":
+          description: "Course not found"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
 securityDefinitions:
   Bearer:
     type: "apiKey"
     name: "Authorization"
     in: header
 definitions:
+  setCourseRequest:
+    type: "object"
+    properties:
+      isActive:
+        type: "boolean"
+  getCourseListRequest:
+    type: "array"
+    items:
+      properties:
+        courseId:
+         type: "number"
+         example: 5910
+         minimum: 0
+         maximum: 2147483647
+        name:
+          type: "string"
+          example: "Kryptologie"
+        isActive:
+          type: "boolean"
+  discordChannelRequest:
+    type: "object"
+    properties:
+      channelId:
+        type: "string"
+        example: 707590543160639540
+        minLength: 18
+        maxLength: 18
+  refreshRateRequest:
+    type: "object"
+    properties:
+      refreshRate:
+        type: "number"
+        example: 60000
+        minimum: 5000
+        maximum: 2147483647
   addAdministratorRequest:
     type: "object"
     properties:
@@ -152,16 +385,6 @@ definitions:
         type: "number"
     xml:
       name: "Category"
-  ApiResponse:
-    type: "object"
-    properties:
-      status:
-        type: "string"
-      statusCode:
-        type: "integer"
-        format: "int32"
-      data:
-        type: "array"
   ApiError:
     type: "object"
     properties:
