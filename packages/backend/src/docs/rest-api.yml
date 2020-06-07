@@ -198,7 +198,7 @@ paths:
       tags:
       - "Discord channel id"
       summary: "Gets discord channel id"
-      description: "Gets the discord channel id from the database"
+      description: "Returns the discord channel id in which the bot sends the notifications."
       operationId: "getDiscordChannelRequest"
       security:
         - Bearer: []
