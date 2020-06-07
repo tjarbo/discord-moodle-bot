@@ -129,8 +129,8 @@ paths:
     get:
       tags:
       - "Moodle refresh rate"
-      summary: "Gets moodle pull intervall"
-      description: "Gets the moodle pull intervall from the database"
+      summary: "Gets moodle fetch intervall"
+      description: "Gets the moodle fetch intervall from the database"
       operationId: "getRefreshRateRequest"
       produces:
       - "application/json"
@@ -155,11 +155,11 @@ paths:
           description: "Service Unavailable"
           schema: 
             $ref: "#/definitions/ApiError"
-    post:
+    put:
       tags:
       - "Moodle refresh rate"
-      summary: "Sets moodle pull intervall"
-      description: "Sets the moodle pull intervall on the database"
+      summary: "Sets moodle fetch intervall"
+      description: "Sets the moodle fetch intervall on the database"
       operationId: "setRefreshRateRequest"
       consumes:
       - "application/json"
@@ -217,7 +217,7 @@ paths:
           description: "Service Unavailable"
           schema: 
             $ref: "#/definitions/ApiError"
-    post:
+    put:
       tags:
       - "Discord channel id"
       summary: "Sets discord channel id"
@@ -280,7 +280,7 @@ paths:
           schema:
             $ref: "#/definitions/ApiError"
   /settings/courses/{id}:
-    post:
+    put:
       tags:
       - "Course"
       summary: "Sets single course status"
