@@ -99,6 +99,8 @@ paths:
       summary: "Creates Administrator"
       description: "Creates a new Administrator"
       operationId: "addAdministratorRequest"
+      security:
+        - Bearer: []
       consumes:
       - "application/json"
       produces:
@@ -132,6 +134,8 @@ paths:
       summary: "Gets moodle fetch intervall"
       description: "Gets the moodle fetch intervall from the database"
       operationId: "getRefreshRateRequest"
+      security:
+        - Bearer: []
       produces:
       - "application/json"
       responses:
@@ -161,6 +165,8 @@ paths:
       summary: "Sets moodle fetch intervall"
       description: "Sets the moodle fetch intervall on the database"
       operationId: "setRefreshRateRequest"
+      security:
+        - Bearer: []
       consumes:
       - "application/json"
       produces:
@@ -194,6 +200,8 @@ paths:
       summary: "Gets discord channel id"
       description: "Gets the discord channel id from the database"
       operationId: "getDiscordChannelRequest"
+      security:
+        - Bearer: []
       produces:
       - "application/json"
       responses:
@@ -223,6 +231,8 @@ paths:
       summary: "Sets discord channel id"
       description: "Sets the discord channel id on the database"
       operationId: "setDiscordChannelRequest"
+      security:
+        - Bearer: []
       consumes:
       - "application/json"
       produces:
@@ -256,6 +266,8 @@ paths:
       summary: "Gets course list"
       description: "Gets the course list from the database/moodle"
       operationId: "getCourseListRequest"
+      security:
+        - Bearer: []
       produces:
       - "application/json"
       responses:
@@ -286,6 +298,8 @@ paths:
       summary: "Sets single course status"
       description: "Sets a single course status to active/inactive (for notifications)"
       operationId: "setCourseRequest"
+      security:
+        - Bearer: []
       consumes:
       - "application/json"
       produces:
