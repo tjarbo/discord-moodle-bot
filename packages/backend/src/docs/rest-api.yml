@@ -1,0 +1,414 @@
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0.0"
+  title: "Fancy-Moodle-Discord-Bot Settings"
+  license:
+    name: "GNU AFFERO GENERAL PUBLIC LICENSE"
+    url: "https://github.com/tjarbo/discord-moodle-bot/tree/development"
+host: "[your_fmdb_instance]"
+basePath: "/api"
+tags:
+- name: "Login"
+  description: "Everything about the authoriziation"
+  externalDocs:
+    description: "Find out more about jwt"
+    url: "https://jwt.io/#debugger"
+schemes:
+- "https"
+- "http"
+paths:
+  /token:
+    post:
+      tags:
+      - "Login"
+      summary: "Request a new token"
+      description: "Request a one-time-token which will be recived discord private message"
+      operationId: "authTokenRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "username#0000 of a registered administator"
+        required: true
+        schema:
+         $ref: "#/definitions/authTokenRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "404":
+          description: "User seems not to be an administrator"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "409":
+          description: "User not in discord cache. Please send the bot a short message and try it again."
+          schema:
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /login:
+    post:
+      tags:
+      - "Login"
+      summary: "Request a JSON-Web-Token"
+      description: "Request a JSON-Web-Token"
+      operationId: "authLoginRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "username#0000 and one-time-token of a registered administator"
+        required: true
+        schema:
+         $ref: "#/definitions/authLoginRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "404":
+          description: "User seems not to be an administrator"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /settings/administrator:
+    post:
+      tags:
+      - "Administrator"
+      summary: "Creates Administrator"
+      description: "Creates a new Administrator"
+      operationId: "addAdministratorRequest"
+      security:
+        - Bearer: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "Username and ID of the administrator"
+        required: true
+        schema:
+         $ref: "#/definitions/addAdministratorRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /settings/refreshRate:
+    get:
+      tags:
+      - "Moodle refresh rate"
+      summary: "Gets moodle fetch intervall"
+      description: "Returns the refresh interval in which the current data is requested and notifications are sent accordingly."
+      operationId: "getRefreshRateRequest"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/refreshRateRequest"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "503":
+          description: "Service Unavailable"
+          schema: 
+            $ref: "#/definitions/ApiError"
+    put:
+      tags:
+      - "Moodle refresh rate"
+      summary: "Sets moodle fetch intervall"
+      description: "Sets the refresh interval in which the current dataset is requested and notifications are sent accordingly."
+      operationId: "setRefreshRateRequest"
+      security:
+        - Bearer: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "New refresh rate in milliseconds"
+        required: true
+        schema:
+         $ref: "#/definitions/refreshRateRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /settings/discordChannel:
+    get:
+      tags:
+      - "Discord channel id"
+      summary: "Gets discord channel id"
+      description: "Returns the discord channel id in which the bot sends the notifications."
+      operationId: "getDiscordChannelRequest"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/discordChannelRequest"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "503":
+          description: "Service Unavailable"
+          schema: 
+            $ref: "#/definitions/ApiError"
+    put:
+      tags:
+      - "Discord channel id"
+      summary: "Sets discord channel id"
+      description: "Writes the discord channel id in which the bot sends the notification to the database."
+      operationId: "setDiscordChannelRequest"
+      security:
+        - Bearer: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "New discord channel id"
+        required: true
+        schema:
+         $ref: "#/definitions/discordChannelRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /settings/courses:
+    get:
+      tags:
+      - "Course"
+      summary: "Gets course list"
+      description: "Returns a list of all courses with the status whether the associated notifications are enabled or disabled."
+      operationId: "getCourseListRequest"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/getCourseListRequest"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "404":
+          description: "No courses found"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+  /settings/courses/{id}:
+    put:
+      tags:
+      - "Course"
+      summary: "Sets single course status"
+      description: "Enables or disables the notifications assigned to the course id."
+      operationId: "setCourseRequest"
+      security:
+        - Bearer: []
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "Course id"
+        required: true
+        type: "number"
+        minimum: 0
+        maximum: 2147483647
+      - name: "body"
+        in: "body"
+        description: "Course active status"
+        required: true
+        schema:
+         $ref: "#/definitions/setCourseRequest"
+      responses:
+        "200":
+          description: "Successful operation"
+        "400":
+          description: "Invalid request body"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiError"
+        "404":
+          description: "Course not found"
+          schema:
+            $ref: "#/definitions/ApiError"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiError"
+securityDefinitions:
+  Bearer:
+    type: "apiKey"
+    name: "Authorization"
+    in: header
+definitions:
+  setCourseRequest:
+    type: "object"
+    properties:
+      isActive:
+        type: "boolean"
+  getCourseListRequest:
+    type: "array"
+    items:
+      properties:
+        courseId:
+         type: "number"
+         example: 5910
+         minimum: 0
+         maximum: 2147483647
+        name:
+          type: "string"
+          example: "Kryptologie"
+        isActive:
+          type: "boolean"
+  discordChannelRequest:
+    type: "object"
+    properties:
+      channelId:
+        type: "string"
+        example: 707590543160639540
+        minLength: 18
+        maxLength: 18
+  refreshRateRequest:
+    type: "object"
+    properties:
+      refreshRate:
+        type: "number"
+        example: 60000
+        minimum: 5000
+        maximum: 2147483647
+  addAdministratorRequest:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      userid:
+        type: "string"
+  authTokenRequest:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+  authLoginRequest:
+    type: "object"
+    properties:
+      username:
+        type: "string"
+      token:
+        type: "number"
+    xml:
+      name: "Category"
+  ApiError:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      statusCode:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+externalDocs:
+  description: "Get source code"
+  url: "https://github.com/tjarbo/discord-moodle-bot/"
