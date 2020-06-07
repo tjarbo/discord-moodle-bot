@@ -264,7 +264,7 @@ paths:
       tags:
       - "Course"
       summary: "Gets course list"
-      description: "Gets the course list from the database/moodle"
+      description: "Returns a list of all courses with the status whether the associated notifications are enabled or disabled."
       operationId: "getCourseListRequest"
       security:
         - Bearer: []
