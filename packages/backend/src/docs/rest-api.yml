@@ -163,7 +163,7 @@ paths:
       tags:
       - "Moodle refresh rate"
       summary: "Sets moodle fetch intervall"
-      description: "Sets the moodle fetch intervall on the database"
+      description: "Sets the refresh interval in which the current dataset is requested and notifications are sent accordingly."
       operationId: "setRefreshRateRequest"
       security:
         - Bearer: []
