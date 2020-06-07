@@ -132,7 +132,7 @@ paths:
       tags:
       - "Moodle refresh rate"
       summary: "Gets moodle fetch intervall"
-      description: "Gets the moodle fetch intervall from the database"
+      description: "Returns the refresh interval in which the current data is requested and notifications are sent accordingly."
       operationId: "getRefreshRateRequest"
       security:
         - Bearer: []
