@@ -229,7 +229,7 @@ paths:
       tags:
       - "Discord channel id"
       summary: "Sets discord channel id"
-      description: "Sets the discord channel id on the database"
+      description: "Writes the discord channel id in which the bot sends the notification to the database."
       operationId: "setDiscordChannelRequest"
       security:
         - Bearer: []
