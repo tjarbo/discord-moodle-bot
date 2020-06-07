@@ -296,7 +296,7 @@ paths:
       tags:
       - "Course"
       summary: "Sets single course status"
-      description: "Sets a single course status to active/inactive (for notifications)"
+      description: "Enables or disables the notifications assigned to the course id."
       operationId: "setCourseRequest"
       security:
         - Bearer: []
