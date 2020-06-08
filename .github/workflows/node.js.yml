@@ -6,6 +6,9 @@ name: Node CI
 on:
   pull_request:
     branches: [ master, development ]
+  push:
+    branches:
+      - master
 
 jobs:
   test:
