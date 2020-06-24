@@ -73,10 +73,10 @@ export default new Vuex.Store({
       });
     },
 
-    loginWithToken(context, creds) {
+    loginWithToken(context, credentials) {
       context.commit('SET_AUTH');
       return new Promise((resolve, reject) => {
-        api.post('/login', creds)
+        api.post('/login', credentials)
           .then((data) => {
             const jwt = data.data.accesstoken;
             api.defaults.headers.common.Authorization = `Bearer ${jwt}`;
@@ -167,7 +167,6 @@ export default new Vuex.Store({
 
   getters: {
     isLoggedIn: (state) => !!state.auth.data,
-    authGetError: (state) => state.auth.status.error.message,
     authGetStatus: (state) => state.auth.status,
     administratorsGetError: (state) => state.administrators.status.error.response.data.message,
     administratorGetStatus: (state) => state.administrators.status,
