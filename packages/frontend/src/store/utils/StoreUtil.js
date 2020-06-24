@@ -1,3 +1,5 @@
+import { NotificationProgrammatic as Notification } from 'buefy';
+
 export default class StoreUtil {
   /**
    * init the state.
@@ -71,6 +73,14 @@ export default class StoreUtil {
     state.status.success = false;
     state.status.fail = true;
     state.status.error = data;
+    Notification.open({
+      duration: 5000,
+      hasIcon: false,
+      message: data.message,
+      position: 'is-bottom-right',
+      type: 'is-danger',
+    });
+
     return state;
   }
 }

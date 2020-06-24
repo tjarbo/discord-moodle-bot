@@ -66,7 +66,8 @@ export default new Vuex.Store({
             resolve();
           })
           .catch((err) => {
-            context.commit('SET_AUTH', err);
+            const error = new Error(err.response.data.message);
+            context.commit('SET_AUTH', error);
             reject();
           });
       });
@@ -166,7 +167,7 @@ export default new Vuex.Store({
 
   getters: {
     isLoggedIn: (state) => !!state.auth.data,
-    authGetError: (state) => state.auth.status.error.response.data.message,
+    authGetError: (state) => state.auth.status.error.message,
     authGetStatus: (state) => state.auth.status,
     administratorsGetError: (state) => state.administrators.status.error.response.data.message,
     administratorGetStatus: (state) => state.administrators.status,
