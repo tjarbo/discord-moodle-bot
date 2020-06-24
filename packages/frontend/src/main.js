@@ -1,8 +1,13 @@
 import Vue from 'vue';
 import Axios from 'axios';
+import Buefy from 'buefy';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+
+import 'buefy/dist/buefy.css';
+
+Vue.use(Buefy);
 
 Vue.prototype.$http = Axios;
 
