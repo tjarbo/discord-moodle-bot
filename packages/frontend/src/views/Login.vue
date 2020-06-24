@@ -1,41 +1,58 @@
 <template>
   <div id="loginview">
-    <div id="navbar" class="navbar">
-      <div id="title">Fancy Moodle Discord Bot</div>
-    </div>
-    <form class="pure-form pure-form-stacked" @submit="onSubmit">
-      <fieldset>
-        <img class=logo alt="FMDB logo" src="../assets/FMDB_logo.png">
-        <span
-          class="warning-text"
-          v-if="authGetStatus.fail"
-        >{{authGetError}}</span>
-        <label for="discordusername">Discord Username</label>
-        <input
-          id="discordusername"
-          placeholder="username#0000"
-          type="text"
-          v-model="form.username"
-        />
-        <label for="token">Zugangstoken</label>
-        <input
-          id="token"
-          placeholder="Token"
-          type="password"
-          v-model="form.token"
-          :disabled="tokenInputDisabled"
-        />
-        <div id="button">
-        <button
-          class="pure-button pure-button-primary"
-          type="submit"
-          :disabled="authGetStatus.pending"
-        >
-        {{form.submitButtonText}}
-        </button>
+    <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="column is-4 is-offset-4">
+            <h3 class="title has-text-black">Fancy Moodle Discord Bot</h3>
+            <hr class="login-hr" />
+            <p class="subtitle has-text-black">Melde dich an, um fortzufahren!</p>
+            <div class="box has-text-left">
+              <figure class="image is-128x128">
+                <img class="is-rounded" src="../assets/FMDB_logo.png" />
+              </figure>
+              <form class="has-text-centered container" @submit="onSubmit">
+                <b-loading :is-full-page="false" :active="authGetStatus.pending"></b-loading>
+                <div class="field">
+                  <div class="control">
+                    <input
+                      autofocus
+                      class="input is-large"
+                      placeholder="username#0000"
+                      type="text"
+                      v-model="form.username"
+                    />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="control">
+                    <input
+                      class="input is-large"
+                      placeholder="Your token"
+                      type="password"
+                      v-model="form.token"
+                      :disabled="tokenInputDisabled"
+                    />
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="control">
+                    <button
+                      class="button is-block is-danger is-large is-fullwidth is-marginless"
+                    >{{form.submitButtonText}}</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <p class="has-text-grey">
+              <a href="https://github.com/tjarbo/discord-moodle-bot/">Github Repository</a> &nbsp;·&nbsp;
+              <a disabled>Brauchst du Hilfe?</a>
+            </p>
+          </div>
         </div>
-      </fieldset>
-    </form>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -57,7 +74,8 @@ export default {
       event.preventDefault();
       // request token in first case
       if (this.tokenInputDisabled) {
-        this.$store.dispatch('requestToken', this.form.username)
+        this.$store
+          .dispatch('requestToken', this.form.username)
           .then(() => {
             // token request was successful
             this.tokenInputDisabled = false;
@@ -68,14 +86,15 @@ export default {
             this.tokenInputDisabled = true;
             this.form.submitButtonText = 'Token anfordern';
           });
-      // login with token in the other case
+        // login with token in the other case
       } else {
         // create object with login credentials
         const credentials = {
           username: this.form.username,
           token: this.form.token,
         };
-        this.$store.dispatch('loginWithToken', credentials)
+        this.$store
+          .dispatch('loginWithToken', credentials)
           .then(() => {
             // login was successful
             this.tokenInputDisabled = true;
@@ -89,42 +108,39 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['authGetError', 'authGetStatus']),
+    ...mapGetters(['authGetStatus']),
   },
 };
 </script>
 
 <style scoped>
 .warning-text {
-  color: rgb(202, 60, 60);;
+  color: rgb(202, 60, 60);
 }
 .logo {
   width: 300px;
 }
 
+figure.image {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  margin-top: -70px;
+  padding-bottom: 20px;
+}
+
+figure img {
+  padding: 5px;
+  background: #fff;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+  box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+}
+.box {
+  margin-top: 5rem;
+}
 #loginview {
   text-align: center;
-}
-
-input[type=text] {
-  text-align: center;
-  display: inline-block;
-}
-
-input[type=password] {
-  text-align: center;
-  display: inline-block;
-}
-
-label {
-  margin-top: 20px;
-}
-
-button {
-  margin: 20px;
-}
-legend {
-  color: #414141;
 }
 
 .warning-text {
@@ -137,14 +153,5 @@ legend {
   overflow: hidden;
   background-color: #4e5f67;
   font-family: Arial, Helvetica, sans-serif;
-}
-
-#title {
-  float: left;
-  font-size: 16px;
-  color: white;
-  text-align: center;
-  padding: 16px 30px;
-  text-decoration: none;
 }
 </style>
