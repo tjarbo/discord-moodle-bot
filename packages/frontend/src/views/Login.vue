@@ -18,6 +18,7 @@
                     <input
                       autofocus
                       class="input is-large"
+                      id="discordusername"
                       placeholder="username#0000"
                       type="text"
                       v-model="form.username"
@@ -29,7 +30,8 @@
                   <div class="control">
                     <input
                       class="input is-large"
-                      placeholder="Your token"
+                      id="token"
+                      placeholder="Dein Token"
                       type="password"
                       v-model="form.token"
                       :disabled="tokenInputDisabled"

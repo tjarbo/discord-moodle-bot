@@ -1,10 +1,12 @@
 import { expect } from 'chai';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
+import Buefy from 'buefy';
 import Login from '@/views/Login.vue';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
+localVue.use(Buefy);
 
 describe('Login.view', () => {
   let wrapper = null;
@@ -45,7 +47,7 @@ describe('Login.view', () => {
     const tokenInput = wrapper.find('#token');
     const testToken = '123123';
 
-    expect(tokenInput.element.placeholder).to.be.equal('Token');
+    expect(tokenInput.element.placeholder).to.be.equal('Dein Token');
     expect(tokenInput.element.type).to.be.equal('password');
 
     expect(tokenInput.element.disabled).to.be.true;
