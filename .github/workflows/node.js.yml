@@ -5,7 +5,7 @@ name: Node CI
 
 on:
   pull_request:
-    branches: [ master, development ]
+    branches: [ master, development, development-2 ]
   push:
     branches:
       - master
