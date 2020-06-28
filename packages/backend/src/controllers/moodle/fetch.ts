@@ -17,6 +17,8 @@ export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
 }
 
 /**
+ * @deprecated Ignores files on sublevels, use fetchCourseContents at course level instead.
+ * 
  * Fetches all Ressources (Files etc) from the moodle instance
  *
  * ! export only for unit testing (rewire doesn't work :/ )
