@@ -110,7 +110,7 @@ export async function handleContents(contents: any, courseName: string, lastFetc
 
 /**
  * @deprecated Ignores files on sublevels, use fetchCourseContents and handleContents instead.
- * 
+ *
  * Filters Ressources by timestamp and notifies about changes
  *
  * ! export only for unit testing (rewire doesn't work :/ )
