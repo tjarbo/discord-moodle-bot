@@ -1,6 +1,6 @@
 import { IContentfile } from './contentfile.interface';
 
-export interface IRessource {
+export interface IResource {
     id: number;
     coursemodule: number;
     course: number;

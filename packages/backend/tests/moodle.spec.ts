@@ -5,7 +5,7 @@ import mockingoose from 'mockingoose';
 import { loggerFile } from '../src/configuration/logger';
 import { LastFetch } from '../src/controllers/moodle/schemas/lastfetch.schema';
 import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
-import { IRessource } from '../src/controllers/moodle/interfaces/ressource.interface';
+import { IResource } from '../src/controllers/moodle/interfaces/ressource.interface';
 import * as courseList from '../src/controllers/courseList/courseList';
 import { ICourseDetails } from '../src/controllers/moodle/interfaces/coursedetails.interface';
 
@@ -87,7 +87,7 @@ describe('fetchAndNotify', () => {
     it('should log error if fetchAssignments fails', async () => {
         mockingoose(LastFetch).toReturn({timestamp: 1}, 'findOneAndUpdate');
         spyFetchAssignments.mockRejectedValueOnce(new Error('Failed1'));
-        spyFetchRessources.mockResolvedValue([] as IRessource[]);
+        spyFetchRessources.mockResolvedValue([] as IResource[]);
         await moodle.fetchAndNotify();
 
         expect(spyLogger).toHaveBeenCalledTimes(1);
@@ -97,7 +97,7 @@ describe('fetchAndNotify', () => {
     it('should log no error if everything is fine', async () => {
         mockingoose(LastFetch).toReturn({timestamp: 1}, 'findOneAndUpdate');
         spyFetchAssignments.mockResolvedValueOnce([] as ICourse[]);
-        spyFetchRessources.mockResolvedValueOnce([] as IRessource[]);
+        spyFetchRessources.mockResolvedValueOnce([] as IResource[]);
         await moodle.fetchAndNotify();
 
         expect(spyLogger).toHaveBeenCalledTimes(0);

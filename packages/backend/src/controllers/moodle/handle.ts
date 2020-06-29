@@ -1,6 +1,6 @@
 import { config } from '../../configuration/environment';
 import { ICourse } from './interfaces/course.interface';
-import { IRessource } from './interfaces/ressource.interface';
+import { IResource } from './interfaces/ressource.interface';
 import { publish } from '../discord';
 import { AssignmentMessage, AssignmentMessageOptions, AssignmentReminderMessage, AssignmentReminderMessageOptions, RessourceMessage, RessourceMessageOptions  } from '../discord/templates';
 import { Reminder } from './schemas/reminder.schema';
@@ -114,11 +114,11 @@ export async function handleContents(contents: any, courseName: string, lastFetc
  *
  * Filters Resources by timestamp and notifies about changes
  *
- * @param {IRessource[]} resources - The Resources to filter
+ * @param {IResource[]} resources - The Resources to filter
  * @param {Map<number, string>} courseMap - Maps course Ids to course names
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
-export async function handleResources(resources: IRessource[], courseMap: Map<number, string>, lastFetch: number): Promise<void> {
+export async function handleResources(resources: IResource[], courseMap: Map<number, string>, lastFetch: number): Promise<void> {
     for (const resource of resources) {
         for (const file of resource.contentfiles) {
             if (file.timemodified <= lastFetch) continue;

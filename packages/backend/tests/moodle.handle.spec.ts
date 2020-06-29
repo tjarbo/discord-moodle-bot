@@ -1,7 +1,7 @@
 import * as discord from '../src/controllers/discord';
 import mockingoose from 'mockingoose';
 import { handleResources, handleAssignments } from '../src/controllers/moodle/handle';
-import { IRessource } from '../src/controllers/moodle/interfaces/ressource.interface';
+import { IResource } from '../src/controllers/moodle/interfaces/ressource.interface';
 import { RessourceMessage, AssignmentMessage } from '../src/controllers/discord/templates';
 import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
 import { Reminder } from '../src/controllers/moodle/schemas/reminder.schema';
@@ -67,7 +67,7 @@ describe('moodle/handle.ts handleAssignments', () => {
 describe('moodle/handle.ts handleResources', () => {
 
     let spyDiscordPublish: jest.SpyInstance;
-    let mockResources: IRessource[];
+    let mockResources: IResource[];
     const courseMap = new Map().set(1, 'Course01').set(2, 'Course02');
 
     beforeEach(() => {
@@ -75,7 +75,7 @@ describe('moodle/handle.ts handleResources', () => {
         mockResources = [
             { course: 1, contentfiles: [{ timemodified: 999 }] },
             { course: 2, contentfiles: [{ timemodified: 1001, fileurl: 'test/webservice', filename: 'testname' }] }
-        ] as IRessource[];
+        ] as IResource[];
     });
 
     afterEach(() => {
