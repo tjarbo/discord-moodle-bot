@@ -5,7 +5,7 @@ import mockingoose from 'mockingoose';
 import { loggerFile } from '../src/configuration/logger';
 import { LastFetch } from '../src/controllers/moodle/schemas/lastfetch.schema';
 import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
-import { IResource } from '../src/controllers/moodle/interfaces/ressource.interface';
+import { IResource } from '../src/controllers/moodle/interfaces/resource.interface';
 import * as courseList from '../src/controllers/courseList/courseList';
 import { ICourseDetails } from '../src/controllers/moodle/interfaces/coursedetails.interface';
 
@@ -53,13 +53,13 @@ describe('getLastFetch', () => {
 describe('fetchAndNotify', () => {
     let spyLogger: jest.SpyInstance;
     let spyFetchAssignments: jest.SpyInstance;
-    let spyFetchRessources: jest.SpyInstance;
+    let spyFetchResources: jest.SpyInstance;
     let spyFetchEnrolledCourses: jest.SpyInstance;
 
     beforeEach(() => {
         spyLogger = jest.spyOn(loggerFile, 'error');
         spyFetchAssignments = jest.spyOn(moodleFetch, 'fetchAssignments');
-        spyFetchRessources = jest.spyOn(moodleFetch, 'fetchRessources');
+        spyFetchResources = jest.spyOn(moodleFetch, 'fetchResources');
         
         jest.spyOn(courseList, 'getCourseBlacklist').mockResolvedValue([]);
         spyFetchEnrolledCourses = jest.spyOn(moodleFetch, 'fetchEnrolledCourses')
@@ -87,7 +87,7 @@ describe('fetchAndNotify', () => {
     it('should log error if fetchAssignments fails', async () => {
         mockingoose(LastFetch).toReturn({timestamp: 1}, 'findOneAndUpdate');
         spyFetchAssignments.mockRejectedValueOnce(new Error('Failed1'));
-        spyFetchRessources.mockResolvedValue([] as IResource[]);
+        spyFetchResources.mockResolvedValue([] as IResource[]);
         await moodle.fetchAndNotify();
 
         expect(spyLogger).toHaveBeenCalledTimes(1);
@@ -97,7 +97,7 @@ describe('fetchAndNotify', () => {
     it('should log no error if everything is fine', async () => {
         mockingoose(LastFetch).toReturn({timestamp: 1}, 'findOneAndUpdate');
         spyFetchAssignments.mockResolvedValueOnce([] as ICourse[]);
-        spyFetchRessources.mockResolvedValueOnce([] as IResource[]);
+        spyFetchResources.mockResolvedValueOnce([] as IResource[]);
         await moodle.fetchAndNotify();
 
         expect(spyLogger).toHaveBeenCalledTimes(0);

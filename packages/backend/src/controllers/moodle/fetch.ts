@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { config } from '../../configuration/environment';
 import { ICourse } from './interfaces/course.interface';
-import { IResource } from './interfaces/ressource.interface';
+import { IResource } from './interfaces/resource.interface';
 import { ICourseDetails } from './interfaces/coursedetails.interface';
 
 /**
@@ -19,13 +19,13 @@ export async function fetchAssignments(moodleUrl: string): Promise<ICourse[]> {
 /**
  * @deprecated Ignores files on sublevels, use fetchCourseContents at course level instead.
  *
- * Fetches all Ressources (Files etc) from the moodle instance
+ * Fetches all Resources (Files etc) from the moodle instance
  *
  * ! export only for unit testing (rewire doesn't work :/ )
  * @param {string} moodleUrl - Moodle Web Service Url
- * @returns {Promise<IResource[]>} A Promise of an array of Ressources
+ * @returns {Promise<IResource[]>} A Promise of an array of Resources
  */
-export async function fetchRessources(moodleUrl: string): Promise<IResource[]> {
+export async function fetchResources(moodleUrl: string): Promise<IResource[]> {
     const res = await fetch(moodleUrl + '&wsfunction=mod_resource_get_resources_by_courses');
     return (await res.json()).resources;
 }

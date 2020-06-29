@@ -1,8 +1,8 @@
 import * as discord from '../src/controllers/discord';
 import mockingoose from 'mockingoose';
 import { handleResources, handleAssignments } from '../src/controllers/moodle/handle';
-import { IResource } from '../src/controllers/moodle/interfaces/ressource.interface';
-import { RessourceMessage, AssignmentMessage } from '../src/controllers/discord/templates';
+import { IResource } from '../src/controllers/moodle/interfaces/resource.interface';
+import { ResourceMessage, AssignmentMessage } from '../src/controllers/discord/templates';
 import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
 import { Reminder } from '../src/controllers/moodle/schemas/reminder.schema';
 
@@ -82,9 +82,9 @@ describe('moodle/handle.ts handleResources', () => {
         jest.resetAllMocks();
     });
 
-    it('should only print ressources newer than the last fetch timestamp', async () => {
+    it('should only print resources newer than the last fetch timestamp', async () => {
         const expectedParameters = [
-            new RessourceMessage(),
+            new ResourceMessage(),
             {
                 course: 'Course02',
                 title: 'testname',

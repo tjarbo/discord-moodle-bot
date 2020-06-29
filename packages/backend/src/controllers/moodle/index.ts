@@ -39,7 +39,7 @@ export async function getLastFetch(): Promise<number> {
 
 /**
  * Fetches all data from the Moodle webservice, filters it
- * and notifies about newly created or updated ressources
+ * and notifies about newly created or updated resources
  *
  * @export
  */
