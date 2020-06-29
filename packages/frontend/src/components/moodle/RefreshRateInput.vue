@@ -1,5 +1,5 @@
 <template>
-  <div id="refreshRateInput">
+  <div id="refreshrateinput">
     <article class="panel is-primary">
       <p class="panel-heading">Aktualisierungsintervall ändern:</p>
             <a class="panel-block">
@@ -64,21 +64,10 @@ export default {
 </script>
 
 <style scoped>
-#refreshRateInputButton,
-#refreshRateInputLabel,
-#refreshRateInputField {
-    margin: 10px;
-}
 .error {
     color: red;
 }
 label {
     color: green;
-}
-h3 {
-    margin-bottom: 0px;
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
 }
 </style>
