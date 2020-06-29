@@ -1,6 +1,6 @@
 import * as discord from '../src/controllers/discord';
 import mockingoose from 'mockingoose';
-import { handleRessources, handleAssignments } from '../src/controllers/moodle/handle';
+import { handleResources, handleAssignments } from '../src/controllers/moodle/handle';
 import { IRessource } from '../src/controllers/moodle/interfaces/ressource.interface';
 import { RessourceMessage, AssignmentMessage } from '../src/controllers/discord/templates';
 import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
@@ -64,15 +64,15 @@ describe('moodle/handle.ts handleAssignments', () => {
     });
 });
 
-describe('moodle/handle.ts handleRessources', () => {
+describe('moodle/handle.ts handleResources', () => {
 
     let spyDiscordPublish: jest.SpyInstance;
-    let mockRessources: IRessource[];
+    let mockResources: IRessource[];
     const courseMap = new Map().set(1, 'Course01').set(2, 'Course02');
 
     beforeEach(() => {
         spyDiscordPublish = jest.spyOn(discord, 'publish');
-        mockRessources = [
+        mockResources = [
             { course: 1, contentfiles: [{ timemodified: 999 }] },
             { course: 2, contentfiles: [{ timemodified: 1001, fileurl: 'test/webservice', filename: 'testname' }] }
         ] as IRessource[];
@@ -92,7 +92,7 @@ describe('moodle/handle.ts handleRessources', () => {
             }
         ]
 
-        await handleRessources(mockRessources, courseMap, 1000);
+        await handleResources(mockResources, courseMap, 1000);
         expect(spyDiscordPublish).toBeCalledTimes(1);
         expect(spyDiscordPublish).toBeCalledWith(...expectedParameters)
     });

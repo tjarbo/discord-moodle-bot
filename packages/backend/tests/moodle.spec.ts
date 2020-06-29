@@ -70,7 +70,6 @@ describe('fetchAndNotify', () => {
 
         jest.spyOn(moodleHandle, 'handleAssignments').mockImplementation(jest.fn());
         jest.spyOn(moodleHandle, 'handleContents').mockImplementation(jest.fn());
-        jest.spyOn(moodleHandle, 'handleRessources').mockImplementation(jest.fn());
     });
 
     afterEach(() => {
@@ -93,17 +92,7 @@ describe('fetchAndNotify', () => {
 
         expect(spyLogger).toHaveBeenCalledTimes(1);
         expect(spyLogger).toHaveBeenCalledWith('Moodle API request failed', new Error('Failed1'));
-    })
-
-    it('should log error if fetchRessources fails', async () => {
-        mockingoose(LastFetch).toReturn({timestamp: 1}, 'findOneAndUpdate');
-        spyFetchAssignments.mockResolvedValue([] as ICourse[]);
-        spyFetchRessources.mockRejectedValue(new Error('Failed2'));
-        await moodle.fetchAndNotify();
-
-        expect(spyLogger).toHaveBeenCalledTimes(1);
-        expect(spyLogger).toHaveBeenCalledWith('Moodle API request failed', new Error('Failed2'));
-    })
+    });
 
     it('should log no error if everything is fine', async () => {
         mockingoose(LastFetch).toReturn({timestamp: 1}, 'findOneAndUpdate');

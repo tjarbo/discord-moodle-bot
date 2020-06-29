@@ -110,21 +110,21 @@ export async function handleContents(contents: any, courseName: string, lastFetc
 
 /**
  * @deprecated Ignores files on sublevels, use fetchCourseContents and handleContents instead.
- *
- * Filters Ressources by timestamp and notifies about changes
- *
  * ! export only for unit testing (rewire doesn't work :/ )
- * @param {IRessource[]} ressources - The Ressources to filter
+ *
+ * Filters Resources by timestamp and notifies about changes
+ *
+ * @param {IRessource[]} resources - The Resources to filter
  * @param {Map<number, string>} courseMap - Maps course Ids to course names
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
-export async function handleRessources(ressources: IRessource[], courseMap: Map<number, string>, lastFetch: number): Promise<void> {
-    for (const ressource of ressources) {
-        for (const file of ressource.contentfiles) {
+export async function handleResources(resources: IRessource[], courseMap: Map<number, string>, lastFetch: number): Promise<void> {
+    for (const resource of resources) {
+        for (const file of resource.contentfiles) {
             if (file.timemodified <= lastFetch) continue;
 
             const options: RessourceMessageOptions = {
-                course: courseMap.get(ressource.course),
+                course: courseMap.get(resource.course),
                 title: file.filename,
                 link: file.fileurl.replace('/webservice', '')
             };

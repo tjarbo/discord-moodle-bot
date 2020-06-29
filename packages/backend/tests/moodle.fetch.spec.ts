@@ -77,7 +77,7 @@ describe('fetchEnrolledCourses', () => {
         expect(mocked(fetch)).toHaveBeenCalledWith('&wsfunction=core_enrol_get_users_courses&userid=123456');
     });
 
-    it('should return an array of all ressources provided by the moodle API', async () => {
+    it('should return an array of all resources provided by the moodle API', async () => {
         mockFetch([]);
         expect(await moodle.fetchEnrolledCourses('')).toStrictEqual([]);
     });
