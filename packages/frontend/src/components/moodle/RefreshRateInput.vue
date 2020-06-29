@@ -1,14 +1,33 @@
 <template>
   <div id="refreshRateInput">
-    <form class="pure-form pure-form-stacked">
-      <h3>Aktualisierungsintervall ändern:</h3>
-      <input id="refreshRateInputField" v-model="newRefreshRate"
-        placeholder="Neues Intervall in ms" />
-      <button class="pure-button" type="button" id="refreshRateInputButton"
-        v-on:click="onClick">Update</button>
-      <label id="refreshRateInputLabel" v-bind:class="{error}"
-        for="refreshRateInputButton">{{ result }}</label>
-    </form>
+    <article class="panel is-primary">
+      <p class="panel-heading">Aktualisierungsintervall ändern:</p>
+            <a class="panel-block">
+        <p class="control">
+          <b-field label="Neues Intervall in ms:">
+            <b-input
+              id="discord-id"
+              max="3147483647"
+              min="5000"
+              placeholder="15000"
+              type="number"
+              v-model="newRefreshRate"
+            ></b-input>
+          </b-field>
+        </p>
+      </a>
+      <p class="panel-block" v-bind:class="{error}">
+        <span>{{result}}</span>
+      </p>
+      <div class="panel-block">
+        <button
+          @click="onSubmit"
+          class="button is-link is-outlined is-fullwidth"
+        >
+        Aktualisieren
+        </button>
+      </div>
+    </article>
   </div>
 </template>
 
@@ -21,7 +40,7 @@ export default {
     error: false, // Sets result color to red if true
   }),
   methods: {
-    onClick() {
+    onSubmit() {
       this.result = '';
       const update = { refreshRate: this.newRefreshRate };
       this.$store.dispatch('refreshRate', update)
