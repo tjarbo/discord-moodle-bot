@@ -21,11 +21,11 @@
 </template>
 
 <script>
-import RefreshRateInput from '../components/RefreshRateInput.vue';
+import RefreshRateInput from '../components/moodle/RefreshRateInput.vue';
 import TheNavBar from '../components/TheNavBar.vue';
-import CourseSelection from '../components/CourseSelection.vue';
+import CourseSelection from '../components/moodle/CourseSelection.vue';
 import DiscordChannelInput from '../components/DiscordChannelInput.vue';
-import AddAdministrator from '../components/AddAdministrator.vue';
+import AddAdministrator from '../components/administration/AddAdministrator.vue';
 
 export default {
   name: 'DashboardView',
