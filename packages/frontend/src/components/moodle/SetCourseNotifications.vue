@@ -1,6 +1,6 @@
 <template>
-  <div id="courseselection">
-    <article class="panel is-primary">
+  <div id="setcoursenotifications">
+    <article class="panel is-moodle">
       <p class="panel-heading">Kurse mit aktivierten Benachrichtigungen:</p>
       <label class="panel-block" v-for="course in courses" :key="course.courseId">
         <input
@@ -12,7 +12,7 @@
         />
         {{course.name}}
       </label>
-      <p class="panel-block" v-bind:class="{error}">
+      <p class="panel-block" v-if="result != ''" :class="{error}">
         <span>{{result}}</span>
       </p>
     </article>
@@ -40,7 +40,7 @@ export default {
         this.courses = list;
       });
   },
-  name: 'CourseSelection',
+  name: 'SetCourseNotifications',
   data: () => ({
     courses: [],
     result: '', // Displays result message if set

@@ -1,18 +1,18 @@
 <template>
   <div id="dashboardview">
-    <TheNavBar></TheNavBar>
+    <the-nav-bar></the-nav-bar>
     <div class="columns">
       <div class="column is-10 is-offset-1">
         <b-tabs position="is-centered" class="block">
-          <b-tab-item label="Administration">
+          <b-tab-item class="spacing" label="Administration">
             <add-administrator></add-administrator>
           </b-tab-item>
-          <b-tab-item label="Moodle">
-            <course-selection></course-selection>
-            <refresh-rate-input></refresh-rate-input>
+          <b-tab-item class="spacing is-moodle" label="Moodle">
+            <set-course-notifications></set-course-notifications>
+            <set-refresh-rate></set-refresh-rate>
           </b-tab-item>
-          <b-tab-item label="Discord">
-            <discord-channel-input></discord-channel-input>
+          <b-tab-item class="spacing" label="Bots">
+            <set-discord-channel></set-discord-channel>
           </b-tab-item>
         </b-tabs>
       </div>
@@ -21,23 +21,26 @@
 </template>
 
 <script>
-import RefreshRateInput from '../components/moodle/RefreshRateInput.vue';
-import TheNavBar from '../components/TheNavBar.vue';
-import CourseSelection from '../components/moodle/CourseSelection.vue';
-import DiscordChannelInput from '../components/DiscordChannelInput.vue';
 import AddAdministrator from '../components/administration/AddAdministrator.vue';
+import SetCourseNotifications from '../components/moodle/SetCourseNotifications.vue';
+import SetDiscordChannel from '../components/bots/SetDiscordChannel.vue';
+import SetRefreshRate from '../components/moodle/SetRefreshRate.vue';
+import TheNavBar from '../components/TheNavBar.vue';
 
 export default {
   name: 'DashboardView',
   components: {
-    RefreshRateInput,
-    TheNavBar,
     AddAdministrator,
-    CourseSelection,
-    DiscordChannelInput,
+    SetCourseNotifications,
+    SetDiscordChannel,
+    SetRefreshRate,
+    TheNavBar,
   },
 };
 </script>
 
 <style scoped>
+.spacing > * {
+  padding-bottom: 16px;
+}
 </style>

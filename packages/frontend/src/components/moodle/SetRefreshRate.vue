@@ -1,12 +1,12 @@
 <template>
-  <div id="refreshrateinput">
-    <article class="panel is-primary">
+  <div id="setrefreshrate">
+    <article class="panel is-moodle">
       <p class="panel-heading">Aktualisierungsintervall ändern:</p>
-            <a class="panel-block">
+       <a class="panel-block">
         <p class="control">
           <b-field label="Neues Intervall in ms:">
             <b-input
-              id="discord-id"
+              id="refreshrateinput"
               max="3147483647"
               min="5000"
               placeholder="15000"
@@ -16,13 +16,13 @@
           </b-field>
         </p>
       </a>
-      <p class="panel-block" v-bind:class="{error}">
+      <p class="panel-block" v-if="result != ''" :class="{error}">
         <span>{{result}}</span>
       </p>
       <div class="panel-block">
         <button
           @click="onSubmit"
-          class="button is-link is-outlined is-fullwidth"
+          class="button is-moodle is-outlined is-fullwidth"
         >
         Aktualisieren
         </button>
@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  name: 'RefreshRateInput',
+  name: 'SetRefreshRate',
   data: () => ({
     newRefreshRate: '', // User input
     result: '', // Result to be displayed

@@ -1,15 +1,15 @@
 <template>
-  <div id="addAdministrator">
+  <div id="addadministrator">
     <article class="panel is-primary">
       <p class="panel-heading">Administrator hinzufügen</p>
       <a class="panel-block">
         <p class="control">
         <b-field label="Discord-Name">
           <b-input
-            id="discord-username"
-            placeholder="username#00000"
+            id="discordusername"
+            placeholder="username#0000"
             type="text"
-            v-model="userName"
+            v-model="username"
             :disabled="administratorGetStatus.pending"
           ></b-input>
         </b-field>
@@ -19,10 +19,10 @@
         <p class="control">
           <b-field label="Discord-ID">
             <b-input
-              id="discord-id"
-              placeholder="123123..."
+              id="discorduserid"
+              placeholder="000000000000000000"
               type="number"
-              v-model="userId"
+              v-model="userid"
               :disabled="administratorGetStatus.pending"
             ></b-input>
           </b-field>
@@ -34,7 +34,7 @@
       <div class="panel-block">
         <button
           @click="onSubmit"
-          class="button is-link is-outlined is-fullwidth"
+          class="button is-primary is-outlined is-fullwidth"
         >Hinzufügen</button>
       </div>
     </article>
@@ -47,8 +47,8 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'AddAdministrator',
   data: () => ({
-    userId: '',
-    userName: '',
+    userid: '',
+    username: '',
   }),
   methods: {
     onSubmit(event) {

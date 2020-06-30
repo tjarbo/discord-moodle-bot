@@ -41,14 +41,14 @@
                 <div class="field">
                   <div class="control">
                     <button
-                      class="button is-block is-danger is-large is-fullwidth is-marginless"
+                      class="button is-block is-primary is-large is-fullwidth is-marginless"
                     >{{form.submitButtonText}}</button>
                   </div>
                 </div>
               </form>
             </div>
-            <p class="has-text-grey">
-              <a href="https://github.com/tjarbo/discord-moodle-bot/">Github Repository</a> &nbsp;·&nbsp;
+            <p class="has-text-link">
+              <a class="has-text-link" href="https://github.com/tjarbo/discord-moodle-bot/">Github Repository</a> &nbsp;·&nbsp;
               <a disabled>Brauchst du Hilfe?</a>
             </p>
           </div>

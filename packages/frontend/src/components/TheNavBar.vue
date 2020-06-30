@@ -1,8 +1,8 @@
 <template>
-  <b-navbar type="is-dark">
+  <b-navbar id="thenavbar" type="is-light">
     <template slot="brand">
       <b-navbar-item >
-        <span class="has-text-weight-bold">Fancy Moodle Discord Bot</span>
+        <span id="title" class="has-text-weight-bold">Fancy Moodle Discord Bot</span>
       </b-navbar-item>
     </template>
     <template slot="end">
@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: 'NavBar',
+  name: 'TheNavBar',
   methods: {
     onClick() {
       this.$store.dispatch('logout');
