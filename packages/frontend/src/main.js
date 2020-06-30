@@ -5,7 +5,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
-import 'buefy/dist/buefy.css';
+import './fmdb.scss';
 
 Vue.use(Buefy);
 
