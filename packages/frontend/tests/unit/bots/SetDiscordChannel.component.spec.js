@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { createLocalVue, mount } from '@vue/test-utils';
 import Buefy from 'buefy';
-import AddAdministrator from '@/components/bots/SetDiscordChannel.vue';
+import SetDiscordChannel from '@/components/bots/SetDiscordChannel.vue';
 
 const localVue = createLocalVue();
 
@@ -11,7 +11,7 @@ describe('SetDiscordChannel.component', () => {
   let wrapper = null;
 
   beforeEach(() => {
-    wrapper = mount(AddAdministrator, { localVue });
+    wrapper = mount(SetDiscordChannel, { localVue });
   });
 
   it('should render the component', () => {

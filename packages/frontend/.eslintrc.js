@@ -16,6 +16,7 @@ module.exports = {
     'no-unresolved': 'off',
     'no-underscore-dangle': ['error', { allowAfterThis: true }],
     'no-alert': 'off',
+    'no-plusplus': 'off',
   },
   overrides: [
     {
