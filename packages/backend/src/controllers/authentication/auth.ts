@@ -133,7 +133,8 @@ export function authVerify(req: Request, res: Response) {
 }
 
 export const isAuth = expressjwt({
-  secret: config.jwt.secret,
-  userProperty: 'token',
+  algorithms: ['HS256'],
   getToken: getTokenFromHeader,
+  userProperty: 'token',
+  secret: config.jwt.secret,
 });
