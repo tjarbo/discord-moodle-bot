@@ -1,8 +1,8 @@
 import { config } from '../../configuration/environment';
 import { ICourse } from './interfaces/course.interface';
-import { IRessource } from './interfaces/ressource.interface';
+import { IResource } from './interfaces/resource.interface';
 import { publish } from '../discord';
-import { AssignmentMessage, AssignmentMessageOptions, AssignmentReminderMessage, AssignmentReminderMessageOptions, RessourceMessage, RessourceMessageOptions  } from '../discord/templates';
+import { AssignmentMessage, AssignmentMessageOptions, AssignmentReminderMessage, AssignmentReminderMessageOptions, ResourceMessage, ResourceMessageOptions  } from '../discord/templates';
 import { Reminder } from './schemas/reminder.schema';
 import { IContentfile } from './interfaces/contentfile.interface';
 
@@ -89,7 +89,7 @@ function extractContentFiles(contents: any): IContentfile[] {
  * Extracts contents, filters them by timestamp and notifies about changes
  *
  * ! export only for unit testing (rewire doesn't work :/ )
- * @param {ICourse[]} courses - The Ressources to filter
+ * @param {ICourse[]} courses - The Resources to filter
  * @param {string} courseName - Maps course Ids to course names
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
@@ -99,34 +99,36 @@ export async function handleContents(contents: any, courseName: string, lastFetc
     for (const file of fileArray) {
         if (file.timemodified <= lastFetch) continue;
 
-        const options: RessourceMessageOptions = {
+        const options: ResourceMessageOptions = {
             course: courseName,
             title: file.filename,
             link: file.fileurl.replace('/webservice', '')
         };
-        await publish(new RessourceMessage(), options);
+        await publish(new ResourceMessage(), options);
     }
 }
 
 /**
- * Filters Ressources by timestamp and notifies about changes
- *
+ * @deprecated Ignores files on sublevels, use fetchCourseContents and handleContents instead.
  * ! export only for unit testing (rewire doesn't work :/ )
- * @param {IRessource[]} ressources - The Ressources to filter
+ *
+ * Filters Resources by timestamp and notifies about changes
+ *
+ * @param {IResource[]} resources - The Resources to filter
  * @param {Map<number, string>} courseMap - Maps course Ids to course names
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
-export async function handleRessources(ressources: IRessource[], courseMap: Map<number, string>, lastFetch: number): Promise<void> {
-    for (const ressource of ressources) {
-        for (const file of ressource.contentfiles) {
+export async function handleResources(resources: IResource[], courseMap: Map<number, string>, lastFetch: number): Promise<void> {
+    for (const resource of resources) {
+        for (const file of resource.contentfiles) {
             if (file.timemodified <= lastFetch) continue;
 
-            const options: RessourceMessageOptions = {
-                course: courseMap.get(ressource.course),
+            const options: ResourceMessageOptions = {
+                course: courseMap.get(resource.course),
                 title: file.filename,
                 link: file.fileurl.replace('/webservice', '')
             };
-            publish(new RessourceMessage(), options);
+            publish(new ResourceMessage(), options);
         }
     }
 }

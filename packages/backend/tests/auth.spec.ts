@@ -88,7 +88,7 @@ describe('auth.js authTokenRequest', () => {
     expect(mockNext.mock.calls[1][0]).toEqual(new ApiError(400, '"username" must be a string'));
   });
 
-  it('should log error if unkown user is provided', async () => {
+  it('should log error if unknown user is provided', async () => {
     mockRequest.body.username = 'testuser2#123123';
     mockingoose(Administrator).toReturn(null, 'findOne');
 
@@ -211,12 +211,12 @@ describe('auth.js authLoginRequest', () => {
     expect(mockNext.mock.calls.length).toBe(4);
     expect(mockNext.mock.calls[3][0]).toEqual(new ApiError(400, '"token" must be greater than 100000'));
 
-    // no successfull response
+    // no successful response
     expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
     expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
   });
 
-  it('should log error if unkown user is provided', async () => {
+  it('should log error if unknown user is provided', async () => {
     mockRequest.body.username = 'testuser2#123123';
     mockRequest.body.token = mockToken.key;
     mockingoose(Administrator).toReturn(null, 'findOne');
@@ -228,7 +228,7 @@ describe('auth.js authLoginRequest', () => {
     expect(spyLogger.mock.calls.length).toBe(1);
     expect(spyLogger.mock.calls[0][0]).toBe(`User ${mockRequest.body.username} not found`);
 
-    // no successfull response
+    // no successful response
     expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
     expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
   });
@@ -246,7 +246,7 @@ describe('auth.js authLoginRequest', () => {
     expect(spyLogger.mock.calls.length).toBe(1);
     expect(spyLogger.mock.calls[0][0]).toBe('Invalid token!');
 
-    // no successfull response
+    // no successful response
     expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
     expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
   });
