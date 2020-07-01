@@ -62,4 +62,11 @@ describe('AddAdministrator.component', () => {
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.$data.userid).to.be.equal(testUserId);
   });
+
+  it('should render submit button', () => {
+    const submitButton = wrapper.find('button.button.is-primary.is-outlined.is-fullwidth');
+
+    expect(submitButton.text()).to.be.equal('Hinzufügen');
+    expect(submitButton.exists()).to.be.true;
+  });
 });

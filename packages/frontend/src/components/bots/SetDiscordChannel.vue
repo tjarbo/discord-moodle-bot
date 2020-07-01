@@ -7,8 +7,9 @@
           <b-field label="Discord Channel ändern:">
             <b-input
               id="channelinput"
-              v-model="newDiscordChannel"
               placeholder="Neue Channel-ID"
+              type="number"
+              v-model="channelId"
             ></b-input>
           </b-field>
         </p>
@@ -30,14 +31,14 @@
 export default {
   name: 'SetDiscordChannel',
   data: () => ({
-    newDiscordChannel: '', // User input
+    channelId: '', // User input
     result: '', // Displays result message if set
     error: false, // Sets result message color to red if true
   }),
   methods: {
     onSubmit() {
       this.result = '';
-      const update = { channelId: this.newDiscordChannel };
+      const update = { channelId: this.channelId };
       this.$store
         .dispatch('setDiscordChannel', update)
         .then((response) => {
