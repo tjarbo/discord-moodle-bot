@@ -2,8 +2,8 @@ import { config } from '../../configuration/environment';
 import { loggerFile } from '../../configuration/logger';
 import { LastFetch } from './schemas/lastfetch.schema';
 import { getCourseBlacklist } from '../courseList/courseList';
-import { fetchAssignments, fetchRessources, fetchEnrolledCourses, fetchCourseContents } from './fetch';
-import { handleAssignments, handleRessources, handleContents } from './handle';
+import { fetchAssignments, fetchEnrolledCourses, fetchCourseContents } from './fetch';
+import { handleAssignments, handleContents } from './handle';
 
 /**
  * Builds a string representing the moodle
@@ -39,7 +39,7 @@ export async function getLastFetch(): Promise<number> {
 
 /**
  * Fetches all data from the Moodle webservice, filters it
- * and notifies about newly created or updated ressources
+ * and notifies about newly created or updated resources
  *
  * @export
  */
@@ -66,11 +66,7 @@ export async function fetchAndNotify(): Promise<void> {
         const courseList = await fetchAssignments(moodleUrl).then(courses =>
             courses.filter(course => !courseBlacklist.includes(course.id)));
 
-        const ressourceList = await fetchRessources(moodleUrl).then(ressources =>
-            ressources.filter(ressource => !courseBlacklist.includes(ressource.course)));
-
         handleAssignments(courseList, lastFetch);
-        handleRessources(ressourceList, courseMap, lastFetch);
 
     } catch(error) {
         loggerFile.error('Moodle API request failed', error);

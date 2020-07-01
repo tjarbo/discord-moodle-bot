@@ -37,7 +37,7 @@ describe('fetchAssignments', () => {
     });
 });
 
-describe('fetchRessources', () => {
+describe('fetchResources', () => {
     let spyLogger: jest.SpyInstance;
 
     beforeEach(() => {
@@ -50,13 +50,13 @@ describe('fetchRessources', () => {
 
     it('should address the correct moodle wsfunction', async () => {
         mockFetch([]);
-        await moodle.fetchRessources('');
+        await moodle.fetchResources('');
         expect(mocked(fetch)).toHaveBeenCalledWith('&wsfunction=mod_resource_get_resources_by_courses');
     });
 
-    it('should return an array of all ressources provided by the moodle API', async () => {
+    it('should return an array of all resources provided by the moodle API', async () => {
         mockFetch({ resources: [] });
-        expect(await moodle.fetchRessources('')).toStrictEqual([]);
+        expect(await moodle.fetchResources('')).toStrictEqual([]);
     });
 });
 
@@ -77,7 +77,7 @@ describe('fetchEnrolledCourses', () => {
         expect(mocked(fetch)).toHaveBeenCalledWith('&wsfunction=core_enrol_get_users_courses&userid=123456');
     });
 
-    it('should return an array of all ressources provided by the moodle API', async () => {
+    it('should return an array of all resources provided by the moodle API', async () => {
         mockFetch([]);
         expect(await moodle.fetchEnrolledCourses('')).toStrictEqual([]);
     });
