@@ -22,8 +22,10 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
     new Administrator(userObj).save();
   });
 
+  // First call of fetchAndNotify depending on the database interval
   const interval = await getRefreshRate();
-  setInterval(() => fetchAndNotify(), interval);
+  setTimeout(fetchAndNotify,interval);
+
 }).catch((error) => {
   loggerFile.error('Mongoose NOT Connected', error);
 });
