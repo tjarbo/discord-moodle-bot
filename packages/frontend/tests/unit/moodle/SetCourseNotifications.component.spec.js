@@ -15,7 +15,7 @@ describe('SetCourseNotifications.component', () => {
   beforeEach(() => {
     const actions = {
       setCourse: () => new Promise(),
-      getCourseList: () => new Promise(() => {}), // .resolve({ data: demoCourses }),
+      getCourseList: () => new Promise(() => {}),
     };
     store = new Vuex.Store({ actions });
     wrapper = mount(SetCourseNotifications, { store, localVue });

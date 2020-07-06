@@ -54,8 +54,8 @@ export default {
     onSubmit(event) {
       event.preventDefault();
       const administrator = {
-        userid: this.userId,
-        username: this.userName,
+        userid: this.userid,
+        username: this.username,
       };
       this.$store
         .dispatch('addAdministrator', administrator)
