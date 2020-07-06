@@ -1,7 +1,7 @@
 <template>
   <b-navbar id="thenavbar" type="is-light">
     <template slot="brand">
-      <b-navbar-item >
+      <b-navbar-item>
         <span id="title" class="has-text-weight-bold">Fancy Moodle Discord Bot</span>
       </b-navbar-item>
     </template>

@@ -49,7 +49,7 @@
             </div>
             <p class="has-text-link">
               <a class="has-text-link" href="https://github.com/tjarbo/discord-moodle-bot/">Github Repository</a> &nbsp;·&nbsp;
-              <a disabled>Brauchst du Hilfe?</a>
+              <a class="has-text-link" href="https://github.com/tjarbo/discord-moodle-bot/wiki">Brauchst du Hilfe?</a>
             </p>
           </div>
         </div>

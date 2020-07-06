@@ -5,7 +5,7 @@ import Dashboard from '@/views/Dashboard.vue';
 
 import AddAdministrator from '@/components/administration/AddAdministrator.vue';
 import SetCourseNotifications from '@/components/moodle/SetCourseNotifications.vue';
-import SetDiscordChannel from '@/components/bots/SetDiscordChannel.vue';
+import DiscordPanel from '@/components/discord/DiscordPanel.vue';
 import SetRefreshRate from '@/components/moodle/SetRefreshRate.vue';
 import TheNavBar from '@/components/TheNavBar.vue';
 
@@ -28,7 +28,7 @@ describe('Dashboard.view', () => {
   });
 
   it('should render SetDiscordChannel', () => {
-    expect(wrapper.find(SetDiscordChannel).exists()).is.true;
+    expect(wrapper.find(DiscordPanel).exists()).is.true;
   });
 
   it('should render SetCourseNotifications', () => {

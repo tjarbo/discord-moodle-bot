@@ -11,8 +11,8 @@
             <set-course-notifications></set-course-notifications>
             <set-refresh-rate></set-refresh-rate>
           </b-tab-item>
-          <b-tab-item class="spacing" label="Bots">
-            <set-discord-channel></set-discord-channel>
+          <b-tab-item class="spacing" label="Discord">
+            <DiscordPanel></DiscordPanel>
           </b-tab-item>
         </b-tabs>
       </div>
@@ -23,7 +23,7 @@
 <script>
 import AddAdministrator from '../components/administration/AddAdministrator.vue';
 import SetCourseNotifications from '../components/moodle/SetCourseNotifications.vue';
-import SetDiscordChannel from '../components/bots/SetDiscordChannel.vue';
+import DiscordPanel from '../components/discord/DiscordPanel.vue';
 import SetRefreshRate from '../components/moodle/SetRefreshRate.vue';
 import TheNavBar from '../components/TheNavBar.vue';
 
@@ -32,7 +32,7 @@ export default {
   components: {
     AddAdministrator,
     SetCourseNotifications,
-    SetDiscordChannel,
+    DiscordPanel,
     SetRefreshRate,
     TheNavBar,
   },

@@ -1,5 +1,5 @@
 <template>
-  <div id="setdiscordchannel">
+  <div id="discordpanel">
     <article class="panel is-discord">
       <p class="panel-heading is-discord">Discord</p>
       <a class="panel-block">
@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  name: 'SetDiscordChannel',
+  name: 'DiscordPanel',
   data: () => ({
     channelId: '', // User input
     result: '', // Displays result message if set

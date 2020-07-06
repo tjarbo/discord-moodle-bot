@@ -1,21 +1,21 @@
 import { expect } from 'chai';
 import { createLocalVue, mount } from '@vue/test-utils';
 import Buefy from 'buefy';
-import SetDiscordChannel from '@/components/bots/SetDiscordChannel.vue';
+import DiscordPanel from '@/components/discord/DiscordPanel.vue';
 
 const localVue = createLocalVue();
 
 localVue.use(Buefy);
 
-describe('SetDiscordChannel.component', () => {
+describe('DiscordPanel.component', () => {
   let wrapper = null;
 
   beforeEach(() => {
-    wrapper = mount(SetDiscordChannel, { localVue });
+    wrapper = mount(DiscordPanel, { localVue });
   });
 
   it('should render the component', () => {
-    expect(wrapper.contains('#setdiscordchannel')).is.true;
+    expect(wrapper.contains('#discordpanel')).is.true;
   });
 
   it('should render title', () => {
