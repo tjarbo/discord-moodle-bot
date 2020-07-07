@@ -5,7 +5,7 @@ import { app } from './src/configuration/express';
 import { loggerFile } from './src/configuration/logger';
 import { getRefreshRate } from './src/controllers/refreshRate/refreshRate';
 import { Administrator } from './src/controllers/administrator/administrator.schema';
-import { fetchAndNotify } from './src/controllers/moodle';
+import { continuousFetchAndNotify } from './src/controllers/moodle';
 
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(async() => {
   loggerFile.debug('Mongoose connected');
@@ -24,7 +24,7 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
 
   // First call of fetchAndNotify depending on the database interval
   const interval = await getRefreshRate();
-  setTimeout(fetchAndNotify,interval);
+  setTimeout(continuousFetchAndNotify, interval);
 
 }).catch((error) => {
   loggerFile.error('Mongoose NOT Connected', error);

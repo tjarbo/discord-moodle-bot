@@ -72,8 +72,16 @@ export async function fetchAndNotify(): Promise<void> {
     } catch(error) {
         loggerFile.error('Moodle API request failed', error);
     }
+}
 
+/**
+ * Calls the fetchAndNotify function in the current refresh rate interval.
+ *
+ * @export
+ */
+export async function continuousFetchAndNotify(): Promise<void> {
+    fetchAndNotify();
     // Call function again after database interval
     const interval = await getRefreshRate();
-    setTimeout(fetchAndNotify,interval);
+    setTimeout(continuousFetchAndNotify, interval);
 }
