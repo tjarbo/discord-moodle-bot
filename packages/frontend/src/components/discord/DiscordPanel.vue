@@ -8,7 +8,6 @@
             <b-input
               id="channelinput"
               placeholder="Neue Channel-ID"
-              type="number"
               v-model="channelId"
             ></b-input>
           </b-field>
@@ -21,6 +20,7 @@
         <button
           @click="onSubmit"
           class="button is-discord is-outlined is-fullwidth"
+          :disabled="$v.$invalid"
         >Aktualisieren</button>
       </div>
     </article>
@@ -28,6 +28,9 @@
 </template>
 
 <script>
+import { required, numeric } from 'vuelidate/lib/validators';
+
+
 export default {
   name: 'DiscordPanel',
   data: () => ({
@@ -60,6 +63,12 @@ export default {
           }, 3000);
         });
     },
+  },
+  validations: {
+    channelId: {
+      required,
+      numeric,
+    }
   },
 };
 </script>

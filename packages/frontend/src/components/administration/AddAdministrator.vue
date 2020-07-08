@@ -21,7 +21,7 @@
             <b-input
               id="discorduserid"
               placeholder="000000000000000000"
-              type="number"
+              type="text"
               v-model="userid"
               :disabled="administratorGetStatus.pending"
             ></b-input>
@@ -35,14 +35,19 @@
         <button
           @click="onSubmit"
           class="button is-primary is-outlined is-fullwidth"
+          :disabled="$v.$invalid"
         >Hinzufügen</button>
       </div>
+      <b-loading :is-full-page="false" :active="administratorGetStatus.pending"></b-loading>
     </article>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import { required, helpers, numeric } from 'vuelidate/lib/validators';
+
+const usernameRegex = helpers.regex('usernameRegex', /[\w\s]+#[0-9]+/);
 
 export default {
   name: 'AddAdministrator',
@@ -60,14 +65,24 @@ export default {
       this.$store
         .dispatch('addAdministrator', administrator)
         .then(() => {
-          this.userId = '';
-          this.userName = '';
+          this.userid = '';
+          this.username = '';
         })
         .catch();
     },
   },
   computed: {
     ...mapGetters(['administratorsGetError', 'administratorGetStatus']),
+  },
+  validations: {
+    userid: {
+      required,
+      numeric,
+    },
+    username: {
+      required,
+      usernameRegex,
+    },
   },
 };
 </script>
