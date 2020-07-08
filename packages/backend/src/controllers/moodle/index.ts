@@ -4,6 +4,7 @@ import { LastFetch } from './schemas/lastfetch.schema';
 import { getCourseBlacklist } from '../courseList/courseList';
 import { fetchAssignments, fetchEnrolledCourses, fetchCourseContents } from './fetch';
 import { handleAssignments, handleContents } from './handle';
+import { getRefreshRate } from '../refreshRate/refreshRate';
 
 /**
  * Builds a string representing the moodle
@@ -71,4 +72,16 @@ export async function fetchAndNotify(): Promise<void> {
     } catch(error) {
         loggerFile.error('Moodle API request failed', error);
     }
+}
+
+/**
+ * Calls the fetchAndNotify function in the current refresh rate interval.
+ *
+ * @export
+ */
+export async function continuousFetchAndNotify(): Promise<void> {
+    fetchAndNotify();
+    // Call function again after database interval
+    const interval = await getRefreshRate();
+    setTimeout(continuousFetchAndNotify, interval);
 }
