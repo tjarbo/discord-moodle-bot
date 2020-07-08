@@ -7,9 +7,9 @@
 <!-- Beschreibe deine Änderungen im Detail -->
 <!-- Nutze Schlüsselwörter wie "Fixes #XX" oder "Closes #XX" um das Issue zu verlinken. -->
 
-## Screenshots (sollte es welche geben):
+### Screenshots (sollte es welche geben):
 
-## Art der Änderungen:
+### Art der Änderungen:
 <!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
@@ -19,7 +19,7 @@
 - [ ] Documentation content changes
 - [ ] Other (please describe):
 
-### Checkliste:
+## Checkliste
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 - [ ] Make sure you are requesting to development. Don't request to master branch!
