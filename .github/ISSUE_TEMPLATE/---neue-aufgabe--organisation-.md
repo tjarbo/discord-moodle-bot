@@ -2,7 +2,7 @@
 name: "\U0001F4E5 Neue Aufgabe (Organisation)"
 about: Erstelle eine neue Aufgabe für die Projekt Organisation
 title: "\U0001F4E5 titel ..."
-labels: ''
+labels: "\U0001F4E4 task, \U0001F9BA Need assignee"
 assignees: ''
 
 ---

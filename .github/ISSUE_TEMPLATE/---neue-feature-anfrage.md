@@ -2,7 +2,7 @@
 name: "\U0001F4EB Neue Feature-Anfrage"
 about: Frage eine neue Funktion an
 title: "\U0001F4EB titel ..."
-labels: ''
+labels: ":white_flag: help wanted, \U0001F4EB feature request"
 assignees: ''
 
 ---

@@ -2,7 +2,7 @@
 name: "\U0001F41B Bug report"
 about: Erstelle einen Bugreport und helfe uns, den Bot zu verbessern!
 title: "\U0001F41B title...."
-labels: ":bug: bug"
+labels: ":bug: bug, :white_flag: help wanted"
 assignees: ''
 
 ---
