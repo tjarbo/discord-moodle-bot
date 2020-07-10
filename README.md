@@ -1,9 +1,10 @@
 # 🤖 Fancy-Moodle-Discord-Bot 
 
-![Discord](https://img.shields.io/badge/build%20for-discord-blueviolet)
 ![Node CI](https://github.com/tjarbo/discord-moodle-bot/workflows/Node%20CI/badge.svg?branch=master)
+![Build with Buefy](https://img.shields.io/badge/build%20with-buefy-7957d5)
 ![GitHub issues](https://img.shields.io/github/issues/tjarbo/discord-moodle-bot)
 ![GitHub](https://img.shields.io/github/license/tjarbo/discord-moodle-bot)
+![Build for Discord](https://img.shields.io/badge/build%20for-discord-blueviolet)
 
 The FMDB notifies you on a discord server about new activities on the Moodle platform. The current implementation includes:
 
