@@ -47,7 +47,7 @@
 import { mapGetters } from 'vuex';
 import { required, helpers, numeric } from 'vuelidate/lib/validators';
 
-const usernameRegex = helpers.regex('usernameRegex', /[\w\s]+#[0-9]+/);
+const usernameRegex = helpers.regex('usernameRegex', /[\w\s]+#[0-9]{4}/);
 
 export default {
   name: 'AddAdministrator',

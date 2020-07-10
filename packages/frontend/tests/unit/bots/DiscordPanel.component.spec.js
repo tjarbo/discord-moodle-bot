@@ -1,11 +1,13 @@
 import { expect } from 'chai';
 import { createLocalVue, mount } from '@vue/test-utils';
 import Buefy from 'buefy';
+import Vuelidate from 'vuelidate';
 import DiscordPanel from '@/components/discord/DiscordPanel.vue';
 
 const localVue = createLocalVue();
 
 localVue.use(Buefy);
+localVue.use(Vuelidate);
 
 describe('DiscordPanel.component', () => {
   let wrapper = null;
@@ -24,17 +26,17 @@ describe('DiscordPanel.component', () => {
   });
 
   it('should render channel-input', async () => {
-    const useridInput = wrapper.find('#channelinput');
-    const testUserId = '000000000000000001';
+    const channelInput = wrapper.find('#channelinput');
+    const testChannel = '000000000000000001';
 
     // correct attributes
-    expect(useridInput.element.placeholder).to.be.equal('Neue Channel-ID');
-    expect(useridInput.element.type).to.be.equal('number');
+    expect(channelInput.element.placeholder).to.be.equal('Neue Channel-ID');
+    expect(channelInput.element.type).to.be.equal('text');
 
     // changes are in sync with local store
-    useridInput.setValue(testUserId);
+    channelInput.setValue(testChannel);
     await wrapper.vm.$nextTick();
-    expect(wrapper.vm.$data.channelId).to.be.equal(testUserId);
+    expect(wrapper.vm.$data.channelId).to.be.equal(testChannel);
   });
 
   it('should render submit button', () => {
@@ -42,5 +44,38 @@ describe('DiscordPanel.component', () => {
 
     expect(submitButton.text()).to.be.equal('Aktualisieren');
     expect(submitButton.exists()).to.be.true;
+    expect(submitButton.element.disabled).to.be.true;
+  });
+
+  it('should disable submit button based on input using right validators', async () => {
+    const submitButton = wrapper.find('button.button.is-discord.is-outlined.is-fullwidth');
+    const channelInput = wrapper.find('#channelinput');
+
+
+    expect(submitButton.element.disabled).to.be.true;
+    const reset = async () => {
+      // enter valid input
+      channelInput.setValue('000000000000000001');
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.$v.$invalid).to.be.false;
+    };
+
+    const setChannel = async (nbr) => {
+      channelInput.setValue(nbr);
+      await wrapper.vm.$nextTick();
+    };
+
+    // valid
+    await reset();
+
+    // test validations.newRefreshRate.required
+    await setChannel('');
+    expect(wrapper.vm.$v.$invalid).to.be.true;
+
+    await reset();
+
+    // test validations.newRefreshRate.numeric
+    await setChannel('123asd');
+    expect(wrapper.vm.$v.$invalid).to.be.true;
   });
 });

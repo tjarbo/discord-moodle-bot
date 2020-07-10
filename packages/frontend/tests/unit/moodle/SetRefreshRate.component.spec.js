@@ -1,10 +1,12 @@
 import { expect } from 'chai';
 import { createLocalVue, mount } from '@vue/test-utils';
 import Buefy from 'buefy';
+import Vuelidate from 'vuelidate';
 import SetRefreshRate from '@/components/moodle/SetRefreshRate.vue';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);
+localVue.use(Vuelidate);
 
 describe('SetRefreshRate.component', () => {
   let wrapper = null;
@@ -28,7 +30,7 @@ describe('SetRefreshRate.component', () => {
 
     // correct attributes
     expect(refreshRateInput.element.placeholder).to.be.equal('15000');
-    expect(refreshRateInput.element.type).to.be.equal('number');
+    expect(refreshRateInput.element.type).to.be.equal('text');
 
     // changes are in sync with local store
     refreshRateInput.setValue(testRefreshRate);
@@ -41,5 +43,50 @@ describe('SetRefreshRate.component', () => {
 
     expect(submitButton.text()).to.be.equal('Aktualisieren');
     expect(submitButton.exists()).to.be.true;
+    expect(submitButton.element.disabled).to.be.true;
+  });
+
+  it('should disable submit button based on input using right validators', async () => {
+    const submitButton = wrapper.find('button.button.is-moodle.is-outlined.is-fullwidth');
+    const refreshRateInput = wrapper.find('#refreshrateinput');
+    const testRefreshRate = '123123';
+
+    expect(submitButton.element.disabled).to.be.true;
+    const reset = async () => {
+      // enter valid input
+      refreshRateInput.setValue(testRefreshRate);
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.$v.$invalid).to.be.false;
+    };
+
+    const setRefreshRate = async (nbr) => {
+      refreshRateInput.setValue(nbr);
+      await wrapper.vm.$nextTick();
+    };
+
+    // valid
+    await reset();
+
+    // test validations.newRefreshRate.required
+    await setRefreshRate('');
+    expect(wrapper.vm.$v.$invalid).to.be.true;
+
+    await reset();
+
+    // test validations.newRefreshRate.numeric
+    await setRefreshRate('123asd');
+    expect(wrapper.vm.$v.$invalid).to.be.true;
+
+    await reset();
+
+    // test validations.newRefreshRate.between.lower
+    await setRefreshRate('4999');
+    expect(wrapper.vm.$v.$invalid).to.be.true;
+
+    await reset();
+
+    // test validations.newRefreshRate.between.upper
+    await setRefreshRate('2678401');
+    expect(wrapper.vm.$v.$invalid).to.be.true;
   });
 });
