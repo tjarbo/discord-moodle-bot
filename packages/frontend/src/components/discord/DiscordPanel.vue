@@ -68,7 +68,7 @@ export default {
     channelId: {
       required,
       numeric,
-    }
+    },
   },
 };
 </script>

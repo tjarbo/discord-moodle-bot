@@ -7,10 +7,7 @@
           <b-field label="Neues Intervall in ms:">
             <b-input
               id="refreshrateinput"
-              max="3147483647"
-              min="5000"
               placeholder="15000"
-              type="number"
               v-model="newRefreshRate"
             ></b-input>
           </b-field>
@@ -23,6 +20,7 @@
         <button
           @click="onSubmit"
           class="button is-moodle is-outlined is-fullwidth"
+          :disabled="$v.$invalid"
         >
         Aktualisieren
         </button>
@@ -32,6 +30,9 @@
 </template>
 
 <script>
+import { required, numeric, between } from 'vuelidate/lib/validators';
+
+
 export default {
   name: 'SetRefreshRate',
   data: () => ({
@@ -58,6 +59,13 @@ export default {
           // Delete Message after 3 seconds
           setTimeout(() => { this.result = ''; }, 3000);
         });
+    },
+  },
+  validations: {
+    newRefreshRate: {
+      required,
+      numeric,
+      between: between(5000, 2678400),
     },
   },
 };
