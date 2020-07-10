@@ -67,8 +67,7 @@ export default {
         .then(() => {
           this.userid = '';
           this.username = '';
-        })
-        .catch();
+        });
     },
   },
   computed: {
