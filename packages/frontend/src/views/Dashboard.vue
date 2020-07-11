@@ -1,32 +1,46 @@
 <template>
-    <div id="dashboardview">
-      <NavBar></NavBar>
-      <RefreshRateInput></RefreshRateInput>
-      <DiscordChannelInput></DiscordChannelInput>
-      <CourseSelection></CourseSelection>
-      <AddAdministrator></AddAdministrator>
+  <div id="dashboardview">
+    <the-nav-bar></the-nav-bar>
+    <div class="columns">
+      <div class="column is-10 is-offset-1">
+        <b-tabs position="is-centered" class="block">
+          <b-tab-item class="spacing" label="Administration">
+            <add-administrator></add-administrator>
+          </b-tab-item>
+          <b-tab-item class="spacing is-moodle" label="Moodle">
+            <set-course-notifications></set-course-notifications>
+            <set-refresh-rate></set-refresh-rate>
+          </b-tab-item>
+          <b-tab-item class="spacing" label="Discord">
+            <DiscordPanel></DiscordPanel>
+          </b-tab-item>
+        </b-tabs>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
-import RefreshRateInput from '../components/RefreshRateInput.vue';
-import NavBar from '../components/NavBar.vue';
-import CourseSelection from '../components/CourseSelection.vue';
-import DiscordChannelInput from '../components/DiscordChannelInput.vue';
-import AddAdministrator from '../components/AddAdministrator.vue';
+import AddAdministrator from '../components/administration/AddAdministrator.vue';
+import SetCourseNotifications from '../components/moodle/SetCourseNotifications.vue';
+import DiscordPanel from '../components/discord/DiscordPanel.vue';
+import SetRefreshRate from '../components/moodle/SetRefreshRate.vue';
+import TheNavBar from '../components/TheNavBar.vue';
 
 export default {
   name: 'DashboardView',
   components: {
-    RefreshRateInput,
-    NavBar,
     AddAdministrator,
-    CourseSelection,
-    DiscordChannelInput,
+    SetCourseNotifications,
+    DiscordPanel,
+    SetRefreshRate,
+    TheNavBar,
   },
 };
 </script>
 
 <style scoped>
-
+.spacing > * {
+  padding-bottom: 16px;
+}
 </style>
