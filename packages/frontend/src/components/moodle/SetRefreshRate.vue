@@ -49,7 +49,7 @@ export default {
           const msg = `Success! (Code ${response.status})`;
           this.error = false;
           this.result = msg;
-          // Delete Message after 3 seconds
+          // Delete message after 3 seconds
           setTimeout(() => { this.result = ''; }, 3000);
         })
         .catch((err) => {
