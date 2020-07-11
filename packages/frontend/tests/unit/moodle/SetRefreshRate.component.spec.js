@@ -86,7 +86,7 @@ describe('SetRefreshRate.component', () => {
     await reset();
 
     // test validations.newRefreshRate.between.upper
-    await setRefreshRate('2678401');
+    await setRefreshRate('2678400001');
     expect(wrapper.vm.$v.$invalid).to.be.true;
   });
 });
