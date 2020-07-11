@@ -56,7 +56,7 @@ export default {
           const msg = `Error: ${err.response.data.message} (Code ${err.response.status})`;
           this.error = true;
           this.result = msg;
-          // Delete Message after 3 seconds
+          // Delete message after 3 seconds
           setTimeout(() => { this.result = ''; }, 3000);
         });
     },
