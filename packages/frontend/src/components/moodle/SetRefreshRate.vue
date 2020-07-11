@@ -63,7 +63,7 @@ export default {
     newRefreshRate: {
       required,
       numeric,
-      between: between(5000, 2678400),
+      between: between(5000, 2678400000),
     },
   },
 };
