@@ -21,9 +21,7 @@
           @click="onSubmit"
           class="button is-moodle is-outlined is-fullwidth"
           :disabled="$v.$invalid"
-        >
-        Aktualisieren
-        </button>
+        >Aktualisieren</button>
       </div>
     </article>
   </div>
