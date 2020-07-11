@@ -149,7 +149,7 @@ export default new Vuex.Store({
 
     addAdministrator(context, administratorObject) {
       context.commit('SET_ADMINISTRATORS');
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         api.post('/settings/administrator', administratorObject)
           .then((response) => {
             console.log(response);
@@ -159,7 +159,6 @@ export default new Vuex.Store({
           .catch((err) => {
             console.log(err);
             context.commit('SET_ADMINISTRATORS', err);
-            reject();
           });
       });
     },

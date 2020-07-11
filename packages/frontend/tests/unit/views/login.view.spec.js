@@ -28,11 +28,11 @@ describe('Login.view', () => {
     wrapper = mount(Login, { store, localVue });
   });
 
-  it('renders a form', () => {
+  it('should render a form', () => {
     expect(wrapper.contains('form')).is.true;
   });
 
-  it('renders username input correctly', () => {
+  it('should render username input correctly', () => {
     const usernameInput = wrapper.find('#discordusername');
     const testUserName = 'testusername';
 
@@ -43,7 +43,7 @@ describe('Login.view', () => {
     expect(wrapper.vm.$data.form.username).to.be.equal(testUserName);
   });
 
-  it('renders token input correctly', () => {
+  it('should render token input correctly', () => {
     const tokenInput = wrapper.find('#token');
     const testToken = '123123';
 
@@ -57,7 +57,7 @@ describe('Login.view', () => {
     expect(wrapper.vm.$data.form.token).to.be.equal(testToken);
   });
 
-  it('changes disabled attribute for token input', async () => {
+  it('should change disabled attribute for token input', async () => {
     const tokenInput = wrapper.find('#token');
 
     wrapper.vm.$set(wrapper.vm, 'tokenInputDisabled', false);
