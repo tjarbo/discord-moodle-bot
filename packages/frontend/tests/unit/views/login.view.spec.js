@@ -11,6 +11,7 @@ localVue.use(Buefy);
 describe('Login.view', () => {
   let wrapper = null;
   let getters;
+  let actions;
   let store;
 
   beforeEach(() => {
@@ -21,8 +22,13 @@ describe('Login.view', () => {
       }),
     };
 
+    actions = {
+      verifyToken: () => new Promise(() => {}),
+    };
+
     store = new Vuex.Store({
       getters,
+      actions,
     });
 
     wrapper = mount(Login, { store, localVue });

@@ -45,7 +45,7 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         api.post('/verify')
           .then(() => {
-            context.commit('SET_AUTH', null);
+            context.commit('SET_AUTH', token);
             resolve();
           })
           .catch((err) => {
