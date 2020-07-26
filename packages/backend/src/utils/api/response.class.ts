@@ -23,7 +23,7 @@ export class ApiResponse {
    * @memberof ApiResponse
    */
   status: ApiStatus;
-  
+
   /**
    * Matches the current Http status code of the ApiResponse
    *
@@ -50,7 +50,7 @@ export class ApiResponse {
 
   /**
    * Creates an instance of ApiResponse.
-   * 
+   *
    * @param {ApiStatus} status type of ApiResponse
    * @param {number} code HTTP STATUS CODE
    * @param {object} data Response data

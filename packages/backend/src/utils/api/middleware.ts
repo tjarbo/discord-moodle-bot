@@ -6,7 +6,7 @@ import { HttpError } from 'http-errors';
 
 /**
  * Custom express middleware to handle any kind of responses. Called via next parameter
- * at previous middleware. 
+ * at previous middleware.
  *
  * @param {*} param
  * @param {Request} req
