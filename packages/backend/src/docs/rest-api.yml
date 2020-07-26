@@ -6,7 +6,7 @@ info:
   license:
     name: "GNU AFFERO GENERAL PUBLIC LICENSE"
     url: "https://github.com/tjarbo/discord-moodle-bot/tree/development"
-host: "[your_fmdb_instance]"
+host: "localhost:4040"
 basePath: "/api"
 tags:
 - name: "Login"
@@ -15,7 +15,6 @@ tags:
     description: "Find out more about jwt"
     url: "https://jwt.io/#debugger"
 schemes:
-- "https"
 - "http"
 paths:
   /token:

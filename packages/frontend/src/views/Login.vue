@@ -48,8 +48,14 @@
               </form>
             </div>
             <p class="has-text-link">
-              <a class="has-text-link" href="https://github.com/tjarbo/discord-moodle-bot/">Github Repository</a> &nbsp;·&nbsp;
-              <a class="has-text-link" href="https://github.com/tjarbo/discord-moodle-bot/wiki">Brauchst du Hilfe?</a>
+              <a
+                class="has-text-link"
+                href="https://github.com/tjarbo/discord-moodle-bot/"
+              >Github Repository</a> &nbsp;·&nbsp;
+              <a
+                class="has-text-link"
+                href="https://github.com/tjarbo/discord-moodle-bot/wiki"
+              >Brauchst du Hilfe?</a>
             </p>
           </div>
         </div>
@@ -60,6 +66,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { notifyFailure, notifySuccess } from '../notification';
 
 export default {
   name: 'LoginView',
@@ -87,12 +94,24 @@ export default {
             // token request was successful
             this.tokenInputDisabled = false;
             this.form.submitButtonText = 'Anmelden';
+
+            notifySuccess('Token wurde erfolgreich versendet!');
           })
-          .catch(() => {
+          .catch((apiResponse) => {
             // token request failed
             this.tokenInputDisabled = true;
             this.form.submitButtonText = 'Token anfordern';
+
+            if (apiResponse.code) {
+              notifyFailure(apiResponse.error[0].message);
+            } else {
+              // request failed locally - maybe no internet connection etc?
+              notifyFailure(
+                'Anfrage fehlgeschlagen! Bitte überpüfe deine Internetverbindung.',
+              );
+            }
           });
+
         // login with token in the other case
       } else {
         // create object with login credentials
@@ -106,10 +125,21 @@ export default {
             // login was successful
             this.tokenInputDisabled = true;
             this.$router.push('dashboard');
+
+            notifySuccess('Anmeldung war erfolgreich!');
           })
-          .catch(() => {
+          .catch((apiResponse) => {
             // login failed
             this.tokenInputDisabled = false;
+
+            if (!apiResponse.code) {
+              // request failed locally - maybe no internet connection etc?
+              notifyFailure(
+                'Anfrage fehlgeschlagen! Bitte überpüfe deine Internetverbindung.',
+              );
+            } else {
+              notifyFailure(apiResponse.error[0].message);
+            }
           });
       }
     },
@@ -140,8 +170,9 @@ figure img {
   padding: 5px;
   background: #fff;
   border-radius: 50%;
-  -webkit-box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
-  box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+  -webkit-box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1),
+    0 0 0 1px rgba(10, 10, 10, 0.1);
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
 }
 .box {
   margin-top: 5rem;

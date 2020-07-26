@@ -4,15 +4,15 @@
       <p class="panel-heading">Administrator hinzufügen</p>
       <a class="panel-block">
         <p class="control">
-        <b-field label="Discord-Name">
-          <b-input
-            id="discordusername"
-            placeholder="username#0000"
-            type="text"
-            v-model="username"
-            :disabled="administratorGetStatus.pending"
-          ></b-input>
-        </b-field>
+          <b-field label="Discord-Name">
+            <b-input
+              id="discordusername"
+              placeholder="username#0000"
+              type="text"
+              v-model="username"
+              :disabled="administratorGetStatus.pending"
+            ></b-input>
+          </b-field>
         </p>
       </a>
       <a class="panel-block">
@@ -46,6 +46,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { required, helpers, numeric } from 'vuelidate/lib/validators';
+import { notifySuccess, notifyFailure } from '../../notification';
 
 const usernameRegex = helpers.regex('usernameRegex', /[\w\s]+#[0-9]{4}/);
 
@@ -67,6 +68,21 @@ export default {
         .then(() => {
           this.userid = '';
           this.username = '';
+          notifySuccess('Administrator erfolgreich hinzugefügt!');
+        })
+        .catch((apiResponse) => {
+          if (apiResponse.code) {
+            notifyFailure(apiResponse.error[0].message);
+
+            if (apiResponse.code === 401) {
+              this.$router.push('/');
+            }
+          } else {
+            // request failed locally - maybe no internet connection etc?
+            notifyFailure(
+              'Anfrage fehlgeschlagen! Bitte überpüfe deine Internetverbindung.',
+            );
+          }
         });
     },
   },
