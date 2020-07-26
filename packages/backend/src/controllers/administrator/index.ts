@@ -1,8 +1,8 @@
-import { ApiError } from '../error/api.class';
 import { Request, Response, NextFunction } from 'express';
 import { object, string } from '@hapi/joi';
 import { loggerFile } from '../../configuration/logger';
 import { Administrator } from './administrator.schema';
+import { ApiError, ApiSuccess } from '../../utils/api';
 
 const administratorRequestSchema = object({
     username: string().required().regex(/[\w\s]+#[0-9]+/),
@@ -43,7 +43,9 @@ export async function addAdministratorRequest(req: Request, res: Response, next:
         };
 
         await new Administrator(adminObj).save();
-        res.status(201).end();
+
+        const response = new ApiSuccess(201);
+        next(response);
 
     } catch (err) {
         loggerFile.error(err.message);
