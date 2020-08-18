@@ -40,32 +40,47 @@ export default {
       commit('SET_COURSES');
       return new Promise((resolve, reject) => {
         ApiUtil.get('/settings/courses')
-        // TODO: New handler like in administration.ts
-          .then((response) => {
-            commit('SET_COURSES', response.data.data);
-            resolve();
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              commit('SET_COURSES', apiResponse.data);
+              resolve();
+            } else {
+              commit('SET_COURSES', new Error(apiResponse.error[0].message));
+              reject(apiResponse);
+            }
           })
-          .catch((error) => {
-            commit('SET_COURSES', error);
-            reject(error);
+          .catch((err) => {
+            console.log(err);
+            commit('SET_COURSES', err);
+            reject();
           });
       });
     },
 
-    setCourse(_, update) {
+    setCourse({ commit }, update) {
+      commit('SET_COURSES');
       return new Promise((resolve, reject) => {
         ApiUtil.put(`/settings/courses/${update.courseId}`, { isActive: update.isActive })
-        // TODO: New handler like in administration.ts
-          .then((response) => {
-            resolve(response);
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              commit('SET_COURSES', apiResponse.data);
+              resolve();
+            } else {
+              commit('SET_COURSES', new Error(apiResponse.error[0].message));
+              reject(apiResponse);
+            }
           })
-          .catch((error) => {
-            reject(error);
+          .catch((err) => {
+            console.log(err);
+            commit('SET_COURSES', err);
+            reject();
           });
       });
     },
   },
   getters: {
     refreshRateGetStatus: (state) => state.refreshRate.status,
+    coursesGetStatus: (state) => state.courses.status,
+    coursesGetData: (state) => state.courses.data,
   },
 };

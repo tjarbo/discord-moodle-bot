@@ -111,7 +111,11 @@ export async function setCourseRequest(req: Request, res: Response, next: NextFu
         // Method call and exit
         await setCourse(courseId, isActive);
 
-        const response = new ApiSuccess();
+        // Send back the new list of all courses
+        const courses = await getCourseList();
+        if (courses.length === 0) throw new ApiError(404, 'No courses found');
+
+        const response = new ApiSuccess(200, courses);
         next(response);
 
     }
