@@ -4,7 +4,7 @@ import { Administrator } from '../src/controllers/administrator/administrator.sc
 import { Request, Response } from 'express';
 import mockingoose from 'mockingoose';
 import { loggerFile } from '../src/configuration/logger';
-import { ApiError } from '../src/controllers/error/api.class';
+import { ApiError, ApiSuccess } from "../src/utils/api";
 import { AuthToken } from '../src/controllers/authentication/token.schema';
 import * as discord from '../src/controllers/discord';
 import { TokenRequestMessage } from '../src/controllers/discord/templates';
@@ -97,7 +97,7 @@ describe('auth.js authTokenRequest', () => {
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe(`User ${mockRequest.body.username} not found`);
+    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(404, `User testuser2#123123 not found`));
   });
 
   it('should log error if token creation fails', async () => {
@@ -131,7 +131,8 @@ describe('auth.js authTokenRequest', () => {
     expect(spyDiscord).toHaveBeenCalledWith(...expectedParameters);
 
     // no error has to be logged
-    expect(mockNext.mock.calls.length).toBe(0);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect((mockNext.mock.calls[0][0] as ApiSuccess).status).toBe('success');
     expect(spyLogger.mock.calls.length).toBe(0);
 
   });
@@ -210,10 +211,6 @@ describe('auth.js authLoginRequest', () => {
     expect(spyLogger.mock.calls.length).toBe(4);
     expect(mockNext.mock.calls.length).toBe(4);
     expect(mockNext.mock.calls[3][0]).toEqual(new ApiError(400, '"token" must be greater than 100000'));
-
-    // no successful response
-    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
-    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
   });
 
   it('should log error if unknown user is provided', async () => {
@@ -226,11 +223,8 @@ describe('auth.js authLoginRequest', () => {
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe(`User ${mockRequest.body.username} not found`);
+    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(404, `User testuser2#123123 not found`));
 
-    // no successful response
-    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
-    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
   });
 
   it('should log error if token is unknown cause of filter options', async () => {
@@ -242,13 +236,10 @@ describe('auth.js authLoginRequest', () => {
     await authLoginRequest(mockRequest, mockResponse, mockNext);
 
     expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Invalid token!`));
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(401, `Invalid token!`));
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe('Invalid token!');
+    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(401, `Invalid token!`));
 
-    // no successful response
-    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(0);
-    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(0);
   });
 
   it('should response with jwt if everything is fine', async () => {
@@ -260,13 +251,9 @@ describe('auth.js authLoginRequest', () => {
 
     await authLoginRequest(mockRequest, mockResponse, mockNext);
 
-    expect((mockResponse.status as jest.Mock).mock.calls.length).toBe(1);
-    expect((mockResponse.status as jest.Mock).mock.calls[0][0]).toBe(200);
-    expect((mockResponse.json as jest.Mock).mock.calls.length).toBe(1);
-    expect((mockResponse.json as jest.Mock).mock.calls[0][0]).not.toBe(null);
-
     // no error has to be logged
-    expect(mockNext.mock.calls.length).toBe(0);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect((mockNext.mock.calls[0][0] as ApiSuccess).status).toBe('success');
     expect(spyLogger.mock.calls.length).toBe(0);
   });
 

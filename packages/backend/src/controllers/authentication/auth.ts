@@ -91,7 +91,7 @@ export async function authTokenRequest(req: Request, res: Response, next: NextFu
     next(response);
 
   } catch (err) {
-    loggerFile.error(err.message);
+    loggerFile.error(err.message || err);
     next(err);
   }
 }
@@ -121,7 +121,7 @@ export async function authLoginRequest(req: Request, res: Response, next: NextFu
     next(response);
 
   } catch (err) {
-    loggerFile.error(err.message);
+    loggerFile.error(err.message || err);
     next(err);
   }
 }

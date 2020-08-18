@@ -1,7 +1,7 @@
 import { client } from '../src/configuration/discord';
 import { TokenRequestMessage } from '../src/controllers/discord/templates';
 import { publish, sendTo } from '../src/controllers/discord';
-import { ApiError } from '../src/controllers/error/api.class';
+import { ApiError } from "../src/utils/api";
 import * as discordChannel from '../src/controllers/discordChannel/discordChannel';
 
 jest.mock('../src/configuration/environment.ts');

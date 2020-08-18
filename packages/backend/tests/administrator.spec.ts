@@ -2,8 +2,8 @@ import { loggerFile } from "../src/configuration/logger";
 import { addAdministratorRequest } from "../src/controllers/administrator";
 import mockingoose from 'mockingoose';
 import { Request, Response } from "express";
-import { ApiError } from "../src/controllers/error/api.class";
 import { Administrator } from "../src/controllers/administrator/administrator.schema";
+import { ApiError, ApiSuccess } from "../src/utils/api";
 
 jest.mock('../src/configuration/environment.ts');
 
@@ -70,7 +70,7 @@ describe('administrator/index.ts addAdministratorRequest',() => {
     expect(mockNext.mock.calls[2][0]).toEqual(new ApiError(400, '"userid" is required'));
   });
 
-  it('should log error if administator with same username exists', async () => {
+  it('should log error if administrator with same username exists', async () => {
 
     mockRequest.body = mockUser;
 
@@ -102,12 +102,10 @@ describe('administrator/index.ts addAdministratorRequest',() => {
 
     await addAdministratorRequest(mockRequest, mockResponse, mockNext);
 
-    expect((mockResponse.status as jest.Mock)).toHaveBeenCalledTimes(1);
-    expect((mockResponse.status as jest.Mock)).toHaveBeenCalledWith(201);
-    expect((mockResponse.end as jest.Mock)).toHaveBeenCalledTimes(1);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect((mockNext.mock.calls[0][0] as ApiSuccess)).toEqual(new ApiSuccess(201));
 
     // no error
     expect(spyLogger.mock.calls.length).toBe(0);
-    expect(mockNext.mock.calls.length).toBe(0);
   });
 });
