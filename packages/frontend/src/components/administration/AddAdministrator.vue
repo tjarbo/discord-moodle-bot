@@ -28,9 +28,6 @@
           </b-field>
         </p>
       </a>
-      <p class="panel-block" v-if="administratorGetStatus.fail">
-        <span>{{administratorsGetError}}</span>
-      </p>
       <div class="panel-block">
         <button
           @click="onSubmit"
@@ -74,9 +71,7 @@ export default {
           if (apiResponse.code) {
             notifyFailure(apiResponse.error[0].message);
 
-            if (apiResponse.code === 401) {
-              this.$router.push('/');
-            }
+            if (apiResponse.code === 401) { this.$router.push('/'); }
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(
@@ -87,7 +82,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['administratorsGetError', 'administratorGetStatus']),
+    ...mapGetters(['administratorGetStatus']),
   },
   validations: {
     userid: {

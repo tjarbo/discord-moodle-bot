@@ -20,7 +20,7 @@ export default {
               commit('SET_ADMINISTRATORS', apiResponse.data);
               resolve();
             } else {
-              commit('SET_AUTH', new Error(apiResponse.error[0].message));
+              commit('SET_ADMINISTRATORS', new Error(apiResponse.error[0].message));
               reject(apiResponse);
             }
           })
@@ -33,7 +33,6 @@ export default {
     },
   },
   getters: {
-    administratorsGetError: (state) => state.administrators.status.error.response.data.message,
     administratorGetStatus: (state) => state.administrators.status,
   },
 };
