@@ -11,19 +11,28 @@ export default {
     },
   },
   actions: {
-    setDiscordChannel(_, update) {
+    setDiscordChannel({ commit }, update) {
+      commit('SET_CHANNEL');
       return new Promise((resolve, reject) => {
         ApiUtil.put('/settings/discordChannel', update)
-          .then((response) => {
-            resolve(response);
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              commit('SET_CHANNEL', apiResponse.data);
+              resolve();
+            } else {
+              commit('SET_CHANNEL', new Error(apiResponse.error[0].message));
+              reject(apiResponse);
+            }
           })
-          .catch((error) => {
-            reject(error);
+          .catch((err) => {
+            console.log(err);
+            commit('SET_CHANNEL', err);
+            reject();
           });
       });
     },
   },
   getters: {
-
+    channelGetStatus: (state) => state.channel.status,
   },
 };
