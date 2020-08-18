@@ -13,9 +13,6 @@
           </b-field>
         </p>
       </a>
-      <p class="panel-block" v-if="refreshRateGetStatus.fail">
-        <span>{{refreshRateGetError}}</span>
-      </p>
       <div class="panel-block">
         <button
           @click="onSubmit"
@@ -62,7 +59,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['refreshRateGetStatus', 'refreshRateGetError']),
+    ...mapGetters(['refreshRateGetStatus']),
   },
   validations: {
     newRefreshRate: {

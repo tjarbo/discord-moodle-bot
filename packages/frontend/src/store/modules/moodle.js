@@ -19,13 +19,19 @@ export default {
       commit('SET_REFRESH_RATE');
       return new Promise((resolve, reject) => {
         ApiUtil.put('/settings/refreshRate', update)
-          .then((response) => {
-            commit('SET_REFRESH_RATE', response.data.data);
-            resolve(response);
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              commit('SET_REFRESH_RATE', apiResponse.data);
+              resolve(apiResponse);
+            } else {
+              commit('SET_REFRESH_RATE', new Error(apiResponse.error[0].message));
+              reject(apiResponse);
+            }
           })
-          .catch((error) => {
-            commit('SET_REFRESH_RATE', error.response.error);
-            reject(error);
+          .catch((err) => {
+            console.log(err);
+            commit('SET_REFRESH_RATE', err);
+            reject();
           });
       });
     },
@@ -34,12 +40,13 @@ export default {
       commit('SET_COURSES');
       return new Promise((resolve, reject) => {
         ApiUtil.get('/settings/courses')
+        // TODO: New handler like in administration.ts
           .then((response) => {
             commit('SET_COURSES', response.data.data);
             resolve();
           })
           .catch((error) => {
-            commit('SET_COURSES', error.response.data.error);
+            commit('SET_COURSES', error);
             reject(error);
           });
       });
@@ -48,6 +55,7 @@ export default {
     setCourse(_, update) {
       return new Promise((resolve, reject) => {
         ApiUtil.put(`/settings/courses/${update.courseId}`, { isActive: update.isActive })
+        // TODO: New handler like in administration.ts
           .then((response) => {
             resolve(response);
           })
@@ -58,7 +66,6 @@ export default {
     },
   },
   getters: {
-    refreshRateGetError: (state) => state.refreshRate.status.error.response.data.message,
     refreshRateGetStatus: (state) => state.refreshRate.status,
   },
 };
