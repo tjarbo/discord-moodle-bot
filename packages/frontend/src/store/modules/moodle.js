@@ -31,7 +31,7 @@ export default {
     },
 
     fetchCourseList({ commit }) {
-      commit('SET_REFRESH_RATE');
+      commit('SET_COURSES');
       return new Promise((resolve, reject) => {
         ApiUtil.get('/settings/courses')
           .then((response) => {
@@ -58,6 +58,7 @@ export default {
     },
   },
   getters: {
-
+    refreshRateGetError: (state) => state.refreshRate.status.error.response.data.message,
+    refreshRateGetStatus: (state) => state.refreshRate.status,
   },
 };

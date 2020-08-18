@@ -13,8 +13,8 @@
           </b-field>
         </p>
       </a>
-      <p class="panel-block" v-if="result != ''" :class="{error}">
-        <span>{{result}}</span>
+      <p class="panel-block" v-if="refreshRateGetStatus.fail">
+        <span>{{refreshRateGetError}}</span>
       </p>
       <div class="panel-block">
         <button
@@ -23,41 +23,46 @@
           :disabled="$v.$invalid"
         >Aktualisieren</button>
       </div>
+      <b-loading :is-full-page="false" :active="refreshRateGetStatus.pending"></b-loading>
     </article>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { required, numeric, between } from 'vuelidate/lib/validators';
-
+import { notifySuccess, notifyFailure } from '../../notification';
 
 export default {
   name: 'SetRefreshRate',
   data: () => ({
     newRefreshRate: '', // User input
-    result: '', // Result to be displayed
-    error: false, // Sets result color to red if true
   }),
   methods: {
     onSubmit() {
-      this.result = '';
       const update = { refreshRate: this.newRefreshRate };
+
       this.$store.dispatch('refreshRate', update)
-        .then((response) => {
-          const msg = `Success! (Code ${response.status})`;
-          this.error = false;
-          this.result = msg;
-          // Delete message after 3 seconds
-          setTimeout(() => { this.result = ''; }, 3000);
+        .then(() => {
+          this.newRefreshRate = '';
+          notifySuccess('Die Aktualisierungsrate wurde erfolgreich gespeichert!');
         })
-        .catch((err) => {
-          const msg = `Error: ${err.response.data.message} (Code ${err.response.status})`;
-          this.error = true;
-          this.result = msg;
-          // Delete message after 3 seconds
-          setTimeout(() => { this.result = ''; }, 3000);
+        .catch((apiResponse) => {
+          if (apiResponse.code) {
+            notifyFailure(apiResponse.error[0].message);
+
+            if (apiResponse.code === 401) { this.$router.push('/'); }
+          } else {
+            // request failed locally - maybe no internet connection etc?
+            notifyFailure(
+              'Anfrage fehlgeschlagen! Bitte überpüfe deine Internetverbindung.',
+            );
+          }
         });
     },
+  },
+  computed: {
+    ...mapGetters(['refreshRateGetStatus', 'refreshRateGetError']),
   },
   validations: {
     newRefreshRate: {
