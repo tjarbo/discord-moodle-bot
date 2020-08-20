@@ -5,6 +5,8 @@ import { Request, Response } from 'express';
 import { UnauthorizedError, ErrorCode } from 'express-jwt';
 import { ApiError } from "../src/utils/api";
 
+jest.mock('../src/configuration/environment.ts');
+
 describe('middleware.ts apiMiddleware', () => {
   let mockRequest: Request;
   let mockResponse: Response;
