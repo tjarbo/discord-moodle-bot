@@ -5,7 +5,7 @@ import { Administrator } from './administrator.schema';
 import { ApiError, ApiSuccess } from '../../utils/api';
 
 const administratorRequestSchema = object({
-    username: string().required().regex(/[\w\s]+#[0-9]\{4\}+/),
+    username: string().required().regex(/[\w\s]+#[0-9]{4}/),
     userid: string().required(),
 });
 

@@ -63,11 +63,30 @@ describe('administrator/index.ts addAdministratorRequest',() => {
 
     // no userid
     mockRequest.body.username = mockUser.username;
+    delete mockRequest.body.userid;
 
     await addAdministratorRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(3);
     expect(mockNext.mock.calls.length).toBe(3);
     expect(mockNext.mock.calls[2][0]).toEqual(new ApiError(400, '"userid" is required'));
+    
+    mockRequest.body.userid = '123123123123';
+    /*
+    // invalid user name (to less or many numbers)
+    mockRequest.body.username = "invalid#123";
+
+    await addAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(4);
+    expect(mockNext.mock.calls.length).toBe(4);
+    expect(mockNext.mock.calls[3][0]).toEqual(new ApiError(400, '"username" with value "invalid#123" fails to match the required pattern: /[\\w\\s]+#[0-9]{4}/'));
+    
+    mockRequest.body.username = "invalid#12345";
+
+    await addAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(5);
+    expect(mockNext.mock.calls.length).toBe(5);
+    expect(mockNext.mock.calls[4][0]).toEqual(new ApiError(400, '"username" with value "invalid#12345" fails to match the required pattern: /[\w\s]+#[0-9]{4}/'));
+    */
   });
 
   it('should log error if administrator with same username exists', async () => {
