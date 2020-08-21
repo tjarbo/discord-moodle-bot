@@ -135,7 +135,7 @@ export default {
             if (!apiResponse.code) {
               // request failed locally - maybe no internet connection etc?
               notifyFailure(
-                'Anfrage fehlgeschlagen! Bitte überpüfe deine Internetverbindung.',
+                'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
               );
             } else {
               notifyFailure(apiResponse.error[0].message);
