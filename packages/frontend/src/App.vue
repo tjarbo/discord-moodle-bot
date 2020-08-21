@@ -14,7 +14,7 @@ export default {
       .then(() => this.$router.push('/dashboard'))
       .catch(() => {
         this.$router.push('/');
-        notifyFailure('Zugang leider abgelaufen. Bitte erneut anmelden');
+        notifyFailure('Zugang leider abgelaufen. Bitte erneut anmelden!');
       });
   },
 };
