@@ -9,7 +9,7 @@
     "prebuild": "vue-cli-service lint --fix",
     "prestart": "vue-cli-service lint --fix",
     "pretest": "vue-cli-service lint --fix",
-    "start": "vue-cli-service serve",
+    "start": "vue-cli-service build --watch",
     "test": "vue-cli-service test:unit"
   },
   "dependencies": {
