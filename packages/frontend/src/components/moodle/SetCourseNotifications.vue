@@ -1,8 +1,9 @@
 <template>
   <div id="setcoursenotifications">
     <article class="panel is-moodle">
+      <b-loading :is-full-page="false" :active="coursesGetStatus.pending"></b-loading>
       <p class="panel-heading">Kurse mit aktivierten Benachrichtigungen:</p>
-      <label class="panel-block" v-for="course in courses" :key="course.courseId">
+      <label class="panel-block" v-for="course in coursesGetData" :key="course.courseId">
         <input
           type="checkbox"
           v-model="course.isActive"
@@ -12,66 +13,64 @@
         />
         {{course.name}}
       </label>
-      <p class="panel-block" v-if="result != ''" :class="{error}">
-        <span>{{result}}</span>
-      </p>
     </article>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { notifyFailure, notifySuccess } from '../../notification';
+
 export default {
-  created() {
+  name: 'SetCourseNotifications',
+  mounted() {
     // Import course array at loading time
     this.$store
-      .dispatch('getCourseList')
-      .then((response) => {
-        this.courses = response.data;
-      })
-      .catch((err) => {
-        // Build error object for display
-        const list = [
-          {
-            courseId: 0,
-            name: `Error: ${err.response.data.message} (Code ${err.response.status})`,
-            isActive: false,
-          },
-        ];
-        this.courses = list;
+      .dispatch('fetchCourseList')
+      .then(() => {})
+      .catch((apiResponse) => {
+        if (apiResponse.code) {
+          notifyFailure(apiResponse.error[0].message);
+        } else {
+          // request failed locally - maybe no internet connection etc?
+          notifyFailure(
+            'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+          );
+        }
       });
   },
-  name: 'SetCourseNotifications',
-  data: () => ({
-    courses: [],
-    result: '', // Displays result message if set
-    error: false, // Sets result message color to red if true
-  }),
   methods: {
     onChange(id, event) {
       // Update course on checkbox change
-      this.result = '';
-      const courseUpdate = { courseId: id, isActive: event.srcElement.checked };
+      const courseUpdate = { courseId: id, isActive: event.target.checked };
       this.$store
         .dispatch('setCourse', courseUpdate)
-        .then((response) => {
-          const msg = `Aktualisierung erfolgreich! (Code ${response.status})`;
-          this.error = false;
-          this.result = msg;
-          // Delete Message after 3 seconds
-          setTimeout(() => {
-            this.result = '';
-          }, 3000);
+        .then(() => {
+          console.log(event.target);
+          notifySuccess(
+            `Benachrichtigung für ${event.target.id} aktualisiert!`,
+          );
         })
-        .catch((err) => {
-          const msg = `Error: ${err.response.data.message} (Code ${err.response.status})`;
-          this.error = true;
-          this.result = msg;
-          // Delete Message after 3 seconds
-          setTimeout(() => {
-            this.result = '';
-          }, 3000);
+        .catch((apiResponse) => {
+          if (apiResponse.code) {
+            notifyFailure(apiResponse.error[0].message);
+
+            if (apiResponse.code === 401) {
+              notifyFailure('Zugang leider abgelaufen! Bitte melde dich erneut an!');
+              this.$store.dispatch('logout');
+              this.$router.push({ name: 'Login' });
+            }
+          } else {
+            // request failed locally - maybe no internet connection etc?
+            notifyFailure(
+              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            );
+          }
         });
     },
+  },
+  computed: {
+    ...mapGetters(['coursesGetStatus', 'coursesGetData']),
   },
 };
 </script>

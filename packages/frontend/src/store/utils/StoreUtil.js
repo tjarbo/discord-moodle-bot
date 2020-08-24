@@ -1,5 +1,3 @@
-import { NotificationProgrammatic as Notification } from 'buefy';
-
 export default class StoreUtil {
   /**
    * init the state.
@@ -29,6 +27,12 @@ export default class StoreUtil {
       // PENDING
       return this._mutationPending({ ...state });
     }
+
+    if (data === null) {
+      // RESET
+      return this.state();
+    }
+
     // SUCCESS or FAIL
     return data instanceof Error
       ? this._mutationFail({ ...state }, data)
@@ -40,7 +44,7 @@ export default class StoreUtil {
    * @returns {Object} updated state
    */
   static _mutationPending(state) {
-    state.data = null;
+    // state.data = null;
     state.status.pending = true;
     state.status.success = false;
     state.status.fail = false;
@@ -73,14 +77,6 @@ export default class StoreUtil {
     state.status.success = false;
     state.status.fail = true;
     state.status.error = data;
-    Notification.open({
-      duration: 5000,
-      hasIcon: false,
-      message: data.message,
-      position: 'is-bottom-right',
-      type: 'is-danger',
-    });
-
     return state;
   }
 }

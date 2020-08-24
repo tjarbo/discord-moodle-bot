@@ -13,9 +13,6 @@
           </b-field>
         </p>
       </a>
-      <p class="panel-block" v-if="result != ''" :class="{error}">
-        <span>{{result}}</span>
-      </p>
       <div class="panel-block">
         <button
           @click="onSubmit"
@@ -23,46 +20,49 @@
           :disabled="$v.$invalid"
         >Aktualisieren</button>
       </div>
+      <b-loading :is-full-page="false" :active="channelGetStatus.pending"></b-loading>
     </article>
   </div>
 </template>
 
 <script>
 import { required, numeric } from 'vuelidate/lib/validators';
+import { mapGetters } from 'vuex';
+import { notifySuccess, notifyFailure } from '../../notification';
 
 
 export default {
   name: 'DiscordPanel',
   data: () => ({
-    channelId: '', // User input
-    result: '', // Displays result message if set
-    error: false, // Sets result message color to red if true
+    channelId: '',
   }),
   methods: {
     onSubmit() {
-      this.result = '';
       const update = { channelId: this.channelId };
-      this.$store
-        .dispatch('setDiscordChannel', update)
-        .then((response) => {
-          const msg = `Aktualisierung erfolgreich! (Code ${response.status})`;
-          this.error = false;
-          this.result = msg;
-          // Delete result message after 3 seconds
-          setTimeout(() => {
-            this.result = '';
-          }, 3000);
+      this.$store.dispatch('setDiscordChannel', update)
+        .then(() => {
+          notifySuccess('Channel auf Discord wurde erfolgreich geändert!');
         })
-        .catch((err) => {
-          const msg = `Error: ${err.response.data.message} (Code ${err.response.status})`;
-          this.error = true;
-          this.result = msg;
-          // Delete result message after 3 seconds
-          setTimeout(() => {
-            this.result = '';
-          }, 3000);
+        .catch((apiResponse) => {
+          if (apiResponse.code) {
+            notifyFailure(apiResponse.error[0].message);
+
+            if (apiResponse.code === 401) {
+              notifyFailure('Zugang leider abgelaufen! Bitte melde dich erneut an!');
+              this.$store.dispatch('logout');
+              this.$router.push({ name: 'Login' });
+            }
+          } else {
+            // request failed locally - maybe no internet connection etc?
+            notifyFailure(
+              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            );
+          }
         });
     },
+  },
+  computed: {
+    ...mapGetters(['channelGetStatus']),
   },
   validations: {
     channelId: {

@@ -1,19 +1,31 @@
 import { expect } from 'chai';
 import { createLocalVue, mount } from '@vue/test-utils';
 import Buefy from 'buefy';
+import Vuex from 'vuex';
 import Vuelidate from 'vuelidate';
 import DiscordPanel from '@/components/discord/DiscordPanel.vue';
 
 const localVue = createLocalVue();
-
+localVue.use(Vuex);
 localVue.use(Buefy);
 localVue.use(Vuelidate);
 
 describe('DiscordPanel.component', () => {
   let wrapper = null;
+  let store;
 
   beforeEach(() => {
-    wrapper = mount(DiscordPanel, { localVue });
+    const getters = {
+      channelGetStatus: () => ({
+        pending: false,
+      }),
+    };
+
+    store = new Vuex.Store({
+      getters,
+    });
+
+    wrapper = mount(DiscordPanel, { localVue, store });
   });
 
   it('should render the component', () => {

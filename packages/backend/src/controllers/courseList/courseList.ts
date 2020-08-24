@@ -3,9 +3,9 @@ import { fetchEnrolledCourses } from '../moodle/fetch';
 import { loggerFile } from '../../configuration/logger';
 import { config } from '../../configuration/environment';
 import { getBaseUrl } from '../moodle/index';
-import { ApiError } from '../error/api.class';
 import { Request, Response, NextFunction } from 'express';
 import { object, number, boolean } from '@hapi/joi';
+import { ApiSuccess, ApiError } from '../../utils/api';
 
 
 /**
@@ -51,8 +51,9 @@ export async function getCourseListRequest(req: Request, res: Response, next: Ne
     try {
         const courses = await getCourseList();
         if (courses.length === 0) throw new ApiError(404, 'No courses found');
-        res.status(200).json(courses);
 
+        const response = new ApiSuccess(200, courses);
+        next(response);
     }
     catch (err) {
         loggerFile.error(err.message);
@@ -109,7 +110,13 @@ export async function setCourseRequest(req: Request, res: Response, next: NextFu
 
         // Method call and exit
         await setCourse(courseId, isActive);
-        res.status(200).end();
+
+        // Send back the new list of all courses
+        const courses = await getCourseList();
+        if (courses.length === 0) throw new ApiError(404, 'No courses found');
+
+        const response = new ApiSuccess(200, courses);
+        next(response);
 
     }
     catch (err) {

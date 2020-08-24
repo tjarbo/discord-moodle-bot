@@ -13,11 +13,26 @@ describe('SetCourseNotifications.component', () => {
   let wrapper = null;
   let store;
   beforeEach(() => {
-    const actions = {
-      setCourse: () => new Promise(),
-      getCourseList: () => new Promise(() => {}),
+    const demoCourses = [];
+    for (let index = 0; index < 6; index++) {
+      const demoCourse = {
+        isActive: true,
+        name: `Test${index}`,
+        courseId: index,
+      };
+      demoCourses.push(demoCourse);
+    }
+    const getters = {
+      coursesGetStatus: () => ({
+        pending: false,
+      }),
+      coursesGetData: () => demoCourses,
     };
-    store = new Vuex.Store({ actions });
+
+    const actions = {
+      fetchCourseList: () => new Promise(() => {}),
+    };
+    store = new Vuex.Store({ actions, getters });
     wrapper = mount(SetCourseNotifications, { store, localVue });
   });
 
@@ -31,23 +46,8 @@ describe('SetCourseNotifications.component', () => {
   });
 
   it('should render items', async () => {
-    let labels = wrapper.findAll('label.panel-block');
-    expect(labels.length).to.be.equal(0);
+    const labels = wrapper.findAll('label.panel-block');
 
-    const demoCourses = [];
-    for (let index = 0; index < 6; index++) {
-      const demoCourse = {
-        isActive: true,
-        name: `Test${index}`,
-        courseId: index,
-      };
-      demoCourses.push(demoCourse);
-    }
-
-    wrapper.vm.$data.courses = demoCourses;
-    await wrapper.vm.$nextTick();
-
-    labels = wrapper.findAll('label.panel-block');
     expect(labels.length).to.be.equal(6);
   });
 });

@@ -2,8 +2,8 @@ import { loggerFile } from "../src/configuration/logger";
 import { addAdministratorRequest } from "../src/controllers/administrator";
 import mockingoose from 'mockingoose';
 import { Request, Response } from "express";
-import { ApiError } from "../src/controllers/error/api.class";
 import { Administrator } from "../src/controllers/administrator/administrator.schema";
+import { ApiError, ApiSuccess } from "../src/utils/api";
 
 jest.mock('../src/configuration/environment.ts');
 
@@ -31,7 +31,7 @@ describe('administrator/index.ts addAdministratorRequest',() => {
 
     mockUser = {
       username: 'test#1231',
-      userid: '123123123',
+      userid: '123456789123456789',
     }
 
     mockAdministrator = {};
@@ -63,14 +63,33 @@ describe('administrator/index.ts addAdministratorRequest',() => {
 
     // no userid
     mockRequest.body.username = mockUser.username;
+    delete mockRequest.body.userid;
 
     await addAdministratorRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(3);
     expect(mockNext.mock.calls.length).toBe(3);
     expect(mockNext.mock.calls[2][0]).toEqual(new ApiError(400, '"userid" is required'));
+    
+    mockRequest.body.userid = '123123123123';
+    /*
+    // invalid user name (to less or many numbers)
+    mockRequest.body.username = "invalid#123";
+
+    await addAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(4);
+    expect(mockNext.mock.calls.length).toBe(4);
+    expect(mockNext.mock.calls[3][0]).toEqual(new ApiError(400, '"username" with value "invalid#123" fails to match the required pattern: /[\\w\\s]+#[0-9]{4}/'));
+    
+    mockRequest.body.username = "invalid#12345";
+
+    await addAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(5);
+    expect(mockNext.mock.calls.length).toBe(5);
+    expect(mockNext.mock.calls[4][0]).toEqual(new ApiError(400, '"username" with value "invalid#12345" fails to match the required pattern: /[\w\s]+#[0-9]{4}/'));
+    */
   });
 
-  it('should log error if administator with same username exists', async () => {
+  it('should log error if administrator with same username exists', async () => {
 
     mockRequest.body = mockUser;
 
@@ -102,12 +121,10 @@ describe('administrator/index.ts addAdministratorRequest',() => {
 
     await addAdministratorRequest(mockRequest, mockResponse, mockNext);
 
-    expect((mockResponse.status as jest.Mock)).toHaveBeenCalledTimes(1);
-    expect((mockResponse.status as jest.Mock)).toHaveBeenCalledWith(201);
-    expect((mockResponse.end as jest.Mock)).toHaveBeenCalledTimes(1);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect((mockNext.mock.calls[0][0] as ApiSuccess)).toEqual(new ApiSuccess(201));
 
     // no error
     expect(spyLogger.mock.calls.length).toBe(0);
-    expect(mockNext.mock.calls.length).toBe(0);
   });
 });

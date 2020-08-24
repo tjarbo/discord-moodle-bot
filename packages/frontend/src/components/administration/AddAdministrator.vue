@@ -4,15 +4,15 @@
       <p class="panel-heading">Administrator hinzufügen</p>
       <a class="panel-block">
         <p class="control">
-        <b-field label="Discord-Name">
-          <b-input
-            id="discordusername"
-            placeholder="username#0000"
-            type="text"
-            v-model="username"
-            :disabled="administratorGetStatus.pending"
-          ></b-input>
-        </b-field>
+          <b-field label="Discord-Name">
+            <b-input
+              id="discordusername"
+              placeholder="username#0000"
+              type="text"
+              v-model="username"
+              :disabled="administratorGetStatus.pending"
+            ></b-input>
+          </b-field>
         </p>
       </a>
       <a class="panel-block">
@@ -28,9 +28,6 @@
           </b-field>
         </p>
       </a>
-      <p class="panel-block" v-if="administratorGetStatus.fail">
-        <span>{{administratorsGetError}}</span>
-      </p>
       <div class="panel-block">
         <button
           @click="onSubmit"
@@ -45,9 +42,11 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { required, helpers, numeric } from 'vuelidate/lib/validators';
+import { required, helpers } from 'vuelidate/lib/validators';
+import { notifySuccess, notifyFailure } from '../../notification';
 
-const usernameRegex = helpers.regex('usernameRegex', /[\w\s]+#[0-9]{4}/);
+const usernameRegex = helpers.regex('usernameRegex', /^[\w\s]+#\d{4}$/);
+const userIdRegex = helpers.regex('usernameRegex', /^\d{18}$/);
 
 export default {
   name: 'AddAdministrator',
@@ -67,16 +66,33 @@ export default {
         .then(() => {
           this.userid = '';
           this.username = '';
+          notifySuccess('Administrator erfolgreich hinzugefügt!');
+        })
+        .catch((apiResponse) => {
+          if (apiResponse.code) {
+            notifyFailure(apiResponse.error[0].message);
+
+            if (apiResponse.code === 401) {
+              notifyFailure('Zugang leider abgelaufen! Bitte melde dich erneut an!');
+              this.$store.dispatch('logout');
+              this.$router.push({ name: 'Login' });
+            }
+          } else {
+            // request failed locally - maybe no internet connection etc?
+            notifyFailure(
+              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            );
+          }
         });
     },
   },
   computed: {
-    ...mapGetters(['administratorsGetError', 'administratorGetStatus']),
+    ...mapGetters(['administratorGetStatus']),
   },
   validations: {
     userid: {
       required,
-      numeric,
+      userIdRegex,
     },
     username: {
       required,

@@ -10,11 +10,11 @@ import { AuthToken } from './token.schema';
 import jwt from 'jsonwebtoken';
 import expressjwt from 'express-jwt';
 import { config } from '../../configuration/environment';
-import { ApiError } from '../error/api.class';
 import { sendTo } from '../discord';
 import { TokenRequestMessage } from '../discord/templates';
+import { ApiError, ApiSuccess } from '../../utils/api';
 
-const authTokenReqeuestSchema = object({
+const authTokenRequestSchema = object({
   username: string().required().regex(/[\w\s]+#[0-9]+/).description('Discord username#0000 of the admin'),
 });
 
@@ -25,7 +25,7 @@ const authLoginRequestSchema = object({
 
 
 /**
- * Generates a signed jwt token, which conatins the user
+ * Generates a signed jwt token, which contains the user
  * object
  *
  * @param {IUserDocument} user
@@ -69,7 +69,7 @@ export function getTokenFromHeader(req: Request): string | null {
 export async function authTokenRequest(req: Request, res: Response, next: NextFunction) {
 
   try {
-    const tokenRequest = authTokenReqeuestSchema.validate(req.body);
+    const tokenRequest = authTokenRequestSchema.validate(req.body);
     if (tokenRequest.error) throw new ApiError(400, tokenRequest.error.message);
 
     // 1. check if user exits at the database
@@ -87,10 +87,11 @@ export async function authTokenRequest(req: Request, res: Response, next: NextFu
     sendTo(user.userId.toString(), new TokenRequestMessage(), { key: token.key });
 
     // 4. Done
-    res.status(200).end();
+    const response = new ApiSuccess();
+    next(response);
 
   } catch (err) {
-    loggerFile.error(err.message);
+    loggerFile.error(err.message || err);
     next(err);
   }
 }
@@ -116,20 +117,19 @@ export async function authLoginRequest(req: Request, res: Response, next: NextFu
     const token = await AuthToken.findOneAndDelete({ key: authRequest.value.token, userId: user.userId });
     if (!token) throw new ApiError(401,  'Invalid token!');
 
-    res.status(200).json({ 'accesstoken': generateJWToken(user) });
+    const response = new ApiSuccess(200, { 'accesstoken': generateJWToken(user) });
+    next(response);
 
   } catch (err) {
-    loggerFile.error(err.message);
+    loggerFile.error(err.message || err);
     next(err);
   }
 }
 
-export function authVerify(req: Request, res: Response) {
-  res.json({
-    status: 'verify',
-    statusCode: 200,
-    message: 'Valid token!'
-  });
+export function authVerify(req: Request, res: Response, next: NextFunction) {
+
+  const response = new ApiSuccess(200);
+  next(response);
 }
 
 export const isAuth = expressjwt({

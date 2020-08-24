@@ -1,19 +1,19 @@
 import { RefreshRate } from './refreshRate.schema';
 import { config } from '../../configuration/environment';
-import { ApiError } from '../error/api.class';
 import { loggerFile } from '../../configuration/logger';
 import { Request, Response, NextFunction } from 'express';
 import { object, number } from '@hapi/joi';
+import { ApiSuccess, ApiError } from '../../utils/api';
 
 /**
  * Writes the refresh rate into the database.
  * Uses the default config value if no value is given.
  * Creates a new document if it doesn't exist before.
- * @param intervall Fetch intervall in minutes
+ * @param interval Fetch interval in minutes
  * @export
  */
-export async function setRefreshRate(intervall: number = config.moodle.fetchInterval):Promise<void>{
-    await RefreshRate.findOneAndUpdate({},{$set: {milliseconds: intervall}},{upsert: true});
+export async function setRefreshRate(interval: number = config.moodle.fetchInterval):Promise<void>{
+    await RefreshRate.findOneAndUpdate({},{$set: {milliseconds: interval}},{upsert: true});
 }
 
 /**
@@ -40,8 +40,9 @@ export async function getRefreshRateRequest(req: Request, res: Response, next: N
     try {
         const refreshRate = await getRefreshRate();
         if (!refreshRate) throw new ApiError(503, 'Internal error while retrieving refresh rate');
-        res.status(200).json({refreshRate});
 
+        const response = new ApiSuccess(200, {refreshRate});
+        next(response);
     }
     catch (err) {
         loggerFile.error(err.message);
@@ -70,8 +71,9 @@ export async function setRefreshRateRequest(req: Request, res: Response, next: N
 
         // Method call and exit
         await setRefreshRate(refreshRate);
-        res.status(200).end();
 
+        const response = new ApiSuccess();
+        next(response);
     }
     catch (err) {
         loggerFile.error(err.message);
