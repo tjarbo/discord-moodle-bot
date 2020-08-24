@@ -31,7 +31,7 @@ describe('administrator/index.ts addAdministratorRequest',() => {
 
     mockUser = {
       username: 'test#1231',
-      userid: '123123123',
+      userid: '123456789123456789',
     }
 
     mockAdministrator = {};
