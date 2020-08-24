@@ -16,6 +16,7 @@ tags:
     url: "https://jwt.io/#debugger"
 schemes:
 - "http"
+- "https"
 paths:
   /token:
     post:
