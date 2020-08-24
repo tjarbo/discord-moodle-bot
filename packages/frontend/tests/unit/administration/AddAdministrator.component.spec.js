@@ -83,7 +83,7 @@ describe('AddAdministrator.component', () => {
     const reset = async () => {
       // enter valid input
       usernameInput.setValue('user name3#1234');
-      useridInput.setValue('123123123123123123123123');
+      useridInput.setValue('123123123123123123');
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.$v.$invalid).to.be.false;
     };

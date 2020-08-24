@@ -42,6 +42,7 @@
                   <div class="control">
                     <button
                       class="button is-block is-primary is-large is-fullwidth is-marginless"
+                      :disabled="$v.$invalid"
                     >{{form.submitButtonText}}</button>
                   </div>
                 </div>
@@ -66,7 +67,10 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { required, helpers } from 'vuelidate/lib/validators';
 import { notifyFailure, notifySuccess } from '../notification';
+
+const usernameRegex = helpers.regex('usernameRegex', /^[\w\s]+#\d{4}$/);
 
 export default {
   name: 'LoginView',
@@ -141,6 +145,14 @@ export default {
   },
   computed: {
     ...mapGetters(['authGetStatus']),
+  },
+  validations: {
+    form: {
+      username: {
+        required,
+        usernameRegex,
+      },
+    },
   },
 };
 </script>

@@ -2,10 +2,12 @@ import { expect } from 'chai';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import Buefy from 'buefy';
+import Vuelidate from 'vuelidate';
 import Login from '@/views/Login.vue';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
+localVue.use(Vuelidate);
 localVue.use(Buefy);
 
 describe('Login.view', () => {
