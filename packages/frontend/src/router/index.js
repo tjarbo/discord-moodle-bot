@@ -1,7 +1,9 @@
+/* eslint consistent-return: 0 */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Login from '../views/Login.vue';
 import Dashboard from '../views/Dashboard.vue';
+import StartLoading from '../views/StartLoading.vue';
 import store from '../store';
 
 Vue.use(VueRouter);
@@ -9,7 +11,12 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'Anmeldung',
+    name: 'Home',
+    component: StartLoading,
+  },
+  {
+    path: '/login',
+    name: 'Login',
     component: Login,
   },
   {
