@@ -63,7 +63,7 @@ export default {
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              'Anfrage fehlgeschlagen! Bitte überpüfe deine Internetverbindung.',
+              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
             );
           }
         });
