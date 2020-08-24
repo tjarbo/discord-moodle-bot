@@ -78,11 +78,6 @@ export default {
     },
     tokenInputDisabled: true,
   }),
-  mounted() {
-    this.$store.dispatch('verifyToken')
-      .then(() => this.$router.push('/dashboard'))
-      .catch(() => this.$router.push('/'));
-  },
   methods: {
     onSubmit(event) {
       event.preventDefault();

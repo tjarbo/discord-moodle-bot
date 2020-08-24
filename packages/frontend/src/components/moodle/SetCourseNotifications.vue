@@ -23,7 +23,7 @@ import { notifyFailure, notifySuccess } from '../../notification';
 
 export default {
   name: 'SetCourseNotifications',
-  created() {
+  mounted() {
     // Import course array at loading time
     this.$store
       .dispatch('fetchCourseList')
@@ -31,10 +31,6 @@ export default {
       .catch((apiResponse) => {
         if (apiResponse.code) {
           notifyFailure(apiResponse.error[0].message);
-
-          if (apiResponse.code === 401) {
-            this.$router.push('/');
-          }
         } else {
           // request failed locally - maybe no internet connection etc?
           notifyFailure(
@@ -60,7 +56,9 @@ export default {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              this.$router.push('/');
+              notifyFailure('Zugang leider abgelaufen! Bitte melde dich erneut an!');
+              this.$store.dispatch('logout');
+              this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?

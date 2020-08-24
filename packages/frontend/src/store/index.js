@@ -26,19 +26,24 @@ export default new Vuex.Store({
   actions: {
 
     verifyToken(context) {
-      if (!context.getters.isLoggedIn) return Promise.resolve();
+      // if (!context.getters.isLoggedIn) return Promise.resolve();
 
       context.commit('SET_AUTH');
       return new Promise((resolve, reject) => {
         ApiUtil.post('/verify')
-          .then(() => {
-            context.commit('SET_AUTH', token);
-            resolve();
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              context.commit('SET_AUTH', token);
+              resolve();
+            } else {
+              context.commit('SET_AUTH', apiResponse.error[0].message);
+              context.dispatch('logout');
+              reject();
+            }
           })
           .catch((err) => {
-            ApiUtil.defaults.headers.common.Authorization = '';
-            localStorage.removeItem('token');
             context.commit('SET_AUTH', err);
+            context.dispatch('logout');
             reject();
           });
       });

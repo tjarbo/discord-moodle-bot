@@ -27,6 +27,12 @@ export default class StoreUtil {
       // PENDING
       return this._mutationPending({ ...state });
     }
+
+    if (data === null) {
+      // RESET
+      return this.state();
+    }
+
     // SUCCESS or FAIL
     return data instanceof Error
       ? this._mutationFail({ ...state }, data)

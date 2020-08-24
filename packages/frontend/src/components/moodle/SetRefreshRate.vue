@@ -48,7 +48,11 @@ export default {
           if (apiResponse.code) {
             notifyFailure(apiResponse.error[0].message);
 
-            if (apiResponse.code === 401) { this.$router.push('/'); }
+            if (apiResponse.code === 401) {
+              notifyFailure('Zugang leider abgelaufen! Bitte melde dich erneut an!');
+              this.$store.dispatch('logout');
+              this.$router.push({ name: 'Login' });
+            }
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(

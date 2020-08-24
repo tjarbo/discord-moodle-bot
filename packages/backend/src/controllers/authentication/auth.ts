@@ -126,12 +126,10 @@ export async function authLoginRequest(req: Request, res: Response, next: NextFu
   }
 }
 
-export function authVerify(req: Request, res: Response) {
-  res.json({
-    status: 'verify',
-    statusCode: 200,
-    message: 'Valid token!'
-  });
+export function authVerify(req: Request, res: Response, next: NextFunction) {
+
+  const response = new ApiSuccess(200);
+  next(response);
 }
 
 export const isAuth = expressjwt({
