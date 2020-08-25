@@ -3,7 +3,7 @@ name: CD
 on:
   push:
     branches:
-      - feature/issue-17
+      - master
 
 jobs:
   docker:
@@ -20,10 +20,19 @@ jobs:
       run: npm run test
     - name: "Build files"
       run: npm run build
-    - name: "Build and push Docker image"
+    - name: "Build and push latest Docker image "
       uses: docker/build-push-action@v1
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: tjarbo/fmdb
         tags: latest
+        push: ${{ startsWith(github.ref, 'refs/tags/') }}
+    - name: "Build and push Docker image"
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: tjarbo/fmdb
+        tag_with_ref: true
+        push: ${{ startsWith(github.ref, 'refs/tags/') }}

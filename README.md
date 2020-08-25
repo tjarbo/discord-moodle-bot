@@ -1,7 +1,8 @@
 # 🤖 Fancy-Moodle-Discord-Bot 
 
-![Node CI](https://github.com/tjarbo/discord-moodle-bot/workflows/Node%20CI/badge.svg?branch=master)
-![Build with Buefy](https://img.shields.io/badge/build%20with-buefy-7957d5)
+![CI](https://github.com/tjarbo/discord-moodle-bot/workflows/Node%20CI/badge.svg?branch=master)
+![CD](https://github.com/tjarbo/discord-moodle-bot/workflows/CD/badge.svg)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/tjarbo/fmdb)
 ![GitHub issues](https://img.shields.io/github/issues/tjarbo/discord-moodle-bot)
 ![GitHub](https://img.shields.io/github/license/tjarbo/discord-moodle-bot)
 ![Build for Discord](https://img.shields.io/badge/build%20for-discord-blueviolet)
@@ -14,8 +15,7 @@ The FMDB notifies you on a discord server about new activities on the Moodle pla
 
 ## ✈️ Get started
 
-The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](#).
-> ⚠️ According to the current status, the article could unfortunately not yet be created.
+The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](https://github.com/tjarbo/discord-moodle-bot/wiki/Hey-%F0%9F%91%8B).
 
 ## ⚒️ Development
 
