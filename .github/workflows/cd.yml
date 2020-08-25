@@ -16,6 +16,8 @@ jobs:
         node-version: 12.0
     - name: "Install all dependencies"
       run: npm ci
+    - name: "Test"
+      run: npm run test
     - name: "Build files"
       run: npm run build
     - name: "Build and push Docker image"
