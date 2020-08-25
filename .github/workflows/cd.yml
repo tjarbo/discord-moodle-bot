@@ -1,0 +1,27 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - feature/issue-17
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12.0
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.0
+    - name: "Install all dependencies"
+      run: npm ci
+    - name: "Build files"
+      run: npm build
+    - name: "Build and push Docker image"
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: tjarbo/fmdb
+        tags: latest
