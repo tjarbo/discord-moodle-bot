@@ -7,6 +7,8 @@ $moodle: #f48600;
 $moodle-invert: findColorInvert($moodle);
 $discord: #7289DA;
 $discord-invert: findColorInvert($discord);
+$status: #48c774;
+$status-invert: findColorInvert($status);
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: (
@@ -53,6 +55,10 @@ $colors: (
   "moodle": (
     $moodle,
     $moodle-invert,
+  ),
+  "status": (
+    $status,
+    $status-invert,
   )
 );
 

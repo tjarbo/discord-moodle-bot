@@ -4,6 +4,9 @@
     <div class="columns">
       <div class="column is-10 is-offset-1">
         <b-tabs position="is-centered" class="block">
+          <b-tab-item class="spacing" label="Statusboard">
+            <StatusBoard></StatusBoard>
+          </b-tab-item>
           <b-tab-item class="spacing" label="Administration">
             <add-administrator></add-administrator>
           </b-tab-item>
@@ -26,6 +29,7 @@ import SetCourseNotifications from '../components/moodle/SetCourseNotifications.
 import DiscordPanel from '../components/discord/DiscordPanel.vue';
 import SetRefreshRate from '../components/moodle/SetRefreshRate.vue';
 import TheNavBar from '../components/TheNavBar.vue';
+import StatusBoard from '../components/status/StatusBoard.vue';
 
 export default {
   name: 'DashboardView',
@@ -35,6 +39,7 @@ export default {
     DiscordPanel,
     SetRefreshRate,
     TheNavBar,
+    StatusBoard,
   },
 };
 </script>
