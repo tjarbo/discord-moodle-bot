@@ -31,7 +31,7 @@ import { mapGetters } from 'vuex';
 // import { notifySuccess, notifyFailure } from '../../notification';
 
 export default {
-  name: 'StatusBoard',
+  name: 'Status',
   data: () => ({
     rows: [
       { setting: 'Moodle Verbindung funktioniert', value: 'Ja' },
