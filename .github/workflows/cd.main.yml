@@ -1,4 +1,4 @@
-name: CD
+name: CD - Main
 
 on:
   push:
@@ -27,7 +27,6 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: tjarbo/fmdb
         tags: latest
-        push: ${{ startsWith(github.ref, 'refs/tags/') }}
     - name: "Build and push Docker image"
       uses: docker/build-push-action@v1
       with:
