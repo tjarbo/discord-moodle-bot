@@ -5,7 +5,14 @@
       <a class="panel-block">
         <p class="control">
           {{test}}
-          <b-table :data="rows" :columns="columns"></b-table>
+          <b-table :data="rows">
+            <template v-slot="{row}" >
+              <b-table-column v-for="(column, index) in columns" :key="index"
+              :label="column.label" v-bind:class="classObject(row[column.field])">
+              {{ row[column.field] }}
+              </b-table-column>
+            </template>
+          </b-table>
         </p>
       </a>
       <div class="panel-block">
@@ -29,7 +36,7 @@ export default {
     rows: [
       { setting: 'Letzte Moodle Aktualisierung', value: '28.08.2020 12:50:34' },
       { setting: 'Moodle Token funktioniert', value: 'Ja' },
-      { setting: 'Discordverbindung erfolgreich', value: 'Ja' },
+      { setting: 'Discordverbindung erfolgreich', value: 'Error' },
       { setting: 'Datenbankverbindung erfolgreich', value: 'Nein' },
     ],
     columns: [
@@ -47,6 +54,9 @@ export default {
   methods: {
     onSubmit() {
       this.count += 1;
+    },
+    classObject(cellValue) {
+      return { error: cellValue === 'Error' };
     },
   },
   computed: {
