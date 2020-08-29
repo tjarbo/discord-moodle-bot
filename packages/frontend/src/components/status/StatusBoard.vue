@@ -34,10 +34,11 @@ export default {
   name: 'StatusBoard',
   data: () => ({
     rows: [
-      { setting: 'Letzte Moodle Aktualisierung', value: '28.08.2020 12:50:34' },
-      { setting: 'Moodle Token funktioniert', value: 'Ja' },
-      { setting: 'Discordverbindung erfolgreich', value: 'Error' },
-      { setting: 'Datenbankverbindung erfolgreich', value: 'Nein' },
+      { setting: 'Moodle Verbindung funktioniert', value: 'Ja' },
+      { setting: 'Letzte Moodle Aktualisierung', value: 'Vor 32 Minuten (28.08.2020 12:50:34)' },
+      { setting: 'Aktuelles Fetch-Intervall', value: 'Alle 10 Minuten' },
+      { setting: 'Letzte aktive Discord Verbindung', value: 'Vor 23 Minuten (28.08.2020 12:50:34)' },
+      { setting: 'Aktuelle Discord Channel-ID', value: '12345678912345' },
     ],
     columns: [
       {
