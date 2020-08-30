@@ -1,5 +1,6 @@
 import { getRefreshRate } from '../refreshRate/refreshRate';
 import { config } from '../../configuration/environment';
+import { LastFetch } from '../moodle/schemas/lastfetch.schema';
 import { loggerFile } from '../../configuration/logger';
 import { Request, Response, NextFunction } from 'express';
 import { ApiSuccess, ApiError } from '../../utils/api';
@@ -30,7 +31,7 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
             moodleConnectionStatus = error.message;
         }
 
-        const moodleLastFetchTimestamp = await getLastFetch();
+        const moodleLastFetchTimestamp = (await LastFetch.findOne()).timestamp;
 
         const discordLastReadyTimestamp = client.readyTimestamp;
 
