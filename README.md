@@ -15,7 +15,7 @@ The FMDB notifies you on a discord server about new activities on the Moodle pla
 
 ## ✈️ Get started
 
-The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](https://github.com/tjarbo/discord-moodle-bot/wiki/Hey-%F0%9F%91%8B).
+The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](https://github.com/tjarbo/discord-moodle-bot/wiki/%F0%9F%9B%A0%EF%B8%8F-FMDB-einrichten).
 
 ## ⚒️ Development
 
