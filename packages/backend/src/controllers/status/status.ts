@@ -22,8 +22,8 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
         let moodleConnectionStatus = '';
         try {
           const courses = await fetchEnrolledCourses(getBaseUrl()) as any;
-          if (courses instanceof Array) moodleConnectionStatus = 'OK';
-          if (courses.message) moodleConnectionStatus = courses.message;
+          if (courses.length) moodleConnectionStatus = 'Ok';
+          else if (courses.message) moodleConnectionStatus = courses.message;
           else moodleConnectionStatus = 'Unknown';
         }
         catch (error) {
@@ -32,7 +32,7 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
 
         const moodleLastFetchTimestamp = await getLastFetch();
 
-        const discordLastReadyTimestamp = Math.floor(client.readyTimestamp / 1000); // To detailled timestamp
+        const discordLastReadyTimestamp = client.readyTimestamp;
 
         const discordCurrentChannelId = await getDiscordChannel();
 

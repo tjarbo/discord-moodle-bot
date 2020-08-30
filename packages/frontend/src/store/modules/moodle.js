@@ -5,7 +5,6 @@ export default {
   state: {
     refreshRate: StoreUtil.state(),
     courses: StoreUtil.state(),
-    statusBoard: StoreUtil.state(),
   },
   mutations: {
     SET_REFRESH_RATE(state, payload) {
@@ -13,9 +12,6 @@ export default {
     },
     SET_COURSES(state, payload) {
       state.courses = StoreUtil.updateState(state.courses, payload);
-    },
-    SET_STATUSBOARD(state, payload) {
-      state.statusBoard = StoreUtil.updateState(state.statusBoard, payload);
     },
   },
   actions: {
@@ -86,7 +82,5 @@ export default {
     refreshRateGetStatus: (state) => state.refreshRate.status,
     coursesGetStatus: (state) => state.courses.status,
     coursesGetData: (state) => state.courses.data,
-    statusBoardGetData: (state) => state.statusBoard.data,
-    statusBoardGetStatus: (state) => state.statusBoard.status,
   },
 };
