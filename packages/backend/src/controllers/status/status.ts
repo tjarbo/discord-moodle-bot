@@ -11,14 +11,15 @@ import { getDiscordChannel } from '../discordChannel/discordChannel';
 /**
  * Handles GET /api/settings/status requests and responds
  * with a JSON object containing all currently available status info.
+ *
  * @param req Request
  * @param res Response
  * @param next NextFunction
  */
 export async function getStatusRequest(req: Request, res: Response, next: NextFunction) {
     try {
-        const moodleCurrentFetchInterval = await getRefreshRate() || 'Error';
 
+        // TODO: Better handling in #19
         let moodleConnectionStatus = 'Unknown';
         try {
             const courses = await fetchEnrolledCourses(getBaseUrl()) as any;
@@ -29,11 +30,12 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
             moodleConnectionStatus = error.message;
         }
 
+        const moodleCurrentFetchInterval = await getRefreshRate() || 'Error';
         const moodleLastFetchTimestamp = (await LastFetch.findOne()).timestamp;
 
         const discordLastReadyTimestamp = client.readyTimestamp;
-
         const discordCurrentChannelId = await getDiscordChannel();
+
         let discordCurrentChannelName = 'Unknown';
         try {
             discordCurrentChannelName = (client.channels.cache.get(discordCurrentChannelId) as any).name;

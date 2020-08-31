@@ -6,18 +6,25 @@
       <a class="panel-block">
         <p class="control">
           <b-table :data="rows" :hoverable="true">
-            <template v-slot="{row}" >
-              <b-table-column v-for="(column, index) in columns" :key="index"
-              :label="column.label" v-bind:class="classObject(row, column.field)" :width="'50%'">
-              {{ row[column.field] }}
-              </b-table-column>
+            <template v-slot="{row}">
+              <b-table-column
+                v-for="(column, index) in columns"
+                :class="classObject(row, column.field)"
+                :key="index"
+                :label="column.label"
+                :width="'50%'"
+              >{{ row[column.field] }}</b-table-column>
             </template>
           </b-table>
         </p>
       </a>
       <div class="panel-block">
-        <button @click="onSubmit"
-        class="button is-outlined is-fullwidth is-status">Aktualisieren</button>
+        <button
+          @click="onSubmit"
+          class="button is-outlined is-fullwidth is-status"
+        >
+          Aktualisieren
+        </button>
       </div>
       <b-loading :is-full-page="false" :active="statusBoardGetStatus.pending"></b-loading>
     </article>
@@ -31,19 +38,15 @@ import { notifySuccess, notifyFailure } from '../../notification';
 export default {
   name: 'Status',
   mounted() {
-  // Import status data at loading time
+    // Import status data at loading time
     this.$store
       .dispatch('getStatus')
       .then(() => {})
       .catch((apiResponse) => {
-        if (apiResponse.code) {
-          notifyFailure(apiResponse.error[0].message);
-        } else {
+        if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
+
         // Request failed locally - maybe no internet connection etc?
-          notifyFailure(
-            'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
-          );
-        }
+        return notifyFailure('Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.');
       });
   },
   data: () => ({
@@ -74,16 +77,16 @@ export default {
       this.$store
         .dispatch('getStatus')
         .then(() => {
-          notifySuccess(
-            'Aktualisierung erfolgreich!',
-          );
+          notifySuccess('Aktualisierung erfolgreich!');
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure('Zugang leider abgelaufen! Bitte melde dich erneut an!');
+              notifyFailure(
+                'Zugang leider abgelaufen! Bitte melde dich erneut an!',
+              );
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
@@ -95,9 +98,15 @@ export default {
           }
         });
     },
+
+    /**
+     * Apply .error CSS class (red text) dynamically depending on cell values
+     *
+     * @param row
+     * @param property
+     * @returns { cssClassNameToApply: boolean }
+     */
     classObject(row, property) {
-      // Apply .error CSS class (red text) dynamically depending on cell values
-      // Return object schema: {cssClassNameToApply: true/false}
       if (row.key === this.keys.moodleConnectionStatus
           && row[property] !== this.keys.moodleConnectionStatus) {
         return { error: row[property] !== 'Ok' };
@@ -121,8 +130,15 @@ export default {
       }
       return {};
     },
+
+    /**
+     * Returns german time string
+     * e.g: '6 Minuten'
+     *
+     * @param ms Time in ms
+     * @returns {string} german time string
+     */
     getFormattedTime(ms) {
-      // Returns german time string, ex. '6 Minuten'
       const seconds = Math.round(ms / 1000);
       const minutes = Math.round(ms / (1000 * 60));
       const hours = Math.round(ms / (1000 * 60 * 60));
@@ -138,14 +154,28 @@ export default {
       if (days === 1) return `${days} Tag`;
       return `${days} Tage`;
     },
+
+    /**
+     * Returns time difference between timestamp and current time in ms
+     *
+     * @param timestamp
+     * @returns {number} Difference in ms
+     */
     getCurrentTimeDifference(timestamp) {
-      // Returns time difference between timestamp and current time in ms
       const nowTimeStamp = new Date().getTime();
       const milliSecondsDiff = Math.abs(nowTimeStamp - timestamp);
       return milliSecondsDiff;
     },
+
+    /**
+     * Returns the timestamp and date combined in a predefined string
+     * e.g. '6 Minuten (31.8.2020, 09:52:18)'
+     *
+     * @param timestamp
+     * @param date
+     * @returns {string}
+     */
     getTimeString(timestamp, date) {
-      // Returns german time string, ex. '6 Minuten (31.8.2020, 09:52:18)'
       return `${this.getFormattedTime(this.getCurrentTimeDifference(timestamp))} (${date})`;
     },
   },
@@ -153,6 +183,7 @@ export default {
     rows() {
       // Avoid console errors at early loading time
       if (!this.statusBoardGetData) return [];
+
       // Get data
       const {
         moodleConnectionStatus,
@@ -175,6 +206,7 @@ export default {
         const moodleNextFetchTimeStamp = (moodleLastFetchTimestamp * 1000)
           + moodleCurrentFetchInterval;
         const moodleNextFetchDate = new Date(moodleNextFetchTimeStamp).toLocaleString();
+
         moodleNextFetchString = `In ${this.getTimeString(moodleNextFetchTimeStamp, moodleNextFetchDate)}`;
         // moodleCurrentFetchInterval string
         moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(moodleCurrentFetchInterval)} (${moodleCurrentFetchInterval} ms)`;
