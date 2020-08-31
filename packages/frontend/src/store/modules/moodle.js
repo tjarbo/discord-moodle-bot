@@ -29,7 +29,7 @@ export default {
             }
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
             commit('SET_REFRESH_RATE', err);
             reject();
           });
@@ -50,7 +50,7 @@ export default {
             }
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
             commit('SET_COURSES', err);
             reject();
           });
@@ -71,7 +71,7 @@ export default {
             }
           })
           .catch((err) => {
-            console.log(err);
+            console.error(err);
             commit('SET_COURSES', err);
             reject();
           });

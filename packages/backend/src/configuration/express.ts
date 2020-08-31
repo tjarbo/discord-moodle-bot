@@ -10,6 +10,9 @@ import methodOverride from 'method-override';
 import { loggerMiddleware } from './logger';
 import { router } from '../routes/index.routes';
 import { ApiError, apiMiddleware } from '../utils/api';
+import path from 'path';
+
+const uiDistDir = '../../../../frontend/dist';
 
 export const app = express();
 
@@ -22,6 +25,12 @@ app.use(compress());
 app.use(methodOverride());
 app.use(helmet());
 app.use(cors());
+
+// makes every file in uiDistFolder accessible
+app.use(express.static(path.join(__dirname, uiDistDir)));
+
+// open /index.html if no path is specified.
+app.use(/^((?!(api)).)*/, (_, res) => { res.sendFile(path.join(__dirname, uiDistDir + '/index.html')); });
 
 // Delimit number of requests per minute
 const apiLimiter = rateLimit({

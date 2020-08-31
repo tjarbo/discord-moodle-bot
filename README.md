@@ -1,21 +1,21 @@
 # 🤖 Fancy-Moodle-Discord-Bot 
 
-![Node CI](https://github.com/tjarbo/discord-moodle-bot/workflows/Node%20CI/badge.svg?branch=master)
-![Build with Buefy](https://img.shields.io/badge/build%20with-buefy-7957d5)
+![CI](https://github.com/tjarbo/discord-moodle-bot/workflows/Node%20CI/badge.svg?branch=master)
+![CD](https://github.com/tjarbo/discord-moodle-bot/workflows/CD/badge.svg)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/tjarbo/fmdb)
 ![GitHub issues](https://img.shields.io/github/issues/tjarbo/discord-moodle-bot)
 ![GitHub](https://img.shields.io/github/license/tjarbo/discord-moodle-bot)
 ![Build for Discord](https://img.shields.io/badge/build%20for-discord-blueviolet)
 
 The FMDB notifies you on a discord server about new activities on the Moodle platform. The current implementation includes:
 
-- Notification of new or changed files 
+- Notification of new or changed files
 - Notification of new assignments
-- Notification of assignments due soon 
+- Notification of assignments due soon
 
 ## ✈️ Get started
 
-The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](#). 
-> ⚠️ According to the current status, the article could unfortunately not yet be created. 
+The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](https://github.com/tjarbo/discord-moodle-bot/wiki/%F0%9F%9B%A0%EF%B8%8F-FMDB-einrichten).
 
 ## ⚒️ Development
 
@@ -27,21 +27,24 @@ These instructions will get you a copy of the project up and running on your loc
 - Node with NPM is installed (https://nodejs.org/en/download/)
 
 #### Installing modules 📁
-Run `npm i` at the root of the repository.
+
+Run `npm i` at the root of the repository and `npm run postinstall`
 
 #### Create .env file 🔐
+
 The backend will fail, if wrong environments variables are provided. If no .env file is provided, please create `packages/backend/.env` with following content:
-```
+
+```bash
 ADMIN_ID=00000...000
 ADMIN_NAME=username#00000
 DISCORD_CHANNEL=00000...000
 DISCORD_TOKEN=XXXXXX....XXX
 JWT_SECRET=ChooseTheSecretWisely
-JWT_EXPIRESIN=1h
+JWT_EXPIRESIN=10m
 MONGO_HOST=mongodb://localhost:27017/fmdb
 MONGOOSE_DEBUG=true
 MOODLE_BASE_URL=https://moodle.example.com/
-MOODLE_FETCH_INTERVAL=1000
+MOODLE_FETCH_INTERVAL=900000
 MOODLE_REMINDER_TIME_LEFT=86400
 MOODLE_TOKEN=XXXXXXXXXXXXXXXXX
 MOODLE_USE_COURSE_SHORTNAME=true
@@ -55,22 +58,25 @@ Example: getDiscordChannel() and getRefreshRate() instead of
 config constants discordChannel and fetchInterval.
 
 ### Start development 🛫
+
 Run `npm run start` at the root of the directory.
 
 ### Links 🔗 (In most cases)
-- The frontend can be opened under http://localhost:8080/
+
+- The frontend can be opened under http://localhost:4040/
 - The backend and especially the api can be reached at http://localhost:4040/api
 - The api documentation can be found at http://localhost:4040/api/docs
+
 ## 🦸 Built With MEVN
 
-* [MongoDB](https://www.mongodb.com/) - The database software
-* [Express](https://expressjs.com/) - The web framework used at the backend
-* [vue.js](https://vuejs.org/) - The web framework used at the frontend
-* [node.js](https://rometools.github.io/rome/) - The power of the backend 
+- [MongoDB](https://www.mongodb.com/) - The database software
+- [Express](https://expressjs.com/) - The web framework used at the backend
+- [Vue.js](https://vuejs.org/) - The web framework used at the frontend
+- [Node.js](https://nodejs.org/en/) - The power of the backend
 
 ## 🏆 Contributing
 
-Right now, this project is part of a web engineering course. So the development is limited to a few people. After completion of the course, however, every contribution is welcome!
+Every contribution is welcome! Do you have a great new feature idea or just want to be part of the project ? Awesome - get started with a look into the issues list. If a similar ticket doesn't exist, feel free to open a new one. The first step is to discuss your new idea or contribution to make sure, it follows the concept of the application. Afterwards, get started to code 💽! If you have finished you changes, create a pull request and we will review your changes!
 
 ## ⚖️ License
 
