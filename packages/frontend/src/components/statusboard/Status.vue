@@ -151,6 +151,8 @@ export default {
   },
   computed: {
     rows() {
+      // Avoid console errors at early loading time
+      if (!this.statusBoardGetData) return [];
       // Get data
       const {
         moodleConnectionStatus,
