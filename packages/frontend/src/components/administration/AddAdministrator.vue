@@ -66,6 +66,8 @@ export default {
         .then(() => {
           this.userid = '';
           this.username = '';
+          // Refresh administrator list
+          this.$store.dispatch('getAdministrators');
           notifySuccess('Administrator erfolgreich hinzugefügt!');
         })
         .catch((apiResponse) => {
