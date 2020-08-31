@@ -31,7 +31,7 @@ import { notifySuccess, notifyFailure } from '../../notification';
 export default {
   name: 'Status',
   mounted() {
-  // Import status object at loading time
+  // Import status data at loading time
     this.$store
       .dispatch('getStatus')
       .then(() => {})
@@ -47,6 +47,7 @@ export default {
       });
   },
   data: () => ({
+    // Column titles
     columns: [
       {
         field: 'key',
@@ -57,13 +58,14 @@ export default {
         label: 'Wert',
       },
     ],
+    // First column values
     keys: {
       moodleConnectionStatus: 'Status der Moodle Verbindung',
       moodleLastFetch: 'Letzte Moodle Aktualisierung',
       moodleNextFetch: 'Nächste Moodle Aktualisierung',
       moodleCurrentFetchInterval: 'Aktuelles Fetch-Intervall',
       discordLastReady: 'Letzte aktive Discord Verbindung',
-      discordCurrentChannelId: 'Aktuelle Discord Channel-ID',
+      discordCurrentChannel: 'Aktueller Discord Channel',
     },
   }),
   methods: {
@@ -94,7 +96,8 @@ export default {
         });
     },
     classObject(row, property) {
-      console.log(row);
+      // Apply .error CSS class (red text) dynamically depending on cell values
+      // Return object schema: {cssClassNameToApply: true/false}
       if (row.key === this.keys.moodleConnectionStatus
           && row[property] !== this.keys.moodleConnectionStatus) {
         return { error: row[property] !== 'Ok' };
@@ -105,6 +108,11 @@ export default {
       if (row.key === this.keys.moodleCurrentFetchInterval) {
         return { error: row[property] === 'Error' };
       }
+      if (row.key === this.keys.discordCurrentChannel
+          && row[property] !== this.keys.discordCurrentChannel) {
+        return { error: this.statusBoardGetData[0].discordCurrentChannelName === 'Unknown' };
+      }
+      // Check if time to last fetch is greater than fetch intervall
       if (row.key === this.keys.moodleLastFetch
           && row[property] !== this.keys.moodleLastFetch) {
         const { moodleLastFetchTimestamp } = this.statusBoardGetData[0];
@@ -115,6 +123,7 @@ export default {
       return {};
     },
     getFormattedTime(ms) {
+      // Returns german time string, ex. '6 Minuten'
       const seconds = Math.floor(ms / 1000);
       const minutes = Math.floor(ms / (1000 * 60));
       const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -131,50 +140,63 @@ export default {
       return `${days} Tage`;
     },
     getCurrentTimeDifference(timestamp) {
+      // Returns the time difference of the timestamp to the current time in ms
       const nowTimeStamp = new Date().getTime();
       const milliSecondsDiff = Math.abs(nowTimeStamp - timestamp);
       return milliSecondsDiff;
     },
     getTimeString(timestamp, date) {
+      // Returns german time string, ex. '6 Minuten (31.8.2020, 09:52:18)'
       return `${this.getFormattedTime(this.getCurrentTimeDifference(timestamp))} (${date})`;
     },
   },
   computed: {
     rows() {
       // Get data
-      const data = this.statusBoardGetData[0];
+      const {
+        moodleConnectionStatus,
+        moodleLastFetchTimestamp,
+        moodleCurrentFetchInterval,
+        discordLastReadyTimestamp,
+        discordCurrentChannelId,
+        discordCurrentChannelName,
+      } = this.statusBoardGetData[0];
 
       // Generate moodleLastFetch string
-      const moodleLastFetchDate = new Date(data.moodleLastFetchTimestamp * 1000).toLocaleString();
-      const moodleLastFetchString = `Vor ${this.getTimeString(data.moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
+      const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
+      const moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
 
-      // Initalize strings
+      // Generate moodleNextFetch and moodleCurrentFetchInterval string (dependant)
       let moodleNextFetchString = 'N/A';
       let moodleCurrentFetchIntervalString = 'Error';
-
-      if (data.moodleCurrentFetchInterval !== 'Error') {
-        // Generate moodleNextFetch string
-        const moodleNextFetchTimeStamp = (data.moodleLastFetchTimestamp * 1000)
-          + data.moodleCurrentFetchInterval;
+      if (moodleCurrentFetchInterval !== 'Error') {
+        // moodleNextFetch string
+        const moodleNextFetchTimeStamp = (moodleLastFetchTimestamp * 1000)
+          + moodleCurrentFetchInterval;
         const moodleNextFetchDate = new Date(moodleNextFetchTimeStamp).toLocaleString();
         moodleNextFetchString = `In ${this.getTimeString(moodleNextFetchTimeStamp, moodleNextFetchDate)}`;
-
-        // Generate moodleCurrentFetchInterval string
-        moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(data.moodleCurrentFetchInterval)} (${data.moodleCurrentFetchInterval} ms)`;
+        // moodleCurrentFetchInterval string
+        moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(moodleCurrentFetchInterval)} (${moodleCurrentFetchInterval} ms)`;
       }
 
       // Generate discordLastReady string
-      const discordLastReadyDate = new Date(data.discordLastReadyTimestamp).toLocaleString();
-      const discordLastReadyString = `Vor ${this.getTimeString(data.discordLastReadyTimestamp, discordLastReadyDate)}`;
+      const discordLastReadyDate = new Date(discordLastReadyTimestamp).toLocaleString();
+      const discordLastReadyString = `Vor ${this.getTimeString(discordLastReadyTimestamp, discordLastReadyDate)}`;
+
+      // Generate discordCurrentChannel string
+      let discordCurrentChannelString = `Unbekannt (${discordCurrentChannelId})`;
+      if (discordCurrentChannelName !== 'Unknown') {
+        discordCurrentChannelString = `${discordCurrentChannelName} (${discordCurrentChannelId})`;
+      }
 
       // Return data array
       return [
-        { key: this.keys.moodleConnectionStatus, value: data.moodleConnectionStatus },
+        { key: this.keys.moodleConnectionStatus, value: moodleConnectionStatus },
         { key: this.keys.moodleLastFetch, value: moodleLastFetchString },
         { key: this.keys.moodleNextFetch, value: moodleNextFetchString },
         { key: this.keys.moodleCurrentFetchInterval, value: moodleCurrentFetchIntervalString },
         { key: this.keys.discordLastReady, value: discordLastReadyString },
-        { key: this.keys.discordCurrentChannelId, value: data.discordCurrentChannelId },
+        { key: this.keys.discordCurrentChannel, value: discordCurrentChannelString },
       ];
     },
     ...mapGetters(['statusBoardGetStatus', 'statusBoardGetData']),

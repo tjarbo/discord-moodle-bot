@@ -20,12 +20,11 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
     try {
         const moodleCurrentFetchInterval = await getRefreshRate() || 'Error';
 
-        let moodleConnectionStatus = '';
+        let moodleConnectionStatus = 'Unknown';
         try {
-          const courses = await fetchEnrolledCourses(getBaseUrl()) as any;
-          if (courses.length) moodleConnectionStatus = 'Ok';
-          else if (courses.message) moodleConnectionStatus = courses.message;
-          else moodleConnectionStatus = 'Unknown';
+            const courses = await fetchEnrolledCourses(getBaseUrl()) as any;
+            if (courses.length) moodleConnectionStatus = 'Ok';
+            else if (courses.message) moodleConnectionStatus = courses.message;
         }
         catch (error) {
             moodleConnectionStatus = error.message;
@@ -36,6 +35,11 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
         const discordLastReadyTimestamp = client.readyTimestamp;
 
         const discordCurrentChannelId = await getDiscordChannel();
+        let discordCurrentChannelName = 'Unknown';
+        try {
+            discordCurrentChannelName = (client.channels.cache.get(discordCurrentChannelId) as any).name;
+        }
+        catch {}
 
         const responseObject = {
             moodleConnectionStatus,
@@ -43,6 +47,7 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
             moodleCurrentFetchInterval,
             discordLastReadyTimestamp,
             discordCurrentChannelId,
+            discordCurrentChannelName,
         };
 
         const response = new ApiSuccess(200, responseObject);
