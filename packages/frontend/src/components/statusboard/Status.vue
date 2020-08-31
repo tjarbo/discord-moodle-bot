@@ -113,6 +113,9 @@ export default {
       if (row.key === this.keys.moodleNextFetch) {
         return { error: row[property] === 'N/A' };
       }
+      if (row.key === this.keys.moodleLastFetch) {
+        return { error: row[property] === 'N/A' };
+      }
       if (row.key === this.keys.moodleCurrentFetchInterval) {
         return { error: row[property] === 'Error' };
       }
@@ -193,22 +196,30 @@ export default {
         discordCurrentChannelName,
       } = this.statusBoardGetData[0];
 
-      // Generate moodleLastFetch string
-      const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
-      const moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
-
-      // Generate moodleNextFetch and moodleCurrentFetchInterval string (dependant)
+      // Generate default (error) strings
+      let moodleLastFetchString = 'N/A';
       let moodleNextFetchString = 'N/A';
       let moodleCurrentFetchIntervalString = 'Error';
-      if (moodleCurrentFetchInterval !== 'Error') {
-        // moodleNextFetch string
+      if (moodleCurrentFetchInterval !== 'Error' && moodleLastFetchTimestamp !== 'Error') {
+        // Calculate currentFetchIntervall
+        moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(moodleCurrentFetchInterval)} (${moodleCurrentFetchInterval} ms)`;
+
+        // Calculate LastFetch
+        const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
+        moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
+
+        // Calculate nextFetch
         const moodleNextFetchTimeStamp = (moodleLastFetchTimestamp * 1000)
           + moodleCurrentFetchInterval;
         const moodleNextFetchDate = new Date(moodleNextFetchTimeStamp).toLocaleString();
-
         moodleNextFetchString = `In ${this.getTimeString(moodleNextFetchTimeStamp, moodleNextFetchDate)}`;
-        // moodleCurrentFetchInterval string
+      } else if (moodleCurrentFetchInterval !== 'Error') {
+        // Calculate currentFetchIntervall
         moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(moodleCurrentFetchInterval)} (${moodleCurrentFetchInterval} ms)`;
+      } else if (moodleLastFetchTimestamp !== 'Error') {
+        // Calculate LastFetch
+        const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
+        moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
       }
 
       // Generate discordLastReady string

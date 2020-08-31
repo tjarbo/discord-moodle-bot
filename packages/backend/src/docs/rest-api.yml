@@ -502,6 +502,10 @@ paths:
                     message:
                       type: "string"
                 example: []
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
         "500":
           description: "Internal server error"
           schema:

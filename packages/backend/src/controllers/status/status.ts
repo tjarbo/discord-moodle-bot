@@ -31,7 +31,9 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
         }
 
         const moodleCurrentFetchInterval = await getRefreshRate() || 'Error';
-        const moodleLastFetchTimestamp = (await LastFetch.findOne()).timestamp;
+        let moodleLastFetchTimestamp = 'Error' as any;
+        const moodleLastFetch = await LastFetch.findOne();
+        if (moodleLastFetch) moodleLastFetchTimestamp = moodleLastFetch.timestamp;
 
         const discordLastReadyTimestamp = client.readyTimestamp;
         const discordCurrentChannelId = await getDiscordChannel();
