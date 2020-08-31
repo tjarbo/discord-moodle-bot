@@ -58,7 +58,7 @@ export default {
         label: 'Wert',
       },
     ],
-    // First column values
+    // First-column values
     keys: {
       moodleConnectionStatus: 'Status der Moodle Verbindung',
       moodleLastFetch: 'Letzte Moodle Aktualisierung',
@@ -140,7 +140,7 @@ export default {
       return `${days} Tage`;
     },
     getCurrentTimeDifference(timestamp) {
-      // Returns the time difference of the timestamp to the current time in ms
+      // Returns time difference between timestamp and current time in ms
       const nowTimeStamp = new Date().getTime();
       const milliSecondsDiff = Math.abs(nowTimeStamp - timestamp);
       return milliSecondsDiff;

@@ -1,11 +1,10 @@
 import { getRefreshRate } from '../refreshRate/refreshRate';
-import { config } from '../../configuration/environment';
 import { LastFetch } from '../moodle/schemas/lastfetch.schema';
 import { loggerFile } from '../../configuration/logger';
 import { Request, Response, NextFunction } from 'express';
-import { ApiSuccess, ApiError } from '../../utils/api';
+import { ApiSuccess } from '../../utils/api';
 import { fetchEnrolledCourses } from '../moodle/fetch';
-import { getBaseUrl, getLastFetch } from '../moodle/index';
+import { getBaseUrl } from '../moodle/index';
 import { client } from '../../configuration/discord';
 import { getDiscordChannel } from '../discordChannel/discordChannel';
 
