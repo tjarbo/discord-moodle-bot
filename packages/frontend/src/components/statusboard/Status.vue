@@ -209,4 +209,7 @@ export default {
 .error {
   color: red;
 }
+.b-table {
+  cursor: default;
+}
 </style>
