@@ -466,10 +466,12 @@ definitions:
         format: "int32"
       data:
         type: "object"
-        additionalProperties:
-          type: 'any'
       error:
-        type: array
+        type: "array"
+        items: 
+          properties:
+            message:
+              type: "string"
 externalDocs:
   description: "Get source code"
   url: "https://github.com/tjarbo/discord-moodle-bot/"
