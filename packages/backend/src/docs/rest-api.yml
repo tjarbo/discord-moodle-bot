@@ -149,10 +149,64 @@ paths:
               error:
                 - message: 	"Internal server error"
   /settings/administrator:
+    get:
+      tags:
+      - "Administrator"
+      summary: "Gets administrator list"
+      description: "Gets a list of all administrators from the database."
+      operationId: "getAdministratorListRequest"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                example: "success"
+              code:
+                type: "integer"
+                format: "int32"
+                example: 200
+              data:
+                type: "array"
+                items: 
+                  type: "object"
+                  properties:
+                    userName:
+                      type: "string"
+                      example: "DiscordUser#1234"
+                    userId:
+                      type: "string"
+                      minLength: 18
+                      maxLength: 18
+                      example: "123456789123456789"
+                    createdAt:
+                      type: "number"
+                      example: 1591198290510
+              error:
+                type: "array"
+                items: 
+                  properties:
+                    message:
+                      type: "string"
+                example: []
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiResponse"
     post:
       tags:
       - "Administrator"
-      summary: "Creates Administrator"
+      summary: "Creates administrator"
       description: "Creates a new Administrator"
       operationId: "addAdministratorRequest"
       security:
@@ -211,6 +265,42 @@ paths:
               data: {}
               error:
                 - message: 	"Internal server error"
+  /settings/administrator/{id}:
+    delete:
+      tags:
+      - "Administrator"
+      summary: "Deletes administrator"
+      description: "Deletes an administrator from the database."
+      operationId: "deleteAdministratorRequest"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "User id"
+        required: true
+        type: "string"
+        minLength: 18
+        maxLength: 18
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
+        "404":
+          description: "Administrator not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiResponse"
   /settings/refreshRate:
     get:
       tags:

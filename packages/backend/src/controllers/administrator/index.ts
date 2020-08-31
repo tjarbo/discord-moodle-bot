@@ -111,7 +111,7 @@ export async function deleteAdministratorRequest(req: Request, res: Response, ne
 
         // Throw error, if admin user id is not in database
         if (!administrator) {
-            throw new ApiError(400, `Administrator with id ${administratorRequest.value.params.id} not found in database`);
+            throw new ApiError(404, `Administrator with id ${administratorRequest.value.params.id} not found in database`);
         }
 
         const response = new ApiSuccess(200);
