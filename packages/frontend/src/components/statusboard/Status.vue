@@ -64,7 +64,7 @@ export default {
       moodleLastFetch: 'Letzte Moodle Aktualisierung',
       moodleNextFetch: 'Nächste Moodle Aktualisierung',
       moodleCurrentFetchInterval: 'Aktuelles Fetch-Intervall',
-      discordLastReady: 'Letzte aktive Discord Verbindung',
+      discordLastReady: 'Letzte erfolgreiche Discord Verbindung',
       discordCurrentChannel: 'Aktueller Discord Channel',
     },
   }),
