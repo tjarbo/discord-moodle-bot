@@ -115,8 +115,7 @@ export default {
       // Check if time to last fetch is greater than fetch intervall
       if (row.key === this.keys.moodleLastFetch
           && row[property] !== this.keys.moodleLastFetch) {
-        const { moodleLastFetchTimestamp } = this.statusBoardGetData[0];
-        const { moodleCurrentFetchInterval } = this.statusBoardGetData[0];
+        const { moodleLastFetchTimestamp, moodleCurrentFetchInterval } = this.statusBoardGetData[0];
         const timeToLastFetch = this.getCurrentTimeDifference(moodleLastFetchTimestamp * 1000);
         return { error: timeToLastFetch > moodleCurrentFetchInterval };
       }
