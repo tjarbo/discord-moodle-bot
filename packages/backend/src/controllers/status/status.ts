@@ -39,7 +39,7 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
         try {
             discordCurrentChannelName = (client.channels.cache.get(discordCurrentChannelId) as any).name;
         }
-        catch {}
+        catch { /* continue */ }
 
         const responseObject = {
             moodleConnectionStatus,
