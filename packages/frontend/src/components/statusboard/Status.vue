@@ -26,7 +26,6 @@
           Aktualisieren
         </button>
       </div>
-      <b-loading :is-full-page="false" :active="statusBoardGetStatus.pending"></b-loading>
     </article>
   </div>
 </template>
