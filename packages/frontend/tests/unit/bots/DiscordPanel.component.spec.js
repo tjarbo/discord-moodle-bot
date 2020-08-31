@@ -63,7 +63,6 @@ describe('DiscordPanel.component', () => {
     const submitButton = wrapper.find('button.button.is-discord.is-outlined.is-fullwidth');
     const channelInput = wrapper.find('#channelinput');
 
-
     expect(submitButton.element.disabled).to.be.true;
     const reset = async () => {
       // enter valid input

@@ -1,15 +1,18 @@
 <template>
   <div id="dashboardview">
-    <the-nav-bar></the-nav-bar>
+    <TheNavBar></TheNavBar>
     <div class="columns">
       <div class="column is-10 is-offset-1">
         <b-tabs position="is-centered" class="block">
+          <b-tab-item class="spacing" label="Statusboard">
+            <Status></Status>
+          </b-tab-item>
           <b-tab-item class="spacing" label="Administration">
-            <add-administrator></add-administrator>
+            <AddAdministrator></AddAdministrator>
           </b-tab-item>
           <b-tab-item class="spacing is-moodle" label="Moodle">
-            <set-course-notifications></set-course-notifications>
-            <set-refresh-rate></set-refresh-rate>
+            <SetCourseNotifications></SetCourseNotifications>
+            <SetRefreshRate></SetRefreshRate>
           </b-tab-item>
           <b-tab-item class="spacing" label="Discord">
             <DiscordPanel></DiscordPanel>
@@ -26,6 +29,7 @@ import SetCourseNotifications from '../components/moodle/SetCourseNotifications.
 import DiscordPanel from '../components/discord/DiscordPanel.vue';
 import SetRefreshRate from '../components/moodle/SetRefreshRate.vue';
 import TheNavBar from '../components/TheNavBar.vue';
+import Status from '../components/statusboard/Status.vue';
 
 export default {
   name: 'DashboardView',
@@ -35,6 +39,7 @@ export default {
     DiscordPanel,
     SetRefreshRate,
     TheNavBar,
+    Status,
   },
 };
 </script>

@@ -450,6 +450,66 @@ paths:
           description: "Internal server error"
           schema:
             $ref: "#/definitions/ApiResponse"
+  /settings/status:
+    get:
+      tags:
+      - "Status"
+      summary: "Gets bot status information and current settings"
+      description: "Returns a list of objects that show the current connection, discord and fetch status and settings."
+      operationId: "getStatusRequest"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                example: "success"
+              code:
+                type: "integer"
+                format: "int32"
+                example: 200
+              data:
+                type: "object"
+                properties:
+                  moodleConnectionStatus:
+                   type: "string"
+                   example: "Ok"
+                  moodleLastFetchTimestamp:
+                    type: "number"
+                    example: "1598862126"
+                  moodleCurrentFetchInterval:
+                    type: "number"
+                    example: "900000"
+                  discordLastReadyTimestamp:
+                    type: "number"
+                    example: "1598861227218"
+                  discordCurrentChannelId:
+                   type: "string"
+                   example: "703550541160639540"
+                  discordCurrentChannelName:
+                   type: "string"
+                   example: "moodle-updates"
+              error:
+                type: "array"
+                items: 
+                  properties:
+                    message:
+                      type: "string"
+                example: []
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiResponse"
 securityDefinitions:
   Bearer:
     type: "apiKey"
@@ -461,15 +521,17 @@ definitions:
     properties:
       status:
         type: "string"
-      statusCode:
+      code:
         type: "integer"
         format: "int32"
       data:
         type: "object"
-        additionalProperties:
-          type: 'any'
       error:
-        type: array
+        type: "array"
+        items: 
+          properties:
+            message:
+              type: "string"
 externalDocs:
   description: "Get source code"
   url: "https://github.com/tjarbo/discord-moodle-bot/"

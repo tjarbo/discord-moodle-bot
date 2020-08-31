@@ -30,7 +30,6 @@ import { required, numeric } from 'vuelidate/lib/validators';
 import { mapGetters } from 'vuex';
 import { notifySuccess, notifyFailure } from '../../notification';
 
-
 export default {
   name: 'DiscordPanel',
   data: () => ({

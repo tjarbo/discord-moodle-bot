@@ -4,10 +4,10 @@ import Vuex from 'vuex';
 import ApiUtil from './utils/ApiUtil';
 import StoreUtil from './utils/StoreUtil';
 
-
 import administrationModule from './modules/administration';
 import discordModule from './modules/discord';
 import moodleModule from './modules/moodle';
+import statusModule from './modules/status';
 
 Vue.use(Vuex);
 
@@ -106,5 +106,6 @@ export default new Vuex.Store({
     administration: administrationModule,
     discord: discordModule,
     moodle: moodleModule,
+    status: statusModule,
   },
 });
