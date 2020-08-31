@@ -124,10 +124,10 @@ export default {
     },
     getFormattedTime(ms) {
       // Returns german time string, ex. '6 Minuten'
-      const seconds = Math.floor(ms / 1000);
-      const minutes = Math.floor(ms / (1000 * 60));
-      const hours = Math.floor(ms / (1000 * 60 * 60));
-      const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+      const seconds = Math.round(ms / 1000);
+      const minutes = Math.round(ms / (1000 * 60));
+      const hours = Math.round(ms / (1000 * 60 * 60));
+      const days = Math.round(ms / (1000 * 60 * 60 * 24));
       if (ms === 1) return `${ms} Millisekunde`;
       if (ms < 1000) return `${ms} Millisekunden`;
       if (seconds === 1) return `${seconds} Sekunde`;
