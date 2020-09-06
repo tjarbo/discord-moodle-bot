@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="./style.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <title>FMDB - Moodle Token generieren</title>
+</head>
+<body>
+    <section class="hero is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="column is-4 is-offset-4">
+            <h3 class="title has-text-black">Fancy Moodle Discord Bot</h3>
+            <hr class="login-hr" />
+            <p class="subtitle has-text-black">Generiere deinen Moodle-Token für den FMDB</p>
+            <div class="box has-text-left">
+              <figure class="image is-128x128">
+                <img class="is-rounded" src="./FMDB_logo.png" />
+              </figure>
+              <form id="form" class="has-text-centered container">
+                <div class="field">
+                  <div class="control">
+                    <input
+                      id="moodleurl"
+                      autofocus
+                      class="input is-large"
+                      placeholder="https://moodle.beispiel.de"
+                      type="text"
+                    />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="control">
+                    <input
+                      id="username"
+                      class="input is-large"
+                      placeholder="Benutzername"
+                      type="text"
+                    />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="control">
+                    <input
+                      id="password"
+                      class="input is-large"
+                      placeholder="Password"
+                      type="password"
+                    />
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="control">
+                    <button
+                      id="submit"
+                      class="button is-block is-primary is-large is-fullwidth is-marginless"
+                    >Generieren</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <p>
+              <a
+                class="has-text-link"
+                href="https://github.com/tjarbo/discord-moodle-bot/"
+              >Github Repository</a> &nbsp;·&nbsp;
+              <a
+                class="has-text-link"
+                href="https://github.com/tjarbo/discord-moodle-bot/wiki"
+              >Brauchst du Hilfe?</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="modal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">Erstellung war erfolgreich!</p>
+          <button id="close" class="delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="content">
+            <h1 class="title">Willkommen <span id="firstname"></span>,</h1>
+            <h2 class="subtitle"><span id="university"></span></h2>
+            <p>Die benötigten Daten konnten erfolgreich generiert werden! 
+              Kopiere die folgenden Werte an die entsprechende Stelle deiner .env Konfigurationsdatei. 
+              Mehr dazu findest du <a href="https://github.com/tjarbo/discord-moodle-bot/wiki/%F0%9F%97%83%EF%B8%8F-.env">hier</a>
+            </p>
+            <div class="tags has-addons are-medium">
+              <span class="tag is-info">MOODLE_TOKEN=</span>
+              <span class="tag"><span id="token"></span></span>
+            </div>
+            <div class="tags has-addons are-medium">
+              <span class="tag is-info">MOODLE_USERID=</span>
+              <span class="tag"><span id="userid"></span></span>
+            </div>
+            <div class="tags has-addons are-medium">
+              <span class="tag is-info">MOODLE_BASE_URL=</span>
+              <span class="tag"><span id="moodlebaseurl"></span></span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+</body>
+
+<script src="./main.js"></script>
+
+</html>
