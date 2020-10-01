@@ -68,7 +68,7 @@ function requestPersonalId(token) {
 }
 
 /**
- * Actives the modal to present the results
+ * Activates the modal to present the results
  * 
  * @param {string} firstname Firstname of the user 
  * @param {string} university Institute behind the moodle instance
