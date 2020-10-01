@@ -1,0 +1,40 @@
+.warning-text {
+  color: rgb(202, 60, 60);
+}
+.logo {
+  width: 300px;
+}
+
+figure.image {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+  margin-top: -70px;
+  padding-bottom: 20px;
+}
+
+figure img {
+  padding: 5px;
+  background: #fff;
+  border-radius: 50%;
+  -webkit-box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1),
+    0 0 0 1px rgba(10, 10, 10, 0.1);
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+}
+.box {
+  margin-top: 5rem;
+}
+
+section {
+  text-align: center;
+}
+
+.warning-text {
+  margin: 20px;
+  display: block;
+  text-decoration: underline;
+}
+
+.content {
+  text-align: initial;
+}
