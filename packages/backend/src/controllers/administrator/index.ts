@@ -9,11 +9,7 @@ const addAdministratorRequestSchema = object({
     userid: string().required().regex(/^\d{18}$/),
 });
 
-const deleteAdministratorRequestSchema = object({
-    params: object({
-        id: string().required().regex(/^\d{18}$/)
-    }).required(),
-}).unknown(true);
+const deleteAdministratorRequestSchema = string().required().regex(/^\d{18}$/);
 
 /**
  * Handles POST /api/settings/administrator requests
@@ -101,17 +97,17 @@ export async function getAdministratorListRequest(req: Request, res: Response, n
 export async function deleteAdministratorRequest(req: Request, res: Response, next: NextFunction) {
 
     try {
-        const administratorRequest = deleteAdministratorRequestSchema.validate(req);
+        const administratorRequest = deleteAdministratorRequestSchema.validate(req.params.id);
         if (administratorRequest.error) throw new ApiError(400, administratorRequest.error.message);
 
         // Delete administrator from database
         const administrator = await Administrator.findOneAndDelete({
-            userId: administratorRequest.value.params.id
+            userId: administratorRequest.value
         });
 
         // Throw error, if admin user id is not in database
         if (!administrator) {
-            throw new ApiError(404, `Administrator with id ${administratorRequest.value.params.id} not found in database`);
+            throw new ApiError(404, `Administrator with id ${administratorRequest.value} not found in database`);
         }
 
         const response = new ApiSuccess(200);
