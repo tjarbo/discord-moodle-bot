@@ -1,5 +1,5 @@
 import { loggerFile } from "../src/configuration/logger";
-import { addAdministratorRequest } from "../src/controllers/administrator";
+import { addAdministratorRequest, deleteAdministratorRequest, getAdministratorListRequest } from "../src/controllers/administrator";
 import mockingoose from 'mockingoose';
 import { Request, Response } from "express";
 import { Administrator } from "../src/controllers/administrator/administrator.schema";
@@ -7,12 +7,12 @@ import { ApiError, ApiSuccess } from "../src/utils/api";
 
 jest.mock('../src/configuration/environment.ts');
 
-describe('administrator/index.ts addAdministratorRequest',() => {
+describe('administrator/index.ts addAdministratorRequest', () => {
 
   let mockRequest: Request;
   let mockResponse: Response;
   let mockUser: any;
-  let mockAdministrator:any ;
+  let mockAdministrator: any;
   let mockNext: jest.Mock;
   let spyLogger: jest.SpyInstance;
 
@@ -69,7 +69,7 @@ describe('administrator/index.ts addAdministratorRequest',() => {
     expect(spyLogger.mock.calls.length).toBe(3);
     expect(mockNext.mock.calls.length).toBe(3);
     expect(mockNext.mock.calls[2][0]).toEqual(new ApiError(400, '"userid" is required'));
-    
+
     mockRequest.body.userid = '123123123123';
     /*
     // invalid user name (to less or many numbers)
@@ -94,17 +94,17 @@ describe('administrator/index.ts addAdministratorRequest',() => {
     mockRequest.body = mockUser;
 
     // Same username
-    mockAdministrator.userName = mockUser.username; 
+    mockAdministrator.userName = mockUser.username;
     mockingoose(Administrator).toReturn(mockAdministrator, 'findOne');
 
     await addAdministratorRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(400, `Administrator ${mockUser.username} already exists`));
-    
+
     // Same userid
     mockAdministrator.userName = 'testuser#9999'
-    mockAdministrator.userId = mockUser.userid; 
+    mockAdministrator.userId = mockUser.userid;
     mockingoose(Administrator).toReturn(mockAdministrator, 'findOne');
 
     await addAdministratorRequest(mockRequest, mockResponse, mockNext);
@@ -113,8 +113,8 @@ describe('administrator/index.ts addAdministratorRequest',() => {
     expect(mockNext.mock.calls[1][0]).toEqual(new ApiError(400, `Administrator with ID ${mockUser.userid} already exists`));
   });
 
-  it('should save new Administrator and send response if everything is fine', async () => { 
-    
+  it('should save new Administrator and send response if everything is fine', async () => {
+
     mockRequest.body = mockUser;
     mockingoose(Administrator).toReturn(null, 'findOne');
     mockingoose(Administrator).toReturn(null, 'save');
@@ -126,5 +126,168 @@ describe('administrator/index.ts addAdministratorRequest',() => {
 
     // no error
     expect(spyLogger.mock.calls.length).toBe(0);
+  });
+});
+
+describe('administrator/index.ts getAdministratorListRequest', () => {
+
+  let mockRequest: Request;
+  let mockResponse: Response;
+  let mockUser: any;
+  let mockAdministrator: any;
+  let mockNext: jest.Mock;
+  let spyLogger: jest.SpyInstance;
+
+  beforeEach(() => {
+    mockRequest = {
+      headers: {},
+      body: {},
+    } as Request;
+
+    mockResponse = {
+      status: jest.fn(() => mockResponse),
+      json: jest.fn(),
+      send: jest.fn(),
+      end: jest.fn()
+    } as any as Response;
+
+    mockUser = {
+      username: 'test#1231',
+      userid: '123456789123456789',
+    }
+
+    mockAdministrator = {};
+
+    mockNext = jest.fn();
+    spyLogger = jest.spyOn(loggerFile, 'error');
+
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should log error if database fails', async () => {
+    mockingoose(Administrator).toReturn(null, 'find');
+
+    await getAdministratorListRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(503, `Internal error while retrieving administrators`));
+  });
+
+  it('should return list of administrators', async () => {
+    mockAdministrator = [
+      {
+        userName: "TestUserName",
+        userId: "TestUserId",
+        createdAt: new Date().valueOf(),
+      },
+      {
+        userName: "TestUserName",
+        userId: "TestUserId",
+        createdAt: new Date().valueOf(),
+      },
+    ];
+
+    mockingoose(Administrator).toReturn(mockAdministrator, 'find');
+    await getAdministratorListRequest(mockRequest, mockResponse, mockNext);
+
+    expect(spyLogger.mock.calls.length).toBe(0);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiSuccess(200, mockAdministrator));
+
+  });
+
+});
+
+
+describe('administrator/index.ts deleteAdministratorRequest', () => {
+
+  let mockRequest: Request;
+  let mockResponse: Response;
+  let mockUser: any;
+  let mockAdministrator: any;
+  let mockNext: jest.Mock;
+  let spyLogger: jest.SpyInstance;
+
+  beforeEach(() => {
+    mockRequest = {
+      headers: {},
+      body: {},
+      params: {},
+    } as Request;
+
+    mockResponse = {
+      status: jest.fn(() => mockResponse),
+      json: jest.fn(),
+      send: jest.fn(),
+      end: jest.fn()
+    } as any as Response;
+
+    mockUser = {
+      username: 'test#1231',
+      userid: '123456789123456789',
+    }
+
+    mockAdministrator = {};
+
+    mockNext = jest.fn();
+    spyLogger = jest.spyOn(loggerFile, 'error');
+
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should log error if wrong deleteAdministratorRequestSchema provided', async () => {
+    
+    // no body
+    await deleteAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(400, '"value" is required'));
+
+    // id too short
+    mockRequest.params.id = "12312312312312";
+
+    await deleteAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(2);
+    expect(mockNext.mock.calls.length).toBe(2);
+    expect(mockNext.mock.calls[1][0]).toEqual(new ApiError(400, `"value" with value "${mockRequest.params.id}" fails to match the required pattern: /^\\d{18}$/`));
+
+    // id with letters
+    mockRequest.params.id = "12312312312312";
+
+    await deleteAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(3);
+    expect(mockNext.mock.calls.length).toBe(3);
+    expect(mockNext.mock.calls[2][0]).toEqual(new ApiError(400, `"value" with value "${mockRequest.params.id}" fails to match the required pattern: /^\\d{18}$/`));
+
+  });
+
+  it('should log error if administrator has not been found', async () => {
+
+    mockRequest.params.id = "123456789012345678";
+    mockingoose(Administrator).toReturn(null, 'findOneAndDelete');
+
+    await deleteAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Administrator with id ${mockRequest.params.id} not found in database`));
+
+  });
+
+  it('should return 200 if deletion was successful', async () => {
+  
+    mockRequest.params.id = "123456789012345678";
+    mockingoose(Administrator).toReturn(mockAdministrator, 'findOneAndDelete');
+  
+    await deleteAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(0);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiSuccess(200));
+
   });
 });
