@@ -181,11 +181,13 @@ describe('administrator/index.ts getAdministratorListRequest', () => {
       {
         userName: "TestUserName",
         userId: "TestUserId",
+        deletable: true,
         createdAt: new Date().valueOf(),
       },
       {
         userName: "TestUserName",
         userId: "TestUserId",
+        deletable: true,
         createdAt: new Date().valueOf(),
       },
     ];
@@ -270,7 +272,7 @@ describe('administrator/index.ts deleteAdministratorRequest', () => {
   it('should log error if administrator has not been found', async () => {
 
     mockRequest.params.id = "123456789012345678";
-    mockingoose(Administrator).toReturn(null, 'findOneAndDelete');
+    mockingoose(Administrator).toReturn(null, 'findOne');
 
     await deleteAdministratorRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(1);
@@ -278,16 +280,32 @@ describe('administrator/index.ts deleteAdministratorRequest', () => {
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `Administrator with id ${mockRequest.params.id} not found in database`));
 
   });
+  
+  it('should log error if administrator is not deletable', async () => {
+
+
+    mockRequest.params.id = "123456789012345678";
+    mockAdministrator.deletable = false;
+    mockingoose(Administrator).toReturn(mockAdministrator, 'findOne');
+
+    await deleteAdministratorRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(403, `Administrator with id ${mockRequest.params.id} is not deletable`));
+
+  });
 
   it('should return 200 if deletion was successful', async () => {
   
     mockRequest.params.id = "123456789012345678";
-    mockingoose(Administrator).toReturn(mockAdministrator, 'findOneAndDelete');
+    mockAdministrator.deletable = true;
+    mockAdministrator.deleteOne = async () => { };
+    mockingoose(Administrator).toReturn(mockAdministrator, 'findOne');
   
     await deleteAdministratorRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(0);
     expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiSuccess(200));
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiSuccess(204));
 
   });
 });
