@@ -3,81 +3,87 @@ import StoreUtil from '../utils/StoreUtil';
 
 export default {
   state: {
-    newAdministrator: StoreUtil.state(),
+    changeRequest: StoreUtil.state(),
     administrators: StoreUtil.state(),
   },
   mutations: {
-    SET_ADMINISTRATOR(state, payload) {
-      state.newAdministrator = StoreUtil.updateState(state.newAdministrator, payload);
+    SET_CHANGE_REQUEST(state, payload) {
+      state.newAdministrator = StoreUtil.updateState(state.changeRequest, payload);
     },
-    GET_ADMINISTRATORS(state, payload) {
+    SET_ADMINISTRATORS(state, payload) {
       state.administrators = StoreUtil.updateState(state.administrators, payload);
     },
   },
   actions: {
     addAdministrator({ commit }, administratorObject) {
-      commit('SET_ADMINISTRATOR');
+      commit('SET_CHANGE_REQUEST');
       return new Promise((resolve, reject) => {
         ApiUtil.post('/settings/administrator', administratorObject)
           .then(({ data: apiResponse }) => {
             if (apiResponse.status === 'success') {
-              commit('SET_ADMINISTRATOR', apiResponse.data);
+              commit('SET_CHANGE_REQUEST', {});
               resolve();
             } else {
-              commit('SET_ADMINISTRATOR', new Error(apiResponse.error[0].message));
+              commit('SET_CHANGE_REQUEST', new Error(apiResponse.error[0].message));
               reject(apiResponse);
             }
           })
           .catch((err) => {
             console.log(err);
-            commit('SET_ADMINISTRATOR', err);
-            reject();
+            commit('SET_CHANGE_REQUEST', err);
+            reject(err);
           });
       });
     },
     deleteAdministrator({ commit }, administratorId) {
-      commit('SET_ADMINISTRATOR');
+      commit('SET_CHANGE_REQUEST');
       return new Promise((resolve, reject) => {
         ApiUtil.delete(`/settings/administrator/${administratorId}`)
-          .then(({ data: apiResponse }) => {
-            if (apiResponse.status === 'success') {
-              commit('SET_ADMINISTRATOR', apiResponse.data);
+          .then(({ status, data: apiResponse }) => {
+          /**
+           * Axios doesn't pass the response body of a successful
+           * delete operation.
+           */
+            if (status === 204 || apiResponse.status === 'success') {
+              commit('SET_CHANGE_REQUEST', {});
+              console.log('## resolve');
               resolve();
             } else {
-              commit('SET_ADMINISTRATOR', new Error(apiResponse.error[0].message));
+              commit('SET_CHANGE_REQUEST', new Error(apiResponse.error[0].message));
+              console.log('## reject');
               reject(apiResponse);
             }
           })
           .catch((err) => {
             console.log(err);
-            commit('SET_ADMINISTRATOR', err);
+            commit('SET_CHANGE_REQUEST', err);
             reject();
           });
       });
     },
     getAdministrators({ commit }) {
-      commit('GET_ADMINISTRATORS');
+      commit('SET_ADMINISTRATORS');
       return new Promise((resolve, reject) => {
         ApiUtil.get('/settings/administrator')
           .then(({ data: apiResponse }) => {
             if (apiResponse.status === 'success') {
-              commit('GET_ADMINISTRATORS', apiResponse.data);
+              commit('SET_ADMINISTRATORS', apiResponse.data);
               resolve();
             } else {
-              commit('GET_ADMINISTRATORS', new Error(apiResponse.error[0].message));
+              commit('SET_ADMINISTRATORS', new Error(apiResponse.error[0].message));
               reject(apiResponse);
             }
           })
           .catch((err) => {
             console.log(err);
-            commit('GET_ADMINISTRATORS', err);
+            commit('SET_ADMINISTRATORS', err);
             reject();
           });
       });
     },
   },
   getters: {
-    administratorGetStatus: (state) => state.newAdministrator.status,
+    administratorChangeRequestGetStatus: (state) => state.changeRequest.status,
     administratorListGetData: (state) => state.administrators.data,
     administratorListGetStatus: (state) => state.administrators.status,
   },
