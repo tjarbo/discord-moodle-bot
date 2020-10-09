@@ -46,7 +46,6 @@ export default {
            */
             if (status === 204 || apiResponse.status === 'success') {
               commit('SET_CHANGE_REQUEST', {});
-              console.log('## resolve');
               resolve();
             } else {
               commit('SET_CHANGE_REQUEST', new Error(apiResponse.error[0].message));
