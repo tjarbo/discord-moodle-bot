@@ -49,7 +49,6 @@ export default {
               resolve();
             } else {
               commit('SET_CHANGE_REQUEST', new Error(apiResponse.error[0].message));
-              console.log('## reject');
               reject(apiResponse);
             }
           })
