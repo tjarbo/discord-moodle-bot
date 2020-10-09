@@ -11,7 +11,7 @@
             checkable
             :checkbox-position="'left'"
             :checked-rows.sync="checkedRows"
-            :is-row-checkable="(row) => row.userId !== firstAdminId">
+            :is-row-checkable="(row) => row.deletable">
             <template v-slot="{row}" >
               <b-table-column
                 v-for="(column, index) in columns"
@@ -45,7 +45,7 @@ export default {
       .dispatch('getAdministrators')
       .then(() => {})
       .catch((apiResponse) => {
-        if (apiResponse.code) notifyFailure(apiResponse.error[0].message);
+        if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
         // Request failed locally - maybe no internet connection etc?
         return notifyFailure('Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.');
       });
@@ -111,6 +111,7 @@ export default {
       const data = this.administratorListGetData.map((admin) => ({
         userName: admin.userName,
         userId: admin.userId,
+        deletable: admin.deletable,
         createdAt: new Date(admin.createdAt).toLocaleString(),
       }));
       return data;
