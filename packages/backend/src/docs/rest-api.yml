@@ -228,7 +228,7 @@ paths:
             userid:
               type: "string"
       responses:
-        "200":
+        "201":
           description: "Successful operation"
           schema:
             $ref: "#/definitions/ApiResponse"
@@ -285,10 +285,21 @@ paths:
         minLength: 18
         maxLength: 18
       responses:
-        "200":
-          description: "Successful operation"
+        "204":
+          description: "Deletion Successful"
           schema:
             $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Invalid request parameter"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+            examples:
+              application/json:
+                status: 'error'
+                code: 400
+                data: {}
+                error:
+                  - message: "\"id\" is required"
         "401":
           description: "Invalid token!"
           schema: 
