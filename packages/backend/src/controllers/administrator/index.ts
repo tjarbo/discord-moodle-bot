@@ -116,7 +116,7 @@ export async function deleteAdministratorRequest(req: Request, res: Response, ne
             throw new ApiError(403, `Administrator with id ${administratorRequest.value} is not deletable`);
         }
 
-        await administrator.deleteOne();
+        administrator.deleteOne();
 
         const response = new ApiSuccess(204);
         next(response);

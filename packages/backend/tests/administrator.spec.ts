@@ -299,7 +299,7 @@ describe('administrator/index.ts deleteAdministratorRequest', () => {
   
     mockRequest.params.id = "123456789012345678";
     mockAdministrator.deletable = true;
-    mockAdministrator.deleteOne = async () => { };
+    mockAdministrator.deleteOne = jest.fn();
     mockingoose(Administrator).toReturn(mockAdministrator, 'findOne');
   
     await deleteAdministratorRequest(mockRequest, mockResponse, mockNext);
