@@ -16,8 +16,7 @@ describe('AddAdministrator.component', () => {
   let store;
   beforeEach(() => {
     const getters = {
-      administratorsGetError: () => null,
-      administratorGetStatus: () => ({
+      administratorChangeRequestGetStatus: () => ({
         pending: false,
       }),
     };

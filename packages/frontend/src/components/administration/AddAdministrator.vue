@@ -10,7 +10,7 @@
               placeholder="username#0000"
               type="text"
               v-model="username"
-              :disabled="administratorGetStatus.pending"
+              :disabled="administratorChangeRequestGetStatus.pending"
             ></b-input>
           </b-field>
         </p>
@@ -23,7 +23,7 @@
               placeholder="000000000000000000"
               type="text"
               v-model="userid"
-              :disabled="administratorGetStatus.pending"
+              :disabled="administratorChangeRequestGetStatus.pending"
             ></b-input>
           </b-field>
         </p>
@@ -35,7 +35,10 @@
           :disabled="$v.$invalid"
         >Hinzufügen</button>
       </div>
-      <b-loading :is-full-page="false" :active="administratorGetStatus.pending"></b-loading>
+      <b-loading
+        :active="administratorChangeRequestGetStatus.pending"
+        :is-full-page="false"
+      ></b-loading>
     </article>
   </div>
 </template>
@@ -66,6 +69,8 @@ export default {
         .then(() => {
           this.userid = '';
           this.username = '';
+          // Refresh administrator list
+          this.$store.dispatch('getAdministrators');
           notifySuccess('Administrator erfolgreich hinzugefügt!');
         })
         .catch((apiResponse) => {
@@ -87,7 +92,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['administratorGetStatus']),
+    ...mapGetters(['administratorChangeRequestGetStatus']),
   },
   validations: {
     userid: {

@@ -4,10 +4,12 @@ import { loggerFile } from '../../configuration/logger';
 import { Administrator } from './administrator.schema';
 import { ApiError, ApiSuccess } from '../../utils/api';
 
-const administratorRequestSchema = object({
+const addAdministratorRequestSchema = object({
     username: string().required().regex(/^[\w\s]+#\d{4}$/),
     userid: string().required().regex(/^\d{18}$/),
 });
+
+const deleteAdministratorRequestSchema = string().required().regex(/^\d{18}$/);
 
 /**
  * Handles POST /api/settings/administrator requests
@@ -19,7 +21,7 @@ const administratorRequestSchema = object({
 export async function addAdministratorRequest(req: Request, res: Response, next: NextFunction) {
 
     try {
-        const administratorRequest = administratorRequestSchema.validate(req.body);
+        const administratorRequest = addAdministratorRequestSchema.validate(req.body);
         if (administratorRequest.error) throw new ApiError(400, administratorRequest.error.message);
 
         // check if administrator exists at the database
@@ -45,6 +47,78 @@ export async function addAdministratorRequest(req: Request, res: Response, next:
         await new Administrator(adminObj).save();
 
         const response = new ApiSuccess(201);
+        next(response);
+
+    } catch (err) {
+        loggerFile.error(err.message);
+        next(err);
+    }
+}
+
+/**
+ * Handles GET /api/settings/administrator requests
+ * and responds with a list of all administrators.
+ * @param req Request
+ * @param res Response
+ * @param next NextFunction
+ */
+export async function getAdministratorListRequest(req: Request, res: Response, next: NextFunction) {
+
+    try {
+        // Get administrators from database
+        const administrators = await Administrator.find({});
+        if (!administrators) throw new ApiError(503, 'Internal error while retrieving administrators');
+
+        // Extract relevant details
+        const administratorList = administrators.map(model => {
+            return {
+                userName: model.get('userName'),
+                userId: model.get('userId'),
+                createdAt: new Date(model.get('createdAt')).getTime(),
+                deletable: model.get('deletable'),
+            };
+        });
+
+        const response = new ApiSuccess(200, administratorList);
+        next(response);
+
+    } catch (err) {
+        loggerFile.error(err.message);
+        next(err);
+    }
+}
+
+/**
+ * Handles DELETE /api/settings/administrator requests
+ * and deletes an administrator specified by user id from the database
+ * @param req Request
+ * @param res Response
+ * @param next NextFunction
+ */
+export async function deleteAdministratorRequest(req: Request, res: Response, next: NextFunction) {
+
+    try {
+        const administratorRequest = deleteAdministratorRequestSchema.validate(req.params.id);
+        if (administratorRequest.error) throw new ApiError(400, administratorRequest.error.message);
+
+        // Delete administrator from database
+        const administrator = await Administrator.findOne({
+            userId: administratorRequest.value
+        });
+
+        // Throw error, if admin user id is not in database
+        if (!administrator) {
+            throw new ApiError(404, `Administrator with id ${administratorRequest.value} not found in database`);
+        }
+
+        // Throw error, if admin is not deletable
+        if (!administrator.deletable) {
+            throw new ApiError(403, `Administrator with id ${administratorRequest.value} is not deletable`);
+        }
+
+        administrator.deleteOne();
+
+        const response = new ApiSuccess(204);
         next(response);
 
     } catch (err) {
