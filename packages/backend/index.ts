@@ -17,6 +17,7 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
     const userObj = {
       userName: config.admin.name,
       userId: config.admin.id,
+      deletable: false,
     };
 
     new Administrator(userObj).save();

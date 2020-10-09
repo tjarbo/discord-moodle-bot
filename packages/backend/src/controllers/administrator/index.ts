@@ -75,6 +75,7 @@ export async function getAdministratorListRequest(req: Request, res: Response, n
                 userName: model.get('userName'),
                 userId: model.get('userId'),
                 createdAt: new Date(model.get('createdAt')).getTime(),
+                deletable: model.get('deletable'),
             };
         });
 
@@ -101,7 +102,7 @@ export async function deleteAdministratorRequest(req: Request, res: Response, ne
         if (administratorRequest.error) throw new ApiError(400, administratorRequest.error.message);
 
         // Delete administrator from database
-        const administrator = await Administrator.findOneAndDelete({
+        const administrator = await Administrator.findOne({
             userId: administratorRequest.value
         });
 
@@ -110,7 +111,14 @@ export async function deleteAdministratorRequest(req: Request, res: Response, ne
             throw new ApiError(404, `Administrator with id ${administratorRequest.value} not found in database`);
         }
 
-        const response = new ApiSuccess(200);
+        // Throw error, if admin is not deletable
+        if (!administrator.deletable) {
+            throw new ApiError(403, `Administrator with id ${administratorRequest.value} is not deletable`);
+        }
+
+        await administrator.deleteOne();
+
+        const response = new ApiSuccess(204);
         next(response);
 
     } catch (err) {
