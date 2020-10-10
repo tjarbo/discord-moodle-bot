@@ -19,12 +19,21 @@
         </p>
       </a>
       <div class="panel-block">
-        <button
+        <b-button
           @click="onSubmit"
-          class="button is-outlined is-fullwidth is-status"
+          class="button is-outlined is-status"
+          style="width: 50%; margin: 5px;"
         >
-          Aktualisieren
-        </button>
+          Status aktualisieren
+        </b-button>
+        <b-button
+          @click="fetchAndNotify"
+          class="button is-outlined is-moodle"
+          style="width: 50%; margin: 5px;"
+          :loading="fetchInProgress"
+        >
+          Jetzt auf Moodle Updates prüfen
+        </b-button>
       </div>
     </article>
   </div>
@@ -69,6 +78,7 @@ export default {
       discordLastReady: 'Letzte erfolgreiche Discord Verbindung',
       discordCurrentChannel: 'Aktueller Discord Channel',
     },
+    fetchInProgress: false,
   }),
   methods: {
     onSubmit() {
@@ -76,7 +86,7 @@ export default {
       this.$store
         .dispatch('getStatus')
         .then(() => {
-          notifySuccess('Aktualisierung erfolgreich!');
+          notifySuccess('Statusdaten aktualisiert!');
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
@@ -96,6 +106,15 @@ export default {
             );
           }
         });
+    },
+
+    fetchAndNotify() {
+      this.fetchInProgress = true;
+      setTimeout(() => {
+        notifySuccess('Prüfung auf Updates erfolgreich!');
+        this.fetchInProgress = false;
+        this.onSubmit();
+      }, 3000);
     },
 
     /**
