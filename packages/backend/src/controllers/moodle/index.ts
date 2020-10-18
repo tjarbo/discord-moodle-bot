@@ -1,10 +1,9 @@
 import { config } from '../../configuration/environment';
 import { loggerFile } from '../../configuration/logger';
-import { LastFetch } from './schemas/lastfetch.schema';
 import { getCourseBlacklist } from '../courseList/courseList';
 import { fetchAssignments, fetchEnrolledCourses, fetchCourseContents } from './fetch';
 import { handleAssignments, handleContents } from './handle';
-import { getRefreshRate } from '../refreshRate/refreshRate';
+import { MoodleSettings } from './schemas/moodle.schema';
 
 /**
  * Builds a string representing the moodle
@@ -23,20 +22,6 @@ export function getBaseUrl(): string {
                 + '&moodlewsrestformat=json';
 }
 
-/**
- * Reads timestamp of the last fetch from database
- * (Creates a new one if this is the first fetch)
- *
- * ! export only for unit testing (rewire doesn't work :/ )
- * @returns {number} The timestamp of last fetch (in seconds!) or
- *                   the current Date if this is the first fetch
- */
-export async function getLastFetch(): Promise<number> {
-    const now = Math.floor(Date.now() / 1000);
-    let lastFetch = await LastFetch.findOneAndUpdate({}, {$set: {timestamp: now}});
-    if (!lastFetch) lastFetch = await new LastFetch({timestamp: now}).save();
-    return lastFetch.timestamp;
-}
 
 /**
  * Fetches all data from the Moodle webservice, filters it
@@ -49,8 +34,7 @@ export async function fetchAndNotify(): Promise<void> {
         const moodleUrl = getBaseUrl();
         const courseBlacklist: number[] = await getCourseBlacklist();
 
-        const lastFetch = await getLastFetch();
-        if (!lastFetch) throw new Error('Unable to get timestamp of last fetch');
+        const lastFetch = await MoodleSettings.getLastFetch();
 
         // get all course IDs and map them to corresponding course names
         const courseDetails = await fetchEnrolledCourses(moodleUrl);
@@ -71,6 +55,8 @@ export async function fetchAndNotify(): Promise<void> {
 
     } catch(error) {
         loggerFile.error('Moodle API request failed', error);
+    } finally {
+        await MoodleSettings.findOneAndUpdate({}, { $set: { lastFetch: Math.floor(Date.now() / 1000) }});
     }
 }
 
@@ -82,6 +68,6 @@ export async function fetchAndNotify(): Promise<void> {
 export async function continuousFetchAndNotify(): Promise<void> {
     fetchAndNotify();
     // Call function again after database interval
-    const interval = await getRefreshRate();
+    const interval = await MoodleSettings.getRefreshRate();
     setTimeout(continuousFetchAndNotify, interval);
 }

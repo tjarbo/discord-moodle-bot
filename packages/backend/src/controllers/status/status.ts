@@ -1,5 +1,3 @@
-import { getRefreshRate } from '../refreshRate/refreshRate';
-import { LastFetch } from '../moodle/schemas/lastfetch.schema';
 import { loggerFile } from '../../configuration/logger';
 import { Request, Response, NextFunction } from 'express';
 import { ApiSuccess } from '../../utils/api';
@@ -7,6 +5,7 @@ import { fetchEnrolledCourses } from '../moodle/fetch';
 import { getBaseUrl } from '../moodle/index';
 import { client } from '../../configuration/discord';
 import { getDiscordChannel } from '../discordChannel/discordChannel';
+import { MoodleSettings } from '../moodle/schemas/moodle.schema';
 
 /**
  * Handles GET /api/settings/status requests and responds
@@ -30,10 +29,8 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
             moodleConnectionStatus = error.message;
         }
 
-        const moodleCurrentFetchInterval = await getRefreshRate() || 'Error';
-        let moodleLastFetchTimestamp = 'Error' as any;
-        const moodleLastFetch = await LastFetch.findOne();
-        if (moodleLastFetch) moodleLastFetchTimestamp = moodleLastFetch.timestamp;
+        const moodleCurrentFetchInterval = await MoodleSettings.getRefreshRate();
+        const moodleLastFetchTimestamp = await MoodleSettings.getLastFetch();
 
         const discordLastReadyTimestamp = client.readyTimestamp;
         const discordCurrentChannelId = await getDiscordChannel();
