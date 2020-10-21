@@ -147,7 +147,43 @@ paths:
               code: 500
               data: {}
               error:
-                - message: 	"Internal server error"
+                - message: "Internal server error"
+  /fetch:
+    get:
+      tags:
+        - "Moodle"
+      summary: "Triggers bot to fetch new updates from moodle."
+      description: >
+        This endpoint allows the user to trigger the bot to fetch new updates from moodle, independent from
+        the current interval. 
+      operationId: "manualFetchRequest"
+      security:
+        - Bearer: []
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Fetch was successful"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "401":
+          description: "Invalid token!"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 401
+              data: {}
+              error:
+                - message: "Invalid token!"
+        "500":
+          description: "Unable to fetch new updates from moodle. See logs for more information."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+
   /settings/administrator:
     get:
       tags:
@@ -253,7 +289,7 @@ paths:
               code: 401
               data: {}
               error:
-                - message: 	"No authorization token was found"
+                - message: "No authorization token was found"
         "500":
           description: "Internal server error"
           schema:
@@ -264,7 +300,7 @@ paths:
               code: 500
               data: {}
               error:
-                - message: 	"Internal server error"
+                - message: "Internal server error"
   /settings/administrator/{id}:
     delete:
       tags:
@@ -315,7 +351,7 @@ paths:
   /settings/refreshRate:
     get:
       tags:
-      - "Moodle refresh rate"
+      - "Moodle"
       summary: "Gets moodle fetch interval"
       description: "Returns the refresh interval in which the current data is requested and notifications are sent accordingly."
       operationId: "getRefreshRateRequest"
@@ -346,7 +382,7 @@ paths:
             $ref: "#/definitions/ApiResponse"
     put:
       tags:
-      - "Moodle refresh rate"
+      - "Moodle"
       summary: "Sets moodle fetch interval"
       description: "Sets the refresh interval in which the current dataset is requested and notifications are sent accordingly."
       operationId: "setRefreshRateRequest"
@@ -459,7 +495,7 @@ paths:
   /settings/courses:
     get:
       tags:
-      - "Course"
+      - "Moodle"
       summary: "Gets course list"
       description: "Returns a list of all courses with the status whether the associated notifications are enabled or disabled."
       operationId: "getCourseListRequest"
@@ -503,7 +539,7 @@ paths:
   /settings/courses/{id}:
     put:
       tags:
-      - "Course"
+      - "Moodle"
       summary: "Sets single course status"
       description: "Enables or disables the notifications assigned to the course id."
       operationId: "setCourseRequest"

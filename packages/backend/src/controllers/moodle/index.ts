@@ -4,6 +4,9 @@ import { getCourseBlacklist } from '../courseList/courseList';
 import { fetchAssignments, fetchEnrolledCourses, fetchCourseContents } from './fetch';
 import { handleAssignments, handleContents } from './handle';
 import { MoodleSettings } from './schemas/moodle.schema';
+import { Request, Response, NextFunction } from 'express';
+import { ApiError } from '../../utils/api';
+import { ApiSuccess } from '../../utils/api';
 
 /**
  * Builds a string representing the moodle
@@ -13,13 +16,13 @@ import { MoodleSettings } from './schemas/moodle.schema';
  * @returns {string} The base url
  */
 export function getBaseUrl(): string {
-    let url = config.moodle.baseURL;
-    if (!url.endsWith('/')) {
-        url += '/';
-    }
-    return  url + 'webservice/rest/server.php'
-                + '?wstoken=' + config.moodle.token
-                + '&moodlewsrestformat=json';
+  let url = config.moodle.baseURL;
+  if (!url.endsWith('/')) {
+    url += '/';
+  }
+  return  url + 'webservice/rest/server.php'
+        + '?wstoken=' + config.moodle.token
+        + '&moodlewsrestformat=json';
 }
 
 
@@ -29,35 +32,37 @@ export function getBaseUrl(): string {
  *
  * @export
  */
-export async function fetchAndNotify(): Promise<void> {
-    try {
-        const moodleUrl = getBaseUrl();
-        const courseBlacklist: number[] = await getCourseBlacklist();
+export async function fetchAndNotify(): Promise<boolean> {
+  try {
+    const moodleUrl = getBaseUrl();
+    const courseBlacklist: number[] = await getCourseBlacklist();
 
-        const lastFetch = await MoodleSettings.getLastFetch();
+    const lastFetch = await MoodleSettings.getLastFetch();
 
-        // get all course IDs and map them to corresponding course names
-        const courseDetails = await fetchEnrolledCourses(moodleUrl);
-        const courseMap: Map<number, string> = new Map();
-        courseDetails.forEach(course => courseMap.set(course.id, course.shortname));
+    // get all course IDs and map them to corresponding course names
+    const courseDetails = await fetchEnrolledCourses(moodleUrl);
+    const courseMap: Map<number, string> = new Map();
+    courseDetails.forEach(course => courseMap.set(course.id, course.shortname));
 
-        // fetch and handle course contents
-        for (const courseId of courseMap.keys()) {
-            if (courseBlacklist.includes(courseId)) continue;
-            const content = await fetchCourseContents(moodleUrl, courseId);
-            handleContents(content, courseMap.get(courseId), lastFetch);
-        }
-
-        const courseList = await fetchAssignments(moodleUrl).then(courses =>
-            courses.filter(course => !courseBlacklist.includes(course.id)));
-
-        handleAssignments(courseList, lastFetch);
-
-    } catch(error) {
-        loggerFile.error('Moodle API request failed', error);
-    } finally {
-        await MoodleSettings.findOneAndUpdate({}, { $set: { lastFetch: Math.floor(Date.now() / 1000) }});
+    // fetch and handle course contents
+    for (const courseId of courseMap.keys()) {
+      if (courseBlacklist.includes(courseId)) continue;
+      const content = await fetchCourseContents(moodleUrl, courseId);
+      handleContents(content, courseMap.get(courseId), lastFetch);
     }
+
+    const courseList = await fetchAssignments(moodleUrl).then(courses =>
+      courses.filter(course => !courseBlacklist.includes(course.id)));
+
+    handleAssignments(courseList, lastFetch);
+
+    return true;
+  } catch(error) {
+    loggerFile.error('Moodle API request failed', error);
+    return false;
+  } finally {
+    await MoodleSettings.findOneAndUpdate({}, { $set: { lastFetch: Math.floor(Date.now() / 1000) }});
+  }
 }
 
 /**
@@ -65,9 +70,34 @@ export async function fetchAndNotify(): Promise<void> {
  *
  * @export
  */
-export async function continuousFetchAndNotify(): Promise<void> {
-    fetchAndNotify();
-    // Call function again after database interval
-    const interval = await MoodleSettings.getRefreshRate();
-    setTimeout(continuousFetchAndNotify, interval);
+export async function continuousFetchAndNotify(): Promise<boolean> {
+  const wasSuccessful: boolean = await fetchAndNotify();
+
+  // Call function again after database interval
+  const interval = await MoodleSettings.getRefreshRate();
+  setTimeout(continuousFetchAndNotify, interval);
+
+  return wasSuccessful;
+}
+
+/**
+ * Handles GET /api/fetch to trigger a moodle-fetch
+ * @export
+ *
+ * @param req Request
+ * @param res Response
+ * @param next NextFunction
+ */
+export async function manualFetchRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+    loggerFile.debug('Perform manual fetch, triggered by http request');
+    const wasSuccessful = await fetchAndNotify();
+    const failed = new ApiError(500, 'Failed to fetch data from moodle. See logs for more information!');
+    const success = new ApiSuccess();
+
+    wasSuccessful ? next(success) : next(failed);
+  } catch (err) {
+    loggerFile.error(err.message || err);
+    next(err);
+  }
 }
