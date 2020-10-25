@@ -30,7 +30,7 @@
           @click="fetchAndNotify"
           class="button is-outlined is-moodle"
           style="width: 50%; margin: 5px;"
-          :loading="fetchInProgress"
+          :loading="fetchGetStatus.pending"
         >
           Jetzt auf Moodle Updates prüfen
         </b-button>
@@ -109,12 +109,30 @@ export default {
     },
 
     fetchAndNotify() {
-      this.fetchInProgress = true;
-      setTimeout(() => {
-        notifySuccess('Prüfung auf Updates erfolgreich!');
-        this.fetchInProgress = false;
-        this.onSubmit();
-      }, 3000);
+      this.$store
+        .dispatch('triggerFetch')
+        .then(() => {
+          notifySuccess('Alle Updates wurden erfolgreich von Moodle abgerufen!');
+          this.$store.dispatch('getStatus');
+        })
+        .catch((apiResponse) => {
+          if (apiResponse.code) {
+            notifyFailure(apiResponse.error[0].message);
+
+            if (apiResponse.code === 401) {
+              notifyFailure(
+                'Zugang leider abgelaufen! Bitte melde dich erneut an!',
+              );
+              this.$store.dispatch('logout');
+              this.$router.push({ name: 'Login' });
+            }
+          } else {
+            // request failed locally - maybe no internet connection etc?
+            notifyFailure(
+              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            );
+          }
+        });
     },
 
     /**
@@ -261,7 +279,7 @@ export default {
         { key: this.keys.discordCurrentChannel, value: discordCurrentChannelString },
       ];
     },
-    ...mapGetters(['statusBoardGetStatus', 'statusBoardGetData']),
+    ...mapGetters(['statusBoardGetStatus', 'statusBoardGetData', 'fetchGetStatus']),
   },
 };
 </script>
