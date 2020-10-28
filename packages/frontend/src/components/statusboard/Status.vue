@@ -112,7 +112,7 @@ export default {
       this.$store
         .dispatch('triggerFetch')
         .then(() => {
-          notifySuccess('Alle Updates wurden erfolgreich von Moodle abgerufen!');
+          notifySuccess('Moodle Updates erfolgreich abgerufen!');
           this.$store.dispatch('getStatus');
         })
         .catch((apiResponse) => {
