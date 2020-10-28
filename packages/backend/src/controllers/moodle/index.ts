@@ -90,7 +90,7 @@ export async function continuousFetchAndNotify(): Promise<boolean> {
  */
 export async function manualFetchRequest(req: Request, res: Response, next: NextFunction) {
   try {
-    loggerFile.debug('Perform manual fetch, triggered by http request');
+    loggerFile.debug('Performing manual fetch, triggered by http request');
     const wasSuccessful = await fetchAndNotify();
     const failed = new ApiError(500, 'Failed to fetch data from moodle. See logs for more information!');
     const success = new ApiSuccess();
