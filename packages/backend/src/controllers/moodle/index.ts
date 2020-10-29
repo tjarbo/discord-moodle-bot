@@ -70,14 +70,10 @@ export async function fetchAndNotify(): Promise<boolean> {
  *
  * @export
  */
-export async function continuousFetchAndNotify(): Promise<boolean> {
-  const wasSuccessful: boolean = await fetchAndNotify();
-
+export async function continuousFetchAndNotify(): Promise<void> {
   // Call function again after database interval
   const interval = await MoodleSettings.getRefreshRate();
   setTimeout(continuousFetchAndNotify, interval);
-
-  return wasSuccessful;
 }
 
 /**

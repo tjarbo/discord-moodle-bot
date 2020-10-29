@@ -99,16 +99,4 @@ describe('continuousFetchAndNotify', () => {
         expect(setTimeout).toHaveBeenCalledTimes(1)
         expect(setTimeout).toHaveBeenCalledWith(moodle.continuousFetchAndNotify, MoodleSettingsReturn.refreshRate)
     });
-
-    it.skip('should return boolean if fetchAndNotify was successful', async () => {
-        spyFetchAndNotify.mockImplementation(jest.fn().mockResolvedValue(true));
-        mockingoose(MoodleSettings).toReturn(MoodleSettingsReturn, 'findOne');
-
-        expect(moodle.continuousFetchAndNotify()).resolves.toBe(true);
-        
-        spyFetchAndNotify.mockResolvedValue(false);
-        mockingoose(MoodleSettings).toReturn(MoodleSettingsReturn, 'findOne');
-        
-        expect(moodle.continuousFetchAndNotify()).resolves.toBe(false);
-    });
 });
