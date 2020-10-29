@@ -5,6 +5,7 @@ export default {
   state: {
     refreshRate: StoreUtil.state(),
     courses: StoreUtil.state(),
+    fetch: StoreUtil.state(),
   },
   mutations: {
     SET_REFRESH_RATE(state, payload) {
@@ -12,6 +13,10 @@ export default {
     },
     SET_COURSES(state, payload) {
       state.courses = StoreUtil.updateState(state.courses, payload);
+    },
+
+    SET_FETCH(state, payload) {
+      state.fetch = StoreUtil.updateState(state.fetch, payload);
     },
   },
   actions: {
@@ -77,8 +82,30 @@ export default {
           });
       });
     },
+
+    triggerFetch({ commit }) {
+      commit('SET_FETCH');
+      return new Promise((resolve, reject) => {
+        ApiUtil.get('/fetch')
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              commit('SET_FETCH', null);
+              resolve();
+            } else {
+              commit('SET_FETCH', new Error(apiResponse.error[0].message));
+              reject(apiResponse);
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            commit('SET_FETCH', err);
+            reject();
+          });
+      });
+    },
   },
   getters: {
+    fetchGetStatus: (state) => state.fetch.status,
     refreshRateGetStatus: (state) => state.refreshRate.status,
     coursesGetStatus: (state) => state.courses.status,
     coursesGetData: (state) => state.courses.data,

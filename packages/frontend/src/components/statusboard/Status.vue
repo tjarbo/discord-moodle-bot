@@ -19,12 +19,21 @@
         </p>
       </a>
       <div class="panel-block">
-        <button
+        <b-button
           @click="onSubmit"
-          class="button is-outlined is-fullwidth is-status"
+          class="button is-outlined is-status"
+          style="width: 50%; margin: 5px;"
         >
-          Aktualisieren
-        </button>
+          Status aktualisieren
+        </b-button>
+        <b-button
+          @click="fetchAndNotify"
+          class="button is-outlined is-moodle"
+          style="width: 50%; margin: 5px;"
+          :loading="fetchGetStatus.pending"
+        >
+          Jetzt auf Moodle Updates prüfen
+        </b-button>
       </div>
     </article>
   </div>
@@ -69,6 +78,7 @@ export default {
       discordLastReady: 'Letzte erfolgreiche Discord Verbindung',
       discordCurrentChannel: 'Aktueller Discord Channel',
     },
+    fetchInProgress: false,
   }),
   methods: {
     onSubmit() {
@@ -76,7 +86,34 @@ export default {
       this.$store
         .dispatch('getStatus')
         .then(() => {
-          notifySuccess('Aktualisierung erfolgreich!');
+          notifySuccess('Statusdaten aktualisiert!');
+        })
+        .catch((apiResponse) => {
+          if (apiResponse.code) {
+            notifyFailure(apiResponse.error[0].message);
+
+            if (apiResponse.code === 401) {
+              notifyFailure(
+                'Zugang leider abgelaufen! Bitte melde dich erneut an!',
+              );
+              this.$store.dispatch('logout');
+              this.$router.push({ name: 'Login' });
+            }
+          } else {
+            // request failed locally - maybe no internet connection etc?
+            notifyFailure(
+              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            );
+          }
+        });
+    },
+
+    fetchAndNotify() {
+      this.$store
+        .dispatch('triggerFetch')
+        .then(() => {
+          notifySuccess('Moodle Updates erfolgreich abgerufen!');
+          this.$store.dispatch('getStatus');
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
@@ -242,7 +279,7 @@ export default {
         { key: this.keys.discordCurrentChannel, value: discordCurrentChannelString },
       ];
     },
-    ...mapGetters(['statusBoardGetStatus', 'statusBoardGetData']),
+    ...mapGetters(['statusBoardGetStatus', 'statusBoardGetData', 'fetchGetStatus']),
   },
 };
 </script>

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { setRefreshRateRequest, getRefreshRateRequest } from '../controllers/refreshRate/refreshRate';
+import { setRefreshRateRequest, getRefreshRateRequest } from '../controllers/moodle/refreshRate';
 import { getCourseListRequest, setCourseRequest } from '../controllers/courseList/courseList';
 import { setDiscordChannelRequest, getDiscordChannelRequest } from '../controllers/discordChannel/discordChannel';
 import { addAdministratorRequest, getAdministratorListRequest, deleteAdministratorRequest } from '../controllers/administrator';
