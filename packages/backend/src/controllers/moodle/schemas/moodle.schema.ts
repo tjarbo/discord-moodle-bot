@@ -41,4 +41,4 @@ moodleSchema.statics.getLastFetch = async () => {
 
     return moodle.lastFetch;
 };
-export const MoodleSettings: IModelMoodleSchema = model('Moodle', moodleSchema) as any;
+export const MoodleSettings: IModelMoodleSchema = model('moodlesetting', moodleSchema) as any;
