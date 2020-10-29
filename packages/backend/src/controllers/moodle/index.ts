@@ -70,7 +70,7 @@ export async function fetchAndNotify(): Promise<boolean> {
  * @export
  */
 export async function continuousFetchAndNotify(): Promise<void> {
-  
+
   fetchAndNotify();
 
   // Call function again after database interval
