@@ -56,12 +56,11 @@ export async function fetchAndNotify(): Promise<boolean> {
 
     handleAssignments(courseList, lastFetch);
 
+    await MoodleSettings.findOneAndUpdate({}, { $set: { lastFetch: Math.floor(Date.now() / 1000) }});
     return true;
   } catch(error) {
     loggerFile.error('Moodle API request failed', error);
     return false;
-  } finally {
-    await MoodleSettings.findOneAndUpdate({}, { $set: { lastFetch: Math.floor(Date.now() / 1000) }});
   }
 }
 
