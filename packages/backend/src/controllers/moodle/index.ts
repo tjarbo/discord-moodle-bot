@@ -37,7 +37,9 @@ export async function fetchAndNotify(): Promise<boolean> {
     const moodleUrl = getBaseUrl();
     const courseBlacklist: number[] = await getCourseBlacklist();
 
-    const lastFetch = await MoodleSettings.getLastFetch();
+    let lastFetch = await MoodleSettings.getLastFetch();
+    // use current time if lastFetch is 0
+    if (!lastFetch) lastFetch = Math.floor(Date.now() / 1000);
 
     // get all course IDs and map them to corresponding course names
     const courseDetails = await fetchEnrolledCourses(moodleUrl);
@@ -75,6 +77,8 @@ export async function continuousFetchAndNotify(): Promise<void> {
 
   // Call function again after database interval
   const interval = await MoodleSettings.getRefreshRate();
+  const nextFetch = Math.floor(Date.now() / 1000) + interval;
+  MoodleSettings.findOneAndUpdate({}, { $set: { nextFetch }});
   setTimeout(continuousFetchAndNotify, interval);
 }
 

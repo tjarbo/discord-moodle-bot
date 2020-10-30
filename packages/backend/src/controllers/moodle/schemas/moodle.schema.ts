@@ -9,17 +9,20 @@ interface IMoodleSchema extends Document {
     [_id: string]: any;
     lastFetch: Timestamp;
     refreshRate: Milliseconds;
+    nextFetch: Timestamp;
 }
 
 interface IModelMoodleSchema extends Model<IMoodleSchema> {
     getRefreshRate: () => Promise<Milliseconds>;
     getLastFetch: () => Promise<Timestamp>;
+    getNextFetch: () => Promise<Timestamp>;
 }
 
 const moodleSchema = new Schema({
     // Note that Moodle stores its timestamps in seconds, not in ms!
     lastFetch: { type: Number, default: Math.floor(Date.now() / 1000)},
     refreshRate: { type: Number },
+    nextFetch: { type: Number, default: 0},
 });
 
 moodleSchema.statics.getRefreshRate = async () => {
@@ -35,10 +38,20 @@ moodleSchema.statics.getRefreshRate = async () => {
 moodleSchema.statics.getLastFetch = async () => {
     const moodle = await MoodleSettings.findOne();
     if (!moodle || !moodle.lastFetch) {
-        loggerFile.error('MoodleSettings.getLastFetch - could not find last fetch, used current time stamp');
-        return Math.floor(Date.now() / 1000);
+        loggerFile.error('MoodleSettings.getLastFetch - could not find last fetch value, returned 0');
+        return 0;
     }
 
     return moodle.lastFetch;
+};
+
+moodleSchema.statics.getNextFetch = async () => {
+    const moodle = await MoodleSettings.findOne();
+    if (!moodle || !moodle.nextFetch) {
+        loggerFile.error('MoodleSettings.getNextFetch - could not find next fetch value, returned 0');
+        return 0;
+    }
+
+    return moodle.nextFetch;
 };
 export const MoodleSettings: IModelMoodleSchema = model('moodlesetting', moodleSchema) as any;

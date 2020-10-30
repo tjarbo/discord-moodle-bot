@@ -620,6 +620,9 @@ paths:
                   moodleLastFetchTimestamp:
                     type: "number"
                     example: "1598862126"
+                  moodleNextFetchTimestamp:
+                    type: "number"
+                    example: "1598865126"
                   moodleCurrentFetchInterval:
                     type: "number"
                     example: "900000"
