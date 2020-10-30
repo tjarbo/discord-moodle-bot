@@ -238,26 +238,19 @@ export default {
       let moodleLastFetchString = 'N/A';
       let moodleNextFetchString = 'N/A';
       let moodleCurrentFetchIntervalString = 'Error';
-      if (moodleCurrentFetchInterval !== 'Error' && moodleLastFetchTimestamp !== 'Error') {
-        // Calculate currentFetchIntervall
-        moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(moodleCurrentFetchInterval)} (${moodleCurrentFetchInterval} ms)`;
-
-        // Calculate LastFetch
+      if (moodleLastFetchTimestamp !== 'Error') {
+        // Calculate lastFetch
         if (moodleLastFetchTimestamp === 0) moodleLastFetchString = 'Keine';
         else {
           const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
           moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
         }
-      } else if (moodleCurrentFetchInterval !== 'Error') {
+      }
+      if (moodleCurrentFetchInterval !== 'Error') {
         // Calculate currentFetchIntervall
         moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(moodleCurrentFetchInterval)} (${moodleCurrentFetchInterval} ms)`;
-      } else if (moodleLastFetchTimestamp !== 'Error') {
-        // Calculate LastFetch
-        const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
-        moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
       }
-
-      if (moodleNextFetchTimestamp !== 'Error' && (moodleNextFetchTimestamp > Date.now() / 1000) && moodleCurrentFetchInterval !== 'Error') {
+      if (moodleNextFetchTimestamp !== 'Error' && (moodleNextFetchTimestamp > Date.now() / 1000)) {
         // Calculate nextFetch
         const moodleNextFetchDate = new Date(moodleNextFetchTimestamp * 1000).toLocaleString();
         moodleNextFetchString = `In ${this.getTimeString(moodleNextFetchTimestamp * 1000, moodleNextFetchDate)}`;

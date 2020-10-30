@@ -29,8 +29,7 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
     if (moodleSettings) return;
 
     const moodleSettingsObj = {
-      refreshRate: config.moodle.fetchInterval,
-      lastFetch: 0
+      refreshRate: config.moodle.fetchInterval
     };
 
     new MoodleSettings(moodleSettingsObj).save();
