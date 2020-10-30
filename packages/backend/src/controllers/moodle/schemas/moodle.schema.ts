@@ -20,8 +20,8 @@ interface IModelMoodleSchema extends Model<IMoodleSchema> {
 
 const moodleSchema = new Schema({
     // Note that Moodle stores its timestamps in seconds, not in ms!
-    lastFetch: { type: Number, default: Math.floor(Date.now() / 1000)},
-    refreshRate: { type: Number },
+    lastFetch: { type: Number, default: 0},
+    refreshRate: { type: Number, default: 900000},
     nextFetch: { type: Number, default: 0},
 });
 

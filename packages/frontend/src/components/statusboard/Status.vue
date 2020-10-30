@@ -72,7 +72,7 @@ export default {
     // First-column values
     keys: {
       moodleConnectionStatus: 'Status der Moodle Verbindung',
-      moodleLastFetch: 'Letzte Moodle Aktualisierung',
+      moodleLastFetch: 'Letzte erfolgreiche Moodle Aktualisierung',
       moodleNextFetch: 'Nächste Moodle Aktualisierung',
       moodleCurrentFetchInterval: 'Aktuelles Fetch-Intervall',
       discordLastReady: 'Letzter erfolgreicher Discord Verbindungaufbau',
@@ -243,9 +243,11 @@ export default {
         moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(moodleCurrentFetchInterval)} (${moodleCurrentFetchInterval} ms)`;
 
         // Calculate LastFetch
-        const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
-        moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
-
+        if (moodleLastFetchTimestamp === 0) moodleLastFetchString = 'Keine';
+        else {
+          const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
+          moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
+        }
       } else if (moodleCurrentFetchInterval !== 'Error') {
         // Calculate currentFetchIntervall
         moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(moodleCurrentFetchInterval)} (${moodleCurrentFetchInterval} ms)`;
@@ -255,10 +257,10 @@ export default {
         moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
       }
 
-      if ((moodleNextFetchTimeStamp > (new Date().getTime())) && moodleNextFetchTimestamp !== 'Error' && moodleCurrentFetchInterval !== 'Error'){
+      if (moodleNextFetchTimestamp !== 'Error' && (moodleNextFetchTimestamp > Date.now() / 1000) && moodleCurrentFetchInterval !== 'Error') {
         // Calculate nextFetch
-        const moodleNextFetchDate = new Date(moodleNextFetchTimeStamp).toLocaleString();
-        moodleNextFetchString = `In ${this.getTimeString(moodleNextFetchTimeStamp, moodleNextFetchDate)}`;
+        const moodleNextFetchDate = new Date(moodleNextFetchTimestamp * 1000).toLocaleString();
+        moodleNextFetchString = `In ${this.getTimeString(moodleNextFetchTimestamp * 1000, moodleNextFetchDate)}`;
       }
 
       // Generate discordLastReady string

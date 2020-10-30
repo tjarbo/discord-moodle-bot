@@ -30,7 +30,7 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
 
     const moodleSettingsObj = {
       refreshRate: config.moodle.fetchInterval,
-      lastFetch: Math.floor(Date.now() / 1000)
+      lastFetch: 0
     };
 
     new MoodleSettings(moodleSettingsObj).save();
@@ -39,6 +39,8 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
   }).finally(async () => {
     // First call of fetchAndNotify depending on the database interval
     const interval = await MoodleSettings.getRefreshRate();
+    const nextFetch = Math.floor((Date.now() + interval) / 1000);
+    await MoodleSettings.findOneAndUpdate({}, { $set: { nextFetch }});
     setTimeout(continuousFetchAndNotify, interval);
   });
 
