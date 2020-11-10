@@ -1,9 +1,9 @@
 import { DiscordChannel } from './discordChannel.schema';
 import { config } from '../../configuration/environment';
-import { ApiError } from '../error/api.class';
 import { loggerFile } from '../../configuration/logger';
 import { Request, Response, NextFunction } from 'express';
 import { object, string } from '@hapi/joi';
+import { ApiSuccess, ApiError } from '../../utils/api';
 
 /**
  * Writes the discord channel into the database.
@@ -41,8 +41,9 @@ export async function getDiscordChannelRequest(req: Request, res: Response, next
     try {
         const channelId = await getDiscordChannel();
         if (!channelId) throw new ApiError(503, 'Internal error while retrieving discord channel id');
-        res.status(200).json({channelId});
 
+        const response = new ApiSuccess(200, {channelId});
+        next(response);
     }
     catch (err) {
         loggerFile.error(err.message);
@@ -71,7 +72,9 @@ export async function setDiscordChannelRequest(req: Request, res: Response, next
 
         // Method call and exit
         await setDiscordChannel(request.value.channelId);
-        res.status(200).end();
+
+        const response = new ApiSuccess();
+        next(response);
     }
     catch (err) {
         loggerFile.error(err.message);

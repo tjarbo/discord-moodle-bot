@@ -4,8 +4,8 @@
 import { client } from '../../configuration/discord';
 import { FMDBMessageTemplate } from './message.interface';
 import { TextChannel } from 'discord.js';
-import { ApiError } from '../error/api.class';
 import { getDiscordChannel } from '../discordChannel/discordChannel';
+import { ApiError } from '../../utils/api';
 
 /**
  * Send a templated message to a discord user

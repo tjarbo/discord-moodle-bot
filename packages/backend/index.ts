@@ -3,9 +3,9 @@ import * as util from 'util';
 import { config } from './src/configuration/environment';
 import { app } from './src/configuration/express';
 import { loggerFile } from './src/configuration/logger';
-import { getRefreshRate } from './src/controllers/refreshRate/refreshRate';
 import { Administrator } from './src/controllers/administrator/administrator.schema';
-import { fetchAndNotify } from './src/controllers/moodle';
+import { continuousFetchAndNotify } from './src/controllers/moodle';
+import { MoodleSettings } from './src/controllers/moodle/schemas/moodle.schema';
 
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(async() => {
   loggerFile.debug('Mongoose connected');
@@ -17,13 +17,32 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
     const userObj = {
       userName: config.admin.name,
       userId: config.admin.id,
+      deletable: false,
     };
-
     new Administrator(userObj).save();
+    loggerFile.debug(`Added ${userObj.userName} as Initial-Administrator`);
   });
 
-  const interval = await getRefreshRate();
-  setInterval(() => fetchAndNotify(), interval);
+
+  MoodleSettings.findOne()
+  .then((moodleSettings) => {
+    if (moodleSettings) return;
+
+    const moodleSettingsObj = {
+      refreshRate: config.moodle.fetchInterval
+    };
+
+    new MoodleSettings(moodleSettingsObj).save();
+    loggerFile.debug(`Initialized moodle settings with .env values`);
+
+  }).finally(async () => {
+    // First call of fetchAndNotify depending on the database interval
+    const interval = await MoodleSettings.getRefreshRate();
+    const nextFetch = Math.floor((Date.now() + interval) / 1000);
+    await MoodleSettings.findOneAndUpdate({}, { $set: { nextFetch }});
+    setTimeout(continuousFetchAndNotify, interval);
+  });
+
 }).catch((error) => {
   loggerFile.error('Mongoose NOT Connected', error);
 });

@@ -6,24 +6,24 @@ info:
   license:
     name: "GNU AFFERO GENERAL PUBLIC LICENSE"
     url: "https://github.com/tjarbo/discord-moodle-bot/tree/development"
-host: "[your_fmdb_instance]"
+host: "localhost:4040"
 basePath: "/api"
 tags:
 - name: "Login"
-  description: "Everything about the authoriziation"
+  description: "Everything about the authorization"
   externalDocs:
     description: "Find out more about jwt"
     url: "https://jwt.io/#debugger"
 schemes:
-- "https"
 - "http"
+- "https"
 paths:
   /token:
     post:
       tags:
       - "Login"
       summary: "Request a new token"
-      description: "Request a one-time-token which will be recived discord private message"
+      description: "Request a one-time-token which will be received discord private message"
       operationId: "authTokenRequest"
       consumes:
       - "application/json"
@@ -32,29 +32,48 @@ paths:
       parameters:
       - name: "body"
         in: "body"
-        description: "username#0000 of a registered administator"
+        description: "username#0000 of a registered administrator"
         required: true
         schema:
-         $ref: "#/definitions/authTokenRequest"
+          type: "object"
+          properties:
+            username:
+              type: "string"
       responses:
         "200":
           description: "Successful operation"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
         "400":
           description: "Invalid request body"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 400
+              data: {}
+              error:
+                - message: "\"username\" is required"
         "404":
           description: "User seems not to be an administrator"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 404
+              data: {}
+              error:
+                - message: "User test#0000 not found"
         "409":
           description: "User not in discord cache. Please send the bot a short message and try it again."
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "500":
           description: "Internal server error"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
   /login:
     post:
       tags:
@@ -69,34 +88,161 @@ paths:
       parameters:
       - name: "body"
         in: "body"
-        description: "username#0000 and one-time-token of a registered administator"
+        description: "username#0000 and one-time-token of a registered administrator"
         required: true
         schema:
-         $ref: "#/definitions/authLoginRequest"
+          type: "object"
+          properties:
+            username:
+              type: "string"
+            token:
+              type: "number"
+          xml:
+            name: "Category"
       responses:
         "200":
           description: "Successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         "400":
           description: "Invalid request body"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 400
+              data: {}
+              error:
+                - message: "\"token\" is required"
         "401":
           description: "Invalid token!"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 401
+              data: {}
+              error:
+                - message: "Invalid token!"
         "404":
           description: "User seems not to be an administrator"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 404
+              data: {}
+              error:
+                - message: "User test#0000 not found"
         "500":
           description: "Internal server error"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 500
+              data: {}
+              error:
+                - message: "Internal server error"
+  /fetch:
+    get:
+      tags:
+        - "Moodle"
+      summary: "Triggers bot to fetch new updates from moodle."
+      description: >
+        This endpoint allows the user to trigger the bot to fetch new updates from moodle, independent from
+        the current interval. 
+      operationId: "manualFetchRequest"
+      security:
+        - Bearer: []
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "Fetch was successful"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "401":
+          description: "Invalid token!"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 401
+              data: {}
+              error:
+                - message: "Invalid token!"
+        "500":
+          description: "Unable to fetch new updates from moodle. See logs for more information."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+
   /settings/administrator:
+    get:
+      tags:
+      - "Administrator"
+      summary: "Gets administrator list"
+      description: "Gets a list of all administrators from the database."
+      operationId: "getAdministratorListRequest"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                example: "success"
+              code:
+                type: "integer"
+                format: "int32"
+                example: 200
+              data:
+                type: "array"
+                items: 
+                  type: "object"
+                  properties:
+                    userName:
+                      type: "string"
+                      example: "DiscordUser#1234"
+                    userId:
+                      type: "string"
+                      minLength: 18
+                      maxLength: 18
+                      example: "123456789123456789"
+                    createdAt:
+                      type: "number"
+                      example: 1591198290510
+              error:
+                type: "array"
+                items: 
+                  properties:
+                    message:
+                      type: "string"
+                example: []
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiResponse"
     post:
       tags:
       - "Administrator"
-      summary: "Creates Administrator"
+      summary: "Creates administrator"
       description: "Creates a new Administrator"
       operationId: "addAdministratorRequest"
       security:
@@ -111,27 +257,102 @@ paths:
         description: "Username and ID of the administrator"
         required: true
         schema:
-         $ref: "#/definitions/addAdministratorRequest"
+          type: "object"
+          properties:
+            username:
+              type: "string"
+            userid:
+              type: "string"
       responses:
-        "200":
+        "201":
           description: "Successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         "400":
           description: "Invalid request body"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 400
+              data: {}
+              error:
+                - message: "\"username\" is required"
         "401":
           description: "Invalid token!"
           schema: 
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 401
+              data: {}
+              error:
+                - message: "No authorization token was found"
         "500":
           description: "Internal server error"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 500
+              data: {}
+              error:
+                - message: "Internal server error"
+  /settings/administrator/{id}:
+    delete:
+      tags:
+      - "Administrator"
+      summary: "Deletes administrator"
+      description: "Deletes an administrator from the database."
+      operationId: "deleteAdministratorRequest"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "User id"
+        required: true
+        type: "string"
+        minLength: 18
+        maxLength: 18
+      responses:
+        "204":
+          description: "Deletion Successful"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Invalid request parameter"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+            examples:
+              application/json:
+                status: 'error'
+                code: 400
+                data: {}
+                error:
+                  - message: "\"id\" is required"
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
+        "404":
+          description: "Administrator not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiResponse"
   /settings/refreshRate:
     get:
       tags:
-      - "Moodle refresh rate"
-      summary: "Gets moodle fetch intervall"
+      - "Moodle"
+      summary: "Gets moodle fetch interval"
       description: "Returns the refresh interval in which the current data is requested and notifications are sent accordingly."
       operationId: "getRefreshRateRequest"
       security:
@@ -142,27 +363,27 @@ paths:
         "200":
           description: "Successful operation"
           schema:
-            $ref: "#/definitions/refreshRateRequest"
+            $ref: "#/definitions/ApiResponse"
         "400":
           description: "Invalid request body"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "401":
           description: "Invalid token!"
           schema: 
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "500":
           description: "Internal server error"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "503":
           description: "Service Unavailable"
           schema: 
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
     put:
       tags:
-      - "Moodle refresh rate"
-      summary: "Sets moodle fetch intervall"
+      - "Moodle"
+      summary: "Sets moodle fetch interval"
       description: "Sets the refresh interval in which the current dataset is requested and notifications are sent accordingly."
       operationId: "setRefreshRateRequest"
       security:
@@ -177,22 +398,28 @@ paths:
         description: "New refresh rate in milliseconds"
         required: true
         schema:
-         $ref: "#/definitions/refreshRateRequest"
+          type: "object"
+          properties:
+            refreshRate:
+              type: "number"
+              example: 60000
+              minimum: 5000
+              maximum: 2147483647
       responses:
         "200":
           description: "Successful operation"
         "400":
           description: "Invalid request body"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "401":
           description: "Invalid token!"
           schema: 
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "500":
           description: "Internal server error"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
   /settings/discordChannel:
     get:
       tags:
@@ -208,23 +435,23 @@ paths:
         "200":
           description: "Successful operation"
           schema:
-            $ref: "#/definitions/discordChannelRequest"
+            $ref: "#/definitions/ApiResponse"
         "400":
           description: "Invalid request body"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "401":
           description: "Invalid token!"
           schema: 
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "500":
           description: "Internal server error"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "503":
           description: "Service Unavailable"
           schema: 
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
     put:
       tags:
       - "Discord channel id"
@@ -243,26 +470,32 @@ paths:
         description: "New discord channel id"
         required: true
         schema:
-         $ref: "#/definitions/discordChannelRequest"
+         type: "object"
+         properties:
+           channelId:
+             type: "string"
+             example: 707590543160639540
+             minLength: 18
+             maxLength: 18
       responses:
         "200":
           description: "Successful operation"
         "400":
           description: "Invalid request body"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "401":
           description: "Invalid token!"
           schema: 
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "500":
           description: "Internal server error"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
   /settings/courses:
     get:
       tags:
-      - "Course"
+      - "Moodle"
       summary: "Gets course list"
       description: "Returns a list of all courses with the status whether the associated notifications are enabled or disabled."
       operationId: "getCourseListRequest"
@@ -274,27 +507,39 @@ paths:
         "200":
           description: "Successful operation"
           schema:
-            $ref: "#/definitions/getCourseListRequest"
+            type: "array"
+            items:
+              properties:
+                courseId:
+                 type: "number"
+                 example: 5910
+                 minimum: 0
+                 maximum: 2147483647
+                name:
+                  type: "string"
+                  example: "Kryptologie"
+                isActive:
+                  type: "boolean"
         "400":
           description: "Invalid request body"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "401":
           description: "Invalid token!"
           schema: 
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "404":
           description: "No courses found"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "500":
           description: "Internal server error"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
   /settings/courses/{id}:
     put:
       tags:
-      - "Course"
+      - "Moodle"
       summary: "Sets single course status"
       description: "Enables or disables the notifications assigned to the course id."
       operationId: "setCourseRequest"
@@ -317,98 +562,116 @@ paths:
         description: "Course active status"
         required: true
         schema:
-         $ref: "#/definitions/setCourseRequest"
+         type: "object"
+         properties:
+           isActive:
+             type: "boolean"
       responses:
         "200":
           description: "Successful operation"
+          schema:
+            $ref: "#/definitions/ApiResponse"
         "400":
           description: "Invalid request body"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "401":
           description: "Invalid token!"
           schema: 
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "404":
           description: "Course not found"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
         "500":
           description: "Internal server error"
           schema:
-            $ref: "#/definitions/ApiError"
+            $ref: "#/definitions/ApiResponse"
+  /settings/status:
+    get:
+      tags:
+      - "Status"
+      summary: "Gets bot status information and current settings"
+      description: "Returns a list of objects that show the current connection, discord and fetch status and settings."
+      operationId: "getStatusRequest"
+      security:
+        - Bearer: []
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Successful operation"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                example: "success"
+              code:
+                type: "integer"
+                format: "int32"
+                example: 200
+              data:
+                type: "object"
+                properties:
+                  moodleConnectionStatus:
+                   type: "string"
+                   example: "Ok"
+                  moodleLastFetchTimestamp:
+                    type: "number"
+                    example: "1598862126"
+                  moodleNextFetchTimestamp:
+                    type: "number"
+                    example: "1598865126"
+                  moodleCurrentFetchInterval:
+                    type: "number"
+                    example: "900000"
+                  discordLastReadyTimestamp:
+                    type: "number"
+                    example: "1598861227218"
+                  discordCurrentChannelId:
+                   type: "string"
+                   example: "703550541160639540"
+                  discordCurrentChannelName:
+                   type: "string"
+                   example: "moodle-updates"
+              error:
+                type: "array"
+                items: 
+                  properties:
+                    message:
+                      type: "string"
+                example: []
+        "401":
+          description: "Invalid token!"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiResponse"
 securityDefinitions:
   Bearer:
     type: "apiKey"
     name: "Authorization"
     in: header
-definitions:
-  setCourseRequest:
-    type: "object"
-    properties:
-      isActive:
-        type: "boolean"
-  getCourseListRequest:
-    type: "array"
-    items:
-      properties:
-        courseId:
-         type: "number"
-         example: 5910
-         minimum: 0
-         maximum: 2147483647
-        name:
-          type: "string"
-          example: "Kryptologie"
-        isActive:
-          type: "boolean"
-  discordChannelRequest:
-    type: "object"
-    properties:
-      channelId:
-        type: "string"
-        example: 707590543160639540
-        minLength: 18
-        maxLength: 18
-  refreshRateRequest:
-    type: "object"
-    properties:
-      refreshRate:
-        type: "number"
-        example: 60000
-        minimum: 5000
-        maximum: 2147483647
-  addAdministratorRequest:
-    type: "object"
-    properties:
-      username:
-        type: "string"
-      userid:
-        type: "string"
-  authTokenRequest:
-    type: "object"
-    properties:
-      username:
-        type: "string"
-  authLoginRequest:
-    type: "object"
-    properties:
-      username:
-        type: "string"
-      token:
-        type: "number"
-    xml:
-      name: "Category"
-  ApiError:
+definitions: 
+  ApiResponse:
     type: "object"
     properties:
       status:
         type: "string"
-      statusCode:
+      code:
         type: "integer"
         format: "int32"
-      message:
-        type: "string"
+      data:
+        type: "object"
+      error:
+        type: "array"
+        items: 
+          properties:
+            message:
+              type: "string"
 externalDocs:
   description: "Get source code"
   url: "https://github.com/tjarbo/discord-moodle-bot/"
