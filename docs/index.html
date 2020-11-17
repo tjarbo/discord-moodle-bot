@@ -83,7 +83,7 @@
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Erstellung war erfolgreich!</p>
+          <p class="modal-card-title">Erstellung war erfolgreich!</p>        
           <button id="close" class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
@@ -107,7 +107,34 @@
               <span class="tag"><span id="moodlebaseurl"></span></span>
             </div>
           </div>
+          <article id="errormessage" class="message is-danger has-text-left is-hidden">
+            <div class="message-header">
+              <p>Fehler</p>
+            </div>
+            <div class="message-body">
+              <p>
+                <span id="errortext"></span>
+              </p>
+              <div class="container mt-3">
+                
+                <h2 class="subtitle">Anfrage</h2>
+                <div class="message is-dark">
+                  <div class="message-body">
+                    <span id="errorrequest"></span>
+                  </div>
+                </div> 
+                <h2 class="subtitle">Url</h2>
+                <div class="message is-dark">
+                  <div class="message-body">
+                    <span id="errorresponse"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
         </section>
+        <footer class="modal-card-foot">
+        </footer>
       </div>
     </div>
 </body>
