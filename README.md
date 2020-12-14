@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="#"><img src="https://raw.githubusercontent.com/tjarbo/templates/master/assets/logo.gif" alt="FMDB" width="200"></a>
+    <a href="#"><img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/tjarbo/issue75/logo.png" alt="FMDB" width="200"></a>
     <br>
     <h1>Fancy-Moodle-Discord-Bot </h1>
     <sub>Built with ❤︎ by
