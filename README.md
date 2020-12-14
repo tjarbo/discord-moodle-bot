@@ -1,11 +1,20 @@
-# 🤖 Fancy-Moodle-Discord-Bot 
+<div align="center">
+    <a href="#"><img src="https://raw.githubusercontent.com/tjarbo/templates/master/assets/logo.gif" alt="FMDB" width="200"></a>
+    <br>
+    <h1>Fancy-Moodle-Discord-Bot </h1>
+    <sub>Built with ❤︎ by
+    <a href="https://github.com/tjarbo">Tjark</a>,
+    <a href="https://github.com/antonplagemann">Anton</a>,
+    <a href="https://github.com/p-fruck">Philipp</a>,
+    <a href="https://github.com/NoWo2000">Noah</a> and
+    <a href="https://github.com/tjarbo/discord-moodle-bot/graphs/contributors">contributors</a>
+    </sub>
+</div>
 
-![CI](https://github.com/tjarbo/discord-moodle-bot/workflows/Node%20CI/badge.svg?branch=master)
-![CD](https://github.com/tjarbo/discord-moodle-bot/workflows/CD/badge.svg)
-![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/tjarbo/fmdb)
-![GitHub issues](https://img.shields.io/github/issues/tjarbo/discord-moodle-bot)
-![GitHub](https://img.shields.io/github/license/tjarbo/discord-moodle-bot)
+---
 ![Build for Discord](https://img.shields.io/badge/build%20for-discord-blueviolet)
+![Runs with docker](https://img.shields.io/badge/runs%20with-docker-0db7ed)
+![AGPL-3.0](https://img.shields.io/github/license/tjarbo/discord-moodle-bot)
 
 The FMDB notifies you on a discord server about new activities on the Moodle platform. The current implementation includes:
 
@@ -13,15 +22,21 @@ The FMDB notifies you on a discord server about new activities on the Moodle pla
 - Notification of new assignments
 - Notification of assignments due soon
 
-## ✈️ Get started
+## 🚀 Setup your own bot
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/tjarbo/fmdb?color=0db7ed)
+![Docker Pulls](https://img.shields.io/docker/pulls/tjarbo/fmdb?color=0db7ed)
 
 The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](https://github.com/tjarbo/discord-moodle-bot/wiki/%F0%9F%9B%A0%EF%B8%8F-FMDB-einrichten).
 
 ## ⚒️ Development
+![CI](https://github.com/tjarbo/discord-moodle-bot/workflows/Node%20CI/badge.svg?branch=master)
+![CD](https://github.com/tjarbo/discord-moodle-bot/workflows/CD/badge.svg)
+![GitHub issues](https://img.shields.io/github/issues/tjarbo/discord-moodle-bot)
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites ⚗️
+> We have also setup a `.devcontainer`.  [Learn more](https://code.visualstudio.com/docs/remote/containers#_quick-start-open-an-existing-folder-in-a-container)
 
 - Local MongoDB installation on port 27017 (https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 - Node with NPM is installed (https://nodejs.org/en/download/)
