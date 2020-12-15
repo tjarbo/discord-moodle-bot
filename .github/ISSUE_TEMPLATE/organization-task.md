@@ -1,7 +1,7 @@
 ---
 name: "\U0001F4E5 Task (Organization)"
 about: New task for the project organization
-title: "\U0001F4E5 titel ..."
+title: "\U0001F4E5 title..."
 labels: "\U0001F4E4 task, \U0001F9BA Need assignee"
 assignees: ''
 
