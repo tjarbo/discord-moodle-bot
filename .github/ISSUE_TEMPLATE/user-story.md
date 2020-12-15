@@ -17,6 +17,6 @@ assignees: ''
 
 ### 🟢 In scope:
 
-### 🔴 Not in Scope:
+### 🔴 Not in scope:
 
 ## What should be the result?
