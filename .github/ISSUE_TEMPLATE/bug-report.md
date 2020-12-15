@@ -18,7 +18,7 @@ Steps to reproduce the behavior:
 4. See error
 
 ### What was supposed to happen?
-What do you think should happen if there is no bug ?
+What do you think should happen if there is no bug?
 
 
 ### Further information:
