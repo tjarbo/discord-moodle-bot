@@ -15,7 +15,7 @@ assignees: ''
 
 ## Description:
 
-### 🟢 In Scope:
+### 🟢 In scope:
 
 ### 🔴 Not in Scope:
 
