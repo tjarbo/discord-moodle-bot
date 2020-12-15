@@ -39,7 +39,7 @@ These instructions will get you a copy of the project up and running on your loc
 > We have also setup a `.devcontainer`.  [Learn more](https://code.visualstudio.com/docs/remote/containers#_quick-start-open-an-existing-folder-in-a-container)
 
 - Local MongoDB installation on port 27017 (https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
-- Node with NPM is installed (https://nodejs.org/en/download/)
+- Node with NPM installed (https://nodejs.org/en/download/)
 
 #### Installing modules 📁
 
