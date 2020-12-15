@@ -1,7 +1,7 @@
 ---
 name: "✨ New User Story"
 about: Create a new task for contributors
-title: "✨ titel..."
+title: "✨ title..."
 labels: ":sparkles: new feature"
 assignees: ''
 
