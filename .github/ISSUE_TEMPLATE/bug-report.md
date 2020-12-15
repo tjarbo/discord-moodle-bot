@@ -13,7 +13,7 @@ Add a small description about what happened.
 ### Steps to reproduce:
 Steps to reproduce the behavior:
 1. Go to '...'
-2. Click on '....'
+2. Click on '...'
 3. Scroll down to '....'
 4. See error
 
