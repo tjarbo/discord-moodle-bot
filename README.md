@@ -96,3 +96,9 @@ Every contribution is welcome! Do you have a great new feature idea or just want
 ## ⚖️ License
 
 This project is licensed under the AGPL-3.0 License - see the [LICENSE.md](LICENSE.md) file for details
+
+---
+
+<div align="right">
+    <a href="https://github.com/tjarbo/tjarbo/blob/main/EASTEREGG.md"><img src="https://raw.githubusercontent.com/tjarbo/tjarbo/main/assets/logo.gif" alt="Animated Gif" height="45"></a>
+</div>
