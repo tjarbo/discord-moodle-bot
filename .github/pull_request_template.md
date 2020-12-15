@@ -20,7 +20,7 @@ If you have any screenshots, please paste them here. Remove this section if it i
 - [ ] Other (please describe):
 
 ## Checklist
-<!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
+<!--- Go over all the following points, and put an `x` in all boxes that apply. -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 - [ ] Make sure you are requesting to development. Don't request to master branch!
 - [ ] I have linked the related issue.
