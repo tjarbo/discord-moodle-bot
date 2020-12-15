@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-### Describe it
+### Description
 Add a small description about what happened
 
 ### Steps to reproduce:
