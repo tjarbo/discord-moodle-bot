@@ -1,7 +1,7 @@
 ---
 name: "\U0001F41B Bug report"
 about: Create a new report and help us, to improve the project!
-title: "\U0001F41B title...."
+title: "\U0001F41B title..."
 labels: ":bug: bug, :white_flag: help wanted"
 assignees: ''
 
