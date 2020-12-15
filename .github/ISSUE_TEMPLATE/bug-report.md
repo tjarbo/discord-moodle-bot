@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 ### Description
-Add a small description about what happened
+Add a small description about what happened.
 
 ### Steps to reproduce:
 Steps to reproduce the behavior:
