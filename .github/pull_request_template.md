@@ -1,16 +1,16 @@
-<!-- 8ung!: Eine Pull-Request muss immer mit einem Issue verbunden sein. -->
-> **Als ein**
-> **will ich**
-> **sodass**
+<!-- ⚠️ A pull request always needs a related issue! -->
+> **As a**
+> **I want**
+> **that**
 
-## Beschreibung
-<!-- Beschreibe deine Änderungen im Detail -->
-<!-- Nutze Schlüsselwörter wie "Fixes #XX" oder "Closes #XX" um das Issue zu verlinken. -->
+## Description
+Describe your changes in detail. Don't forget to link the issue!
 
-### Screenshots (sollte es welche geben):
+### Screenshots
+If you have any screenshots, please paste them here. Remove this section if it is not necessary.
 
-### Art der Änderungen:
-<!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
+### Types of changes
+<!--- What types of changes does your code introduce? Put an `x` in all boxes that apply: -->
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Code style update (formatting, renaming)
@@ -19,8 +19,8 @@
 - [ ] Documentation content changes
 - [ ] Other (please describe):
 
-## Checkliste
-<!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
+## Checklist
+<!--- Go over all the following points, and put an `x` in all boxes that apply. -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
 - [ ] Make sure you are requesting to development. Don't request to master branch!
 - [ ] I have linked the related issue.
