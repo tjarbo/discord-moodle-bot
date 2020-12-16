@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="#"><img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/tjarbo/issue75/logo.png" alt="FMDB" width="200"></a>
+    <a href="#"><img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/master/logo.png" alt="FMDB" width="200"></a>
     <br>
     <h1>Fancy-Moodle-Discord-Bot </h1>
     <sub>Built with ❤︎ by
@@ -40,41 +40,23 @@ These instructions will get you a copy of the project up and running on your loc
 
 - Local MongoDB installation on port 27017 (https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 - Node with NPM installed (https://nodejs.org/en/download/)
+- Discord Server to test the application
 
 #### Installing modules 📁
 
 Run `npm i` at the root of the repository and `npm run postinstall`
 
-#### Create .env file 🔐
+#### Prepare environment 🦕
 
-The backend will fail, if wrong environments variables are provided. If no .env file is provided, please create `packages/backend/.env` with following content:
-
-```bash
-ADMIN_ID=00000...000
-ADMIN_NAME=username#00000
-DISCORD_CHANNEL=00000...000
-DISCORD_TOKEN=XXXXXX....XXX
-JWT_SECRET=ChooseTheSecretWisely
-JWT_EXPIRESIN=10m
-MONGO_HOST=mongodb://localhost:27017/fmdb
-MONGOOSE_DEBUG=true
-MOODLE_BASE_URL=https://moodle.example.com/
-MOODLE_FETCH_INTERVAL=900000
-MOODLE_REMINDER_TIME_LEFT=86400
-MOODLE_TOKEN=XXXXXXXXXXXXXXXXX
-MOODLE_USE_COURSE_SHORTNAME=true
-MOODLE_USERID=00000
-NODE_ENV=development
-SERVER_PORT=4040
-```
-
-Attention: For coding use get functions first if defined!
-Example: getDiscordChannel() and getRefreshRate() instead of
-config constants discordChannel and fetchInterval.
+Follow the steps described in [this wiki artice](https://github.com/tjarbo/discord-moodle-bot/wiki/Setup-your-own-bot): Setup a bot for developing, generate your moodle token and save your `.env` file at `./packages/backend/`.
 
 ### Start development 🛫
 
 Run `npm run start` at the root of the directory.
+
+Attention: For coding use get functions first if defined!
+Example: getDiscordChannel() and getRefreshRate() instead of
+config constants discordChannel and fetchInterval.
 
 ### Links 🔗 (In most cases)
 
