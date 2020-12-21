@@ -91,7 +91,7 @@ export async function authTokenRequest(req: Request, res: Response, next: NextFu
     next(response);
 
   } catch (err) {
-    loggerFile.error(err.message || err);
+    loggerFile.error(err);
     next(err);
   }
 }
