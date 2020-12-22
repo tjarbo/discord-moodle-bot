@@ -112,7 +112,7 @@ describe('auth.js authTokenRequest', () => {
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(testError);
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe(testError.message);
+    expect(spyLogger.mock.calls[0][0]).toBe(testError);
   });
 
   it('should send token to user if everything is fine', async () => {
