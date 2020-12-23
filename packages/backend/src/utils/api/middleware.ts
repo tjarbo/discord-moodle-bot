@@ -57,6 +57,4 @@ export const apiMiddleware = (param: any, req: Request, res: Response, next: any
       res.status(500).json(apiError);
       break;
   }
-
-  next(param);
 };
