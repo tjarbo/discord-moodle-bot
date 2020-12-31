@@ -70,7 +70,7 @@ import { mapGetters } from 'vuex';
 import { required, helpers } from 'vuelidate/lib/validators';
 import { notifyFailure, notifySuccess } from '../notification';
 
-const usernameRegex = helpers.regex('usernameRegex', /^[\w\s]+#\d{4}$/);
+const usernameRegex = helpers.regex('usernameRegex', /^[\w\s]{2,32}#\d{4}$/);
 
 export default {
   name: 'LoginView',
