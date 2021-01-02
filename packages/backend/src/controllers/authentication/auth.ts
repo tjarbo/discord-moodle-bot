@@ -15,11 +15,11 @@ import { TokenRequestMessage } from '../discord/templates';
 import { ApiError, ApiSuccess } from '../../utils/api';
 
 const authTokenRequestSchema = object({
-  username: string().required().regex(/[\w\s]+#[0-9]+/).description('Discord username#0000 of the admin'),
+  username: string().required().regex(/^[\w\s]{2,32}#\d{4}$/).description('Discord username#0000 of the admin'),
 });
 
 const authLoginRequestSchema = object({
-  username: string().required().regex(/[\w\s]+#[0-9]+/).description('Discord username#0000 of the admin'),
+  username: string().required().regex(/^[\w\s]{2,32}#\d{4}$/).description('Discord username#0000 of the admin'),
   token: number().greater(100000).less(999999).required(),
 });
 
