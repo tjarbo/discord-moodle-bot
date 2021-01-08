@@ -1,0 +1,1 @@
+web: cd ./packages/backend/dist && node index.js 
