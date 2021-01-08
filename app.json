@@ -10,7 +10,7 @@
   ],
   "website": "https://github.com/tjarbo/discord-moodle-bot",
   "repository": "https://github.com/tjarbo/discord-moodle-bot",
-  "logo": "https://github.com/tjarbo/discord-moodle-bot/blob/master/logo.png",
+  "logo": "https://github.com/tjarbo/discord-moodle-bot/raw/feature/82-Easy-deployment-with-Heroku/logo.png",
   "success_url": "/login",
   "scripts": {
     "postdeploy": "npm run build"
