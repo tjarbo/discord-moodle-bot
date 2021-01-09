@@ -13,7 +13,7 @@
 
 ---
 ![Build for Discord](https://img.shields.io/badge/build%20for-discord-blueviolet)
-![Runs with docker](https://img.shields.io/badge/runs%20with-docker-0db7ed)
+![Runs with Docker](https://img.shields.io/badge/runs%20with-docker-0db7ed)
 ![AGPL-3.0](https://img.shields.io/github/license/tjarbo/discord-moodle-bot)
 
 The FMDB notifies you on a discord server about new activities on the Moodle platform. The current implementation includes:
@@ -25,6 +25,7 @@ The FMDB notifies you on a discord server about new activities on the Moodle pla
 ## 🚀 Setup your own bot
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/tjarbo/fmdb?color=0db7ed)
 ![Docker Pulls](https://img.shields.io/docker/pulls/tjarbo/fmdb?color=0db7ed)
+[![Deploy to Heroku](https://img.shields.io/badge/deploy%20to-herkou-79589F)](https://github.com/tjarbo/discord-moodle-bot/wiki/Setup-with-heroku-and-mongodb-atlas)
 
 The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](https://github.com/tjarbo/discord-moodle-bot/wiki/%F0%9F%9B%A0%EF%B8%8F-FMDB-einrichten).
 
