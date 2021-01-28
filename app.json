@@ -15,6 +15,10 @@
   "scripts": {
     "postdeploy": "npm run build"
   },
+  "buildpacks": [
+    { "url": "heroku/nodejs" },
+    { "url": "https://github.com/heroku/heroku-buildpack-static" }
+  ],
   "env": {
     "ADMIN_ID": {
       "description": "Discord-Id of the initial administrator. More can be added later vie webinterface."
