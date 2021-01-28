@@ -40,10 +40,10 @@ const envVarsSchema = object({
     .description('Discord username#0000 of the admin'),
   JWT_SECRET: string()
     .required()
-    .description("Used to validate a jwt. Use a strong secret!"),
+    .description('Used to validate a jwt. Use a strong secret!'),
   JWT_EXPIRESIN: string()
     .required()
-    .description("Defines how long a user will be logged in"),
+    .description('Defines how long a user will be logged in'),
   MOODLE_BASE_URL: string()
     .required()
     .description('URL of your Moodle instance, eg. https://moodle.domain.me'),
