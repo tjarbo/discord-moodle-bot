@@ -72,6 +72,10 @@
     "NODE_ENV": {
       "description": "Defines the environment, where the bot will be started.",
       "value": "production"
+    },
+    "NPM_CONFIG_PRODUCTION": {
+      "description": "Leave it as it is!",
+      "value": "false"
     }
   }
 }
