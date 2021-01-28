@@ -17,9 +17,6 @@
     "moodle",
     "bot"
   ],
-  "engines": {
-    "node": "12.x"
-  },
   "scripts": {
     "build": "lerna run build",
     "build:prod": "lerna run build:prod",

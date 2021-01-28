@@ -16,8 +16,7 @@
     "postdeploy": "npm run build"
   },
   "buildpacks": [
-    { "url": "heroku/nodejs" },
-    { "url": "https://github.com/heroku/heroku-buildpack-static" }
+    { "url": "heroku/nodejs" }
   ],
   "env": {
     "ADMIN_ID": {
