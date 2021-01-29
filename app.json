@@ -62,7 +62,7 @@
       "description": "Token you got from https://fmdb.tjarbo.me ."
     },
     "MOODLE_USE_COURSE_SHORTNAME": {
-      "description": "Use the course form or the full course name in Discord messages.",
+      "description": "Whether to use short- or fullname of the courses in the discord message",
       "value": "true"
     },
     "MOODLE_USERID": {
