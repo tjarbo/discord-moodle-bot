@@ -55,7 +55,7 @@
       "value": "900000"
     },
     "MOODLE_REMINDER_TIME_LEFT": {
-      "description": "If the remaining time of a submission is less than the specified time, a notification will be sind. Time in seconds.",
+      "description": "If the remaining time of a submission is less than the specified time, a notification will be sent. Time in seconds.",
       "value": "86400"
     },
     "MOODLE_TOKEN": {
