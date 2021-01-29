@@ -20,7 +20,7 @@
   ],
   "env": {
     "ADMIN_ID": {
-      "description": "Discord-Id of the initial administrator. More can be added later vie webinterface."
+      "description": "Discord-Id of the initial administrator. More can be added later via webinterface."
     },
     "ADMIN_NAME": {
       "description": "Username of the initial administrator in form of username#0000 ."
