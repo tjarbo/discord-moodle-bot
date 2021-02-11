@@ -22,7 +22,7 @@ If you have any screenshots, please paste them here. Remove this section if it i
 ## Checklist
 <!--- Go over all the following points, and put an `x` in all boxes that apply. -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're here to help! -->
-- [ ] Make sure you are requesting to development. Don't request to master branch!
+- [ ] Make sure you are requesting to main. Don't request to release branch!
 - [ ] I have linked the related issue.
 - [ ] My code follows the code style of this project.
 - [ ] My change requires a change to the documentation.
