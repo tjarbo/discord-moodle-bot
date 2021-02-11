@@ -15,7 +15,7 @@ import { ApiError } from '../../utils/api';
  * @param {FMDBMessageTemplate} messageTemplate Message template
  * @param {object} values
  */
-export async function sendTo(userId: string, messageTemplate: FMDBMessageTemplate, values: object) {
+export function sendTo(userId: string, messageTemplate: FMDBMessageTemplate, values: object) {
   const discordUser = client.users.cache.get(userId);
   if (!discordUser) throw new ApiError(409, `User not in discord cache. Send the bot a small 'test' message (via DM) and try again.`);
 

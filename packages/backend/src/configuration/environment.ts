@@ -36,7 +36,7 @@ const envVarsSchema = object({
     .description('Discord ID of the admin'),
   ADMIN_NAME: string()
     .required()
-    .regex(/[\w\s]+#[0-9]+/)
+    .regex(/^[\w\s]{2,32}#\d{4}$/)
     .description('Discord username#0000 of the admin'),
   JWT_SECRET: string()
     .required()

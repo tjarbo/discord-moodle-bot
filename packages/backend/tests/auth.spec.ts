@@ -89,7 +89,7 @@ describe('auth.js authTokenRequest', () => {
   });
 
   it('should log error if unknown user is provided', async () => {
-    mockRequest.body.username = 'testuser2#123123';
+    mockRequest.body.username = 'testuser2#1234';
     mockingoose(Administrator).toReturn(null, 'findOne');
 
     await authTokenRequest(mockRequest, mockResponse, mockNext);
@@ -97,7 +97,7 @@ describe('auth.js authTokenRequest', () => {
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(404, `User testuser2#123123 not found`));
+    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
   });
 
   it('should log error if token creation fails', async () => {
@@ -112,7 +112,7 @@ describe('auth.js authTokenRequest', () => {
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(testError);
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe(testError.message);
+    expect(spyLogger.mock.calls[0][0]).toBe(testError);
   });
 
   it('should send token to user if everything is fine', async () => {
@@ -214,7 +214,7 @@ describe('auth.js authLoginRequest', () => {
   });
 
   it('should log error if unknown user is provided', async () => {
-    mockRequest.body.username = 'testuser2#123123';
+    mockRequest.body.username = 'testuser2#1234';
     mockRequest.body.token = mockToken.key;
     mockingoose(Administrator).toReturn(null, 'findOne');
 
@@ -223,7 +223,7 @@ describe('auth.js authLoginRequest', () => {
     expect(mockNext.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(404, `User testuser2#123123 not found`));
+    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
 
   });
 
