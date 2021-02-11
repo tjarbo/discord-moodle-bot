@@ -1,0 +1,80 @@
+{
+  "name": "Fancy-Moodle-Discord-Bot",
+  "description": "The FMDB notifies you on a discord server about new activities on the Moodle platform.",
+  "keywords": [
+    "moodle",
+    "moodle-platform",
+    "vuejs",
+    "discord",
+    "discord-bot"
+  ],
+  "website": "https://github.com/tjarbo/discord-moodle-bot",
+  "repository": "https://github.com/tjarbo/discord-moodle-bot",
+  "logo": "https://github.com/tjarbo/discord-moodle-bot/raw/feature/82-Easy-deployment-with-Heroku/logo.png",
+  "success_url": "/login",
+  "scripts": {
+    "postdeploy": "npm run build"
+  },
+  "buildpacks": [
+    { "url": "heroku/nodejs" }
+  ],
+  "env": {
+    "ADMIN_ID": {
+      "description": "Discord-Id of the initial administrator. More can be added later via webinterface."
+    },
+    "ADMIN_NAME": {
+      "description": "Username of the initial administrator in form of username#0000 ."
+    },
+    "DISCORD_CHANNEL": {
+      "description": "Id of the channel in discord, where all notification should be published."
+    },
+    "DISCORD_TOKEN": {
+      "description": "Token you got from the Discord-Developer-Portal"
+    },
+    "JWT_SECRET": {
+      "description": "Choose a very strong secret!",
+      "generator": "secret"
+    },
+    "JWT_EXPIRESIN": {
+      "description": "Defines, how long you will stay logged in at the webinterface.",
+      "value": "10m"
+    },
+    "MONGO_HOST": {
+      "description": "Path to your mongodb instance. Keep the ssl query parameter at the end!",
+      "value": "mongodb://mongo:27017/fmdb?ssl=true"
+    },
+    "MONGOOSE_DEBUG": {
+      "description": "Activates logging of mongodb queries. Keep it off.",
+      "value": "false"
+    },
+    "MOODLE_BASE_URL": {
+      "description": "URL of your moodle instance you got from https://fmdb.tjarbo.me"
+    },
+    "MOODLE_FETCH_INTERVAL": {
+      "description": "Defines how often the fmdb looks for updates. Intervall in milliseconds.",
+      "value": "900000"
+    },
+    "MOODLE_REMINDER_TIME_LEFT": {
+      "description": "If the remaining time of a submission is less than the specified time, a notification will be sent. Time in seconds.",
+      "value": "86400"
+    },
+    "MOODLE_TOKEN": {
+      "description": "Token you got from https://fmdb.tjarbo.me ."
+    },
+    "MOODLE_USE_COURSE_SHORTNAME": {
+      "description": "Whether to use short- or fullname of the courses in the discord message",
+      "value": "true"
+    },
+    "MOODLE_USERID": {
+      "description": "User Id you got from https://fmdb.tjarbo.me ."
+    },
+    "NODE_ENV": {
+      "description": "Defines the environment, where the bot will be started.",
+      "value": "production"
+    },
+    "NPM_CONFIG_PRODUCTION": {
+      "description": "Leave it as it is!",
+      "value": "false"
+    }
+  }
+}
