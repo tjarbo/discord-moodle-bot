@@ -74,7 +74,7 @@ config constants discordChannel and fetchInterval.
 
 ## 🏆 Contributing
 
-Every contribution is welcome! Do you have a great new feature idea or just want to be part of the project ? Awesome - get started with a look into the issues list. If a similar ticket doesn't exist, feel free to open a new one. The first step is to discuss your new idea or contribution to make sure, it follows the concept of the application. Afterwards, get started to code 💽! If you have finished you changes, create a pull request and we will review your changes!
+Do you have a great new feature idea or just want to be part of the project ? Awesome! Every contribution is welcome! If you want to find out more about how to contribute to the project, please checkout our [CONTRIBUTING.md](CONTRIBUTING.md)!
 
 ## ⚖️ License
 
