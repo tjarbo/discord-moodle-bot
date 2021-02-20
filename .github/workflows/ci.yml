@@ -39,7 +39,7 @@ jobs:
       uses: docker/build-push-action@v1
       with:
         push: false
-        tags: fmdb:test
+        tags: test
   
   lint:
     runs-on: ubuntu-latest
