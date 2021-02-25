@@ -11,7 +11,7 @@ const envVarsSchema = object({
     .allow('production')
     .allow('test')
     .allow('provision')
-    .default('development'),
+    .default('production'),
   PORT: number()
     .default(4040),
   MONGOOSE_DEBUG: boolean()
@@ -22,9 +22,7 @@ const envVarsSchema = object({
     }),
   MONGO_HOST: string()
     .required()
-    .description('Mongo DB host url'),
-  MONGO_PORT: number()
-    .default(27017),
+    .description('Path to your mongodb instance.'),
   DISCORD_TOKEN: string()
     .required()
     .description('Discord Token for bot'),
@@ -42,16 +40,17 @@ const envVarsSchema = object({
     .required()
     .description('Used to validate a jwt. Use a strong secret!'),
   JWT_EXPIRESIN: string()
-    .required()
+    .default('10m')
     .description('Defines how long a user will be logged in'),
   MOODLE_BASE_URL: string()
     .required()
+    .uri()
     .description('URL of your Moodle instance, eg. https://moodle.domain.me'),
   MOODLE_FETCH_INTERVAL: number()
-    .required()
+    .default(900000)
     .description('Interval to look for updates on moodle (in ms)'),
   MOODLE_REMINDER_TIME_LEFT: number()
-    .required()
+    .default(86400)
     .description('Send notification if deadline is within given time (in seconds)'),
   MOODLE_TOKEN: string()
     .required()
@@ -82,7 +81,6 @@ export const config = {
   },
   mongo: {
     host: envVars.MONGO_HOST,
-    port: envVars.MONGO_PORT
   },
   mongooseDebug: envVars.MONGOOSE_DEBUG,
   port: envVars.PORT,

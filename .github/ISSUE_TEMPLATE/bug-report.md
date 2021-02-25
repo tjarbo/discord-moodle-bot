@@ -31,6 +31,11 @@ What do you think should happen if there is no bug?
 **Screenshots**
 If you have any screenshots of the bug by chance, please paste them here. Remove this section if it is not necessary.
 
+**Log**
+If your log provides any additional information by chance, please paste it here. Remove this section if it is not necessary.
+```
+[here your log]
+```
 
 **Additional**
 Here you have space to add additional information. Remove this section if it is not necessary.
