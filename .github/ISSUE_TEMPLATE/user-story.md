@@ -11,7 +11,7 @@ assignees: ''
 
 > **As a**
 > **I want**
-> **that**
+> **so that**
 
 ## Description:
 
