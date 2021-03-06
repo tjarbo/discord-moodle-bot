@@ -1,0 +1,20 @@
+name: CD - Test
+
+on:
+  workflow_run:
+    workflows:
+      - "CI - Test"
+    branches: [feature/93-🐛-CD-(Main)-not-working]
+    types:
+      - completed
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    - name: "ls /"
+      run: ls -a
+    - name: "ls /packages/backend"
+      run: ls -a /packages/backend
+    - name: "ls /packages/frontend"
+      run: ls -a /packages/frontend
