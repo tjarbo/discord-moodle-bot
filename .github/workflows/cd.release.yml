@@ -41,7 +41,9 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
       
     - name: "Build and push #latest Docker image to Docker Hub"
-      uses: docker/build-push-action@v1
+      uses: docker/build-push-action@v2
       with:
+        context: .
+        no-cache: true
         push: true
         tags: ${{ steps.docker_meta.outputs.tags }}
