@@ -32,6 +32,7 @@ jobs:
       id: docker_meta
       uses: crazy-max/ghaction-docker-meta@v1
       with:
+        tag-latest: true
         images: tjarbo/fmdb
 
     - name: "Login to DockerHub"
