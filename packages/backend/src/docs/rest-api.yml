@@ -6,7 +6,6 @@ info:
   license:
     name: "GNU AFFERO GENERAL PUBLIC LICENSE"
     url: "https://github.com/tjarbo/discord-moodle-bot/tree/development"
-host: "localhost:4040"
 basePath: "/api"
 tags:
 - name: "Login"
