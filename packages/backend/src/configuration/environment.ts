@@ -29,13 +29,6 @@ const envVarsSchema = object({
   DISCORD_CHANNEL: string()
     .required()
     .description('Channel ID to receive notifications'),
-  ADMIN_ID: string()
-    .required()
-    .description('Discord ID of the admin'),
-  ADMIN_NAME: string()
-    .required()
-    .regex(/^[\w\s]{2,32}#\d{4}$/)
-    .description('Discord username#0000 of the admin'),
   JWT_SECRET: string()
     .required()
     .description('Used to validate a jwt. Use a strong secret!'),
@@ -61,17 +54,31 @@ const envVarsSchema = object({
   MOODLE_USERID: number()
     .required()
     .description('Moodle user Id required to fetch course details'),
-}).unknown()
+  RP_NAME: string()
+    .default('Fancy Moodle Discord Bot')
+    .description('Human-readable title of the website for webauthn'),
+  RP_ID: string()
+    .when('NODE_ENV', {
+      is: string().equal('development'),
+      then: string().default('localhost'),
+      otherwise: string().min(8).required()
+    })
+    .description('Unique identifier of the website for webauthn'),
+  RP_ORIGIN: string()
+    .when('NODE_ENV', {
+      is: string().equal('development'),
+      then: string().uri().default(`http://localhost`),
+      otherwise: string().uri().required()
+    })
+    .description('Unique identifier of the website for webauthn'),
+  }).unknown()
   .required();
 
 const { error, value: envVars } = envVarsSchema.validate(process.env);
-if (error) throw new Error(`Config validation error: ${error.message}`);
+const envDescriptionLink = 'https://github.com/tjarbo/discord-moodle-bot/wiki/What-is-inside-.env%3F';
+if (error) throw new Error(`Config validation error: ${error.message} \n See ${envDescriptionLink} for more information`);
 
 export const config = {
-  admin: {
-    id: envVars.ADMIN_ID,
-    name: envVars.ADMIN_NAME,
-  },
   discordToken: envVars.DISCORD_TOKEN,
   discordChannel: envVars.DISCORD_CHANNEL,
   env: envVars.NODE_ENV,
@@ -83,7 +90,6 @@ export const config = {
     host: envVars.MONGO_HOST,
   },
   mongooseDebug: envVars.MONGOOSE_DEBUG,
-  port: envVars.PORT,
   moodle: {
     baseURL: envVars.MOODLE_BASE_URL,
     fetchInterval: envVars.MOODLE_FETCH_INTERVAL,
@@ -92,4 +98,10 @@ export const config = {
     useCourseShortname: envVars.MOODLE_USE_COURSE_SHORTNAME,
     userId:  envVars.MOODLE_USERID,
   },
+  port: envVars.PORT,
+  rp: {
+    name: envVars.RP_NAME,
+    id: envVars.RP_ID,
+    origin: envVars.RP_ORIGIN,
+  }
 };
