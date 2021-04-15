@@ -9,14 +9,17 @@
     "prebuild": "vue-cli-service lint --fix",
     "prestart": "vue-cli-service lint --fix",
     "pretest": "vue-cli-service lint --fix",
+    "serve": "vue-cli-service serve",
     "start": "vue-cli-service build --watch",
     "test": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@simplewebauthn/browser": "^2.2.1",
     "axios": "^0.21.1",
     "buefy": "^0.8.20",
     "bulma": "^0.9.0",
     "core-js": "^3.6.4",
+    "uuid": "^3.4.0",
     "vue": "^2.6.12",
     "vue-router": "^3.4.3",
     "vuelidate": "^0.7.5",
