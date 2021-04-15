@@ -1,5 +1,5 @@
 // mock relevant imports
-import { getTokenFromHeader, authLoginRequest, authTokenRequest } from '../src/controllers/authentication/auth';
+import { getTokenFromHeader, authLoginRequest, authTokenRequest } from '../src/controllers/authentication';
 import { Administrator } from '../src/controllers/administrator/administrator.schema';
 import { Request, Response } from 'express';
 import mockingoose from 'mockingoose';
