@@ -8,7 +8,7 @@ export interface IAdministratorDocument extends Document {
   createdAt: Date;
   deletable: boolean;
   currentChallenge?: string;
-  devices: IAuthenticatorDocument[];
+  device: IAuthenticatorDocument;
 }
 
 const administratorSchema = new Schema({
@@ -16,7 +16,7 @@ const administratorSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   deletable: { type: Boolean, default: true },
   currentChallenge: { type: String, default: null },
-  devices: [{ type: Schema.Types.ObjectId, ref: 'Authenticator' }],
+  device: { type: Schema.Types.ObjectId, ref: 'Authenticator' },
 });
 
 export const Administrator: Model<IAdministratorDocument> = model<IAdministratorDocument>('Administrator', administratorSchema);

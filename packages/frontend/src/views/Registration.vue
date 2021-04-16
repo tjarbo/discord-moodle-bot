@@ -7,7 +7,7 @@
       switchViewText="Du bist bereits registriert?"
       switchViewLink="/login"
     >
-      <b-loading :is-full-page="false" :active="loading"></b-loading>
+      <b-loading :is-full-page="false" :active="authGetStatus.pending"></b-loading>
 
       <div class="field">
         <div class="control">
@@ -53,6 +53,7 @@ import {
   required, minLength, maxLength, alphaNum,
 } from 'vuelidate/lib/validators';
 import { startAttestation } from '@simplewebauthn/browser';
+import { mapGetters } from 'vuex';
 import { notifyFailure, notifySuccess } from '../notification';
 import AuthenticationLayout from '../Layouts/AuthenticationLayout.vue';
 
@@ -64,30 +65,23 @@ export default {
       username: '',
       token: '',
     },
-    loading: false,
   }),
   methods: {
     onSubmit(event) {
       event.preventDefault();
-      this.loading = true;
 
-      // Request challenge from sever
+      // Request attestation options from sever
       this.$store.dispatch('startAttestation', this.form)
-        .then(async (challenge) => {
+        .then(async (attestationOptions) => {
           try {
-            // Pass the challenge to the authenticator and wait for a response
+            // Pass the attestation options to the authenticator and wait for a response
             // User will use an authenticator and will generate a response
-            const attestationResponse = await startAttestation(challenge);
-            
-            this.loading = false;
-            
+            const attestationResponse = await startAttestation(attestationOptions);
+
             // Verify response from authenticator
             this.verifyAttestation(this.form, attestationResponse);
-
           } catch (error) {
             // Handle error during challange solving process
-            this.loading = false;
-
             switch (error.name) {
               case 'AbortError':
                 // Registration proccess timed out or cancled
@@ -106,7 +100,6 @@ export default {
           }
         })
         .catch((apiResponse) => {
-          this.loading = false;
           if (apiResponse.code) {
             notifyFailure(apiResponse.error[0].message);
           } else {
@@ -119,19 +112,13 @@ export default {
     },
 
     verifyAttestation(formData, attestationResponse) {
-      this.loading = true;
-
-      this.$store.dispatch('finishAttestation', { username: formData.username, token: formData.token, challenge: attestationResponse })
+      this.$store.dispatch('finishAttestation', { username: formData.username, token: formData.token, attestationResponse })
         .then(() => {
-          // registration was successful and jwt was received 
-          this.loading = false;
-
-          // refirect to dashboard
+          // registration was successful and jwt was received; redirect to dashboard
           this.$router.push('dashboard');
           notifySuccess('Anmeldung war erfolgreich!');
         })
         .catch((apiResponse) => {
-          this.loading = false;
           if (apiResponse.code) {
             notifyFailure(apiResponse.error[0].message);
           } else {
@@ -142,6 +129,9 @@ export default {
           }
         });
     },
+  },
+  computed: {
+    ...mapGetters(['authGetStatus']),
   },
   validations: {
     form: {

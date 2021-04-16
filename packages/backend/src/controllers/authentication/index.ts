@@ -29,10 +29,8 @@ const authAssertionGetRequestSchema = object({
 
 const authAssertionPostRequestSchema = object({
   username: string().required().min(8).max(64).description('Admin user name'),
-  authenticorID: string().required().description('Id of used authenticator'),
-  challenge: object().unknown().required().description('Webauthn challenge')
+  assertionResponse: object().unknown().required().description('Webauthn challenge')
 });
-
 
 const authAttestationGetRequestSchema = object({
   username: string().required().min(8).max(64).description('Admin user name'),
@@ -42,7 +40,7 @@ const authAttestationGetRequestSchema = object({
 const authAttestationPostRequestSchema = object({
   username: string().required().min(8).max(64).description('Admin user name'),
   token: string().required().custom(isUUID).description('Registration token'),
-  challenge: object().unknown().required().description('Webauthn challenge')
+  attestationResponse: object().unknown().required().description('Webauthn challenge')
 });
 
 
@@ -134,9 +132,8 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     if (registrationTokenDoc === null) throw new ApiError(404, 'Registration token not found');
 
     // 3. Get user document; create if it does not exist
-    const userDoc = await Administrator.findOneAndUpdate({ username: attestationGetRequest.value.username }, {}, { upsert: true  });
-    // if (userDoc === null) throw new ApiError(404, 'User not found or unable to create');
-    if (userDoc?.devices?.length) throw new ApiError(403, 'User already registered');
+    let userDoc = await Administrator.findOneAndUpdate({ username: attestationGetRequest.value.username }, {}, { upsert: true, new: true });
+    if (userDoc.device) throw new ApiError(403, 'User already registered');
 
     // 4. Create attestation challenge
     const attestationOptionsOpts: GenerateAttestationOptionsOpts = {
@@ -151,12 +148,13 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
        * registering the same device multiple times. The authenticator will simply throw an error in
        * the browser if it's asked to perform an attestation when one of these ID's already resides
        * on it.
-       */
-      excludeCredentials: userDoc.devices.map(dev => ({
-        id: dev.credentialID,
+       
+      excludeCredentials: [{
+        id: userDoc.device.credentialID,
         type: 'public-key',
-        transports: dev.transports,
-      })),
+        transports: userDoc.device.transports,
+      }],
+      */
       /**
        * The optional authenticatorSelection property allows for specifying more constraints around
        * the types of authenticators that users to can use for attestation
@@ -167,14 +165,14 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
       },
     };
 
-    const options = generateAttestationOptions(attestationOptionsOpts);
+    const attestationOptions = generateAttestationOptions(attestationOptionsOpts);
 
     // 5. Save current challenge to user
-    userDoc.currentChallenge = options.challenge;
+    userDoc.currentChallenge = attestationOptions.challenge;
     userDoc.save();
 
     // 4. Done
-    const response = new ApiSuccess(200, options);
+    const response = new ApiSuccess(200, attestationOptions);
     next(response);
 
   } catch (err) {
@@ -195,7 +193,6 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
  export async function authAttestationPostRequest(req: Request, res: Response, next: NextFunction) : Promise<void> {
   try {
     // 1. Validate user input
-    loggerFile.debug(req.body)
     const attestationPostRequest = authAttestationPostRequestSchema.validate(req.body);
     if (attestationPostRequest.error) throw new ApiError(400, attestationPostRequest.error.message);
 
@@ -206,7 +203,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     // 3. Get user document
     const userDoc = await Administrator.findOne({ username: attestationPostRequest.value.username });
     if (userDoc === null) throw new ApiError(404, 'User not found');
-    if (userDoc.devices.length) throw new ApiError(403, 'User already registered');
+    if (userDoc.device) throw new ApiError(403, 'User already registered');
     if (userDoc.currentChallenge === undefined || userDoc.currentChallenge === null) throw new ApiError(400, 'User has no pending challenge');
 
     // 4. Verify challenge
@@ -229,7 +226,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
         counter
       }).save();
 
-      userDoc.devices.push(authenticator);
+      userDoc.device = authenticator;
 
       // 6. Send jwt to user
       const response = new ApiSuccess(200, { 'accesstoken': generateJWToken(userDoc) });
@@ -269,17 +266,17 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     if (assertionGetRequest.error) throw new ApiError(400, assertionGetRequest.error.message);
 
     // 2. Get user document
-    const userDoc = await (await Administrator.findOne({ username: assertionGetRequest.value.username })).populated('devices');
+    const userDoc = await Administrator.findOne({ username: assertionGetRequest.value.username }).populate('device');
     if (userDoc === null) throw new ApiError(404, 'User not found');
-    if (userDoc.devices.length) throw new ApiError(403, 'User not registered');
+    if (userDoc.device === null || userDoc.device === undefined) throw new ApiError(403, 'User not registered');
 
     // 3. Generate challenge
     const options = generateAssertionOptions({
       // Require users to use a previously-registered authenticator
-      allowCredentials: userDoc.devices.map((authenticator: IAuthenticatorDocument) => ({
-        id: authenticator.credentialID,
-        type: 'public-key',
-      })),
+      allowCredentials: [{
+        id: userDoc.device.credentialID,
+        type: 'public-key'
+      }],
       userVerification: 'preferred',
     });
 
@@ -313,13 +310,13 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     if (assertionPostRequest.error) throw new ApiError(400, assertionPostRequest.error.message);
 
     // 2. Get user document
-    const userDoc: IAdministratorDocument = await (await Administrator.findOne({ username: assertionPostRequest.value.username })).populated('devices');
+    const userDoc: IAdministratorDocument = await Administrator.findOne({ username: assertionPostRequest.value.username }).populate('device');
     if (userDoc === null) throw new ApiError(404, 'User not found');
-    if (userDoc.devices.length < 1) throw new ApiError(403, 'User not registered');
+    if (userDoc.device === null || userDoc.device === undefined) throw new ApiError(403, 'User not registered');
     if (userDoc.currentChallenge === undefined || userDoc.currentChallenge === null) throw new ApiError(400, 'User has no pending challenge');
 
     // 3. Get authenticator
-    const authenticator = userDoc.devices.filter((dev: IAuthenticatorDocument) => dev.credentialID === assertionPostRequest.value.authenticatorID)[0];
+    const authenticator = userDoc.device;
 
     // 4. Verify challenge
     try {

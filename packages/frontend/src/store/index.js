@@ -112,10 +112,10 @@ export default new Vuex.Store({
       });
     },
 
-    finishAssertion({ commit }, challenge) {
+    finishAssertion({ commit }, payload) {
       commit('SET_AUTH');
       return new Promise((resolve, reject) => {
-        ApiUtil.post('/webauthn/login', challenge)
+        ApiUtil.post('/webauthn/login', payload)
           .then(({ data: apiResponse }) => {
             if (apiResponse.status === 'success') {
               const jwt = apiResponse.data.accesstoken;

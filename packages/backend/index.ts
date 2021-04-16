@@ -11,11 +11,10 @@ import { MoodleSettings } from './src/controllers/moodle/schemas/moodle.schema';
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(async() => {
   loggerFile.debug('Mongoose connected');
 
-  Administrator.findOne({ $and: [{ 'devices': { $ne: [] }}, { 'devices': { $ne: null }}] }).then(user => {
+  Administrator.findOne({ $and: [{ 'device': { $ne: undefined }}, { 'device': { $ne: null }}] }).then(user => {
       if (user !== null) return; // An admin already exists!
 
-      // No admin have been found -> Create a registration token
-      // and print it into the logs
+      // No admin have been found -> Create a registration token and print it into the logs
       new RegistrationToken().save().then(token => {
         loggerFile.info('No administrator found!');
         loggerFile.info(`Visit ${config.rp.origin}/register and use to following token: ${token.key}`);
