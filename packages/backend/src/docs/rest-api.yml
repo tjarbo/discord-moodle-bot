@@ -98,7 +98,7 @@ paths:
         schema:
           type: object
           properties:
-            unknow_strukture:
+            unknown_structure:
               type: string
           
       responses:
@@ -110,12 +110,11 @@ paths:
             application/json:
               status: 'success'
               code: 200
-              data: {
+              data:
                 accesstoken: "abcd.1234.efghi"
-              }
               error: []
         "400":
-          description: "Invalid request schema. Read reponse for more information."
+          description: "Invalid request schema. Read response for more information."
           schema:
             $ref: "#/definitions/ApiResponse"
           examples:
@@ -222,7 +221,7 @@ paths:
         schema:
           type: object
           properties:
-            unknow_strukture:
+            unknown_structure:
               type: string
           
       responses:
@@ -234,9 +233,8 @@ paths:
             application/json:
               status: 'success'
               code: 200
-              data: {
+              data:
                 accesstoken: "abcd.1234.efghi"
-              }
               error: []
         "400":
           description: "Invalid request schema. Read response for more information."

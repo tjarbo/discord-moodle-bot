@@ -132,7 +132,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     if (registrationTokenDoc === null) throw new ApiError(404, 'Registration token not found');
 
     // 3. Get user document; create if it does not exist
-    let userDoc = await Administrator.findOneAndUpdate({ username: attestationGetRequest.value.username }, {}, { upsert: true, new: true });
+    const userDoc = await Administrator.findOneAndUpdate({ username: attestationGetRequest.value.username }, {}, { upsert: true, new: true });
     if (userDoc.device) throw new ApiError(403, 'User already registered');
 
     // 4. Create attestation challenge
@@ -148,13 +148,13 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
        * registering the same device multiple times. The authenticator will simply throw an error in
        * the browser if it's asked to perform an attestation when one of these ID's already resides
        * on it.
-       
-      excludeCredentials: [{
-        id: userDoc.device.credentialID,
-        type: 'public-key',
-        transports: userDoc.device.transports,
-      }],
-      */
+       *
+       * excludeCredentials: [{
+       *  id: userDoc.device.credentialID,
+       *  type: 'public-key',
+       *  transports: userDoc.device.transports,
+       * }],
+       */
       /**
        * The optional authenticatorSelection property allows for specifying more constraints around
        * the types of authenticators that users to can use for attestation
@@ -209,7 +209,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     // 4. Verify challenge
     try {
       const { verified, attestationInfo } = await verifyAttestationResponse({
-        credential: attestationPostRequest.value.challenge,
+        credential: attestationPostRequest.value.attestationResponse,
         expectedChallenge: userDoc.currentChallenge,
         expectedOrigin: config.rp.origin,
         expectedRPID: config.rp.id,
@@ -321,7 +321,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     // 4. Verify challenge
     try {
       const { verified, assertionInfo } = await verifyAssertionResponse({
-        credential: assertionPostRequest.value.challenge,
+        credential: assertionPostRequest.value.assertionResponse,
         expectedChallenge: userDoc.currentChallenge,
         expectedOrigin: config.rp.origin,
         expectedRPID: config.rp.id,
