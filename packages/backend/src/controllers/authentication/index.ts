@@ -24,21 +24,21 @@ const isUUID = (value: any, helper: CustomHelpers) : any => {
 };
 
 const authAssertionGetRequestSchema = object({
-  username: string().required().min(8).max(64).description('Admin user name'),
+  username: string().alphanum().required().min(8).max(64).description('Username of admin to register'),
 });
 
 const authAssertionPostRequestSchema = object({
-  username: string().required().min(8).max(64).description('Admin user name'),
+  username: string().alphanum().required().min(8).max(64).description('Username of admin to register'),
   assertionResponse: object().unknown().required().description('Webauthn challenge')
 });
 
 const authAttestationGetRequestSchema = object({
-  username: string().required().min(8).max(64).description('Admin user name'),
+  username: string().alphanum().required().min(8).max(64).description('Username of admin to register'),
   token: string().required().custom(isUUID).description('Registration token'),
 });
 
 const authAttestationPostRequestSchema = object({
-  username: string().required().min(8).max(64).description('Admin user name'),
+  username: string().alphanum().required().min(8).max(64).description('Username of admin to register'),
   token: string().required().custom(isUUID).description('Registration token'),
   attestationResponse: object().unknown().required().description('Webauthn challenge')
 });
@@ -112,7 +112,7 @@ export function authVerify(req: Request, res: Response, next: NextFunction) {
 /**
  * GET /webauthn/register
  *
- * Handles requests to create a new challenge that is required,
+ * Handles requests to create a new challenge that is required
  * to register a new device.
  *
  * Expect: token and username parameter
@@ -184,7 +184,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
 /**
  * POST /webauthn/register
  *
- * Validates the challenge done by user to register a new device
+ * Validates the attestation response done by user to register a new device
  *
  * @export
  * @param {Request} req

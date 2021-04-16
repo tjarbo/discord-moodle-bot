@@ -1,15 +1,15 @@
 swagger: "2.0"
 info:
   description: ""
-  version: "1.0.0"
+  version: "2.0.0"
   title: "Fancy-Moodle-Discord-Bot Settings"
   license:
     name: "GNU AFFERO GENERAL PUBLIC LICENSE"
-    url: "https://github.com/tjarbo/discord-moodle-bot/tree/development"
+    url: "https://github.com/tjarbo/discord-moodle-bot/blob/main/LICENSE.md"
 basePath: "/api"
 tags:
-- name: "Login"
-  description: "Everything about the authorization"
+- name: "Webauthn"
+  description: "Use passwordless authentication!"
   externalDocs:
     description: "Find out more about jwt"
     url: "https://jwt.io/#debugger"
@@ -17,34 +17,35 @@ schemes:
 - "http"
 - "https"
 paths:
-  /token:
-    post:
+  /webauthn/register:
+    get:
       tags:
-      - "Login"
-      summary: "Request a new token"
-      description: "Request a one-time-token which will be received discord private message"
-      operationId: "authTokenRequest"
+      - "Webauthn"
+      summary: "Request challenge options for attestation"
+      description: "Handles requests to create a new challenge that is required to register a new device."
+      operationId: "authAttestationGetRequest"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "body"
-        in: "body"
-        description: "username#0000 of a registered administrator"
+      - name: "username"
+        in: "query"
+        description: "Username of admin to register. Only between 8-64 characters allowed."
         required: true
-        schema:
-          type: "object"
-          properties:
-            username:
-              type: "string"
+        type: string
+      - name: "token"
+        in: "query"
+        description: "Registration token in form of 000000-0000-0000-0000-000000 or more."
+        required: true
+        type: string
       responses:
         "200":
-          description: "Successful operation"
+          description: "Attestation options has been created successfully!"
           schema: 
             $ref: "#/definitions/ApiResponse"
         "400":
-          description: "Invalid request body"
+          description: "Invalid request schema. Read reponse for more information."
           schema:
             $ref: "#/definitions/ApiResponse"
           examples:
@@ -55,7 +56,7 @@ paths:
               error:
                 - message: "\"username\" is required"
         "404":
-          description: "User seems not to be an administrator"
+          description: "Registration token not found"
           schema:
             $ref: "#/definitions/ApiResponse"
           examples:
@@ -65,46 +66,56 @@ paths:
               data: {}
               error:
                 - message: "User test#0000 not found"
-        "409":
-          description: "User not in discord cache. Please send the bot a short message and try it again."
-          schema:
-            $ref: "#/definitions/ApiResponse"
         "500":
           description: "Internal server error"
           schema:
             $ref: "#/definitions/ApiResponse"
-  /login:
     post:
       tags:
-      - "Login"
-      summary: "Request a JSON-Web-Token"
-      description: "Request a JSON-Web-Token"
-      operationId: "authLoginRequest"
+      - "Webauthn"
+      summary: "Validates the attestation response done by user to register a new device"
+      description: "Validates the attestation response done by user to register a new device"
+      operationId: "authAttestationPostRequest"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "body"
+      - name: "username"
+        in: "query"
+        description: "Username of admin to register. Only between 8-64 characters allowed."
+        required: true
+        type: string
+      - name: "token"
+        in: "query"
+        description: "Registration token in form of 000000-0000-0000-0000-000000 or more."
+        required: true
+        type: string
+      - name: "attestationResponse"
         in: "body"
-        description: "username#0000 and one-time-token of a registered administrator"
+        description: "Value you get from navigator.credentials.get()"
         required: true
         schema:
-          type: "object"
+          type: object
           properties:
-            username:
-              type: "string"
-            token:
-              type: "number"
-          xml:
-            name: "Category"
+            unknow_strukture:
+              type: string
+          
       responses:
         "200":
-          description: "Successful operation"
-          schema:
+          description: "Registration was successful. Response contains jwt!"
+          schema: 
             $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'success'
+              code: 200
+              data: {
+                accesstoken: "abcd.1234.efghi"
+              }
+              error: []
         "400":
-          description: "Invalid request body"
+          description: "Invalid request schema. Read reponse for more information."
           schema:
             $ref: "#/definitions/ApiResponse"
           examples:
@@ -113,9 +124,9 @@ paths:
               code: 400
               data: {}
               error:
-                - message: "\"token\" is required"
+                - message: "\"username\" is required"
         "401":
-          description: "Invalid token!"
+          description: "Validation of attestation response failed."
           schema:
             $ref: "#/definitions/ApiResponse"
           examples:
@@ -124,9 +135,9 @@ paths:
               code: 401
               data: {}
               error:
-                - message: "Invalid token!"
+                - message: "Challenge has not been solved correctly"
         "404":
-          description: "User seems not to be an administrator"
+          description: "Registration token not found"
           schema:
             $ref: "#/definitions/ApiResponse"
           examples:
@@ -140,13 +151,130 @@ paths:
           description: "Internal server error"
           schema:
             $ref: "#/definitions/ApiResponse"
+  /webauthn/login:
+    get:
+      tags:
+      - "Webauthn"
+      summary: "Request challenge options for assertion"
+      description: "Handles requests to create a new challenge that is required to login."
+      operationId: "authAssertionGetRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "Username of registered admin. Only between 8-64 characters allowed."
+        required: true
+        type: string
+      responses:
+        "200":
+          description: "Assertion options has been created successfully!"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
+        "400":
+          description: "Invalid request schema. Read response for more information."
+          schema:
+            $ref: "#/definitions/ApiResponse"
           examples:
             application/json:
               status: 'error'
-              code: 500
+              code: 400
               data: {}
               error:
-                - message: "Internal server error"
+                - message: "\"username\" is required"
+        "404":
+          description: "Registration token not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 404
+              data: {}
+              error:
+                - message: "User test#0000 not found"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+    post:
+      tags:
+      - "Webauthn"
+      summary: "Validates the assertion response done by user to login"
+      description: "Validates the assertion response done by user to login"
+      operationId: "authAssertionPostRequest"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "Username of registered admin. Only between 8-64 characters allowed."
+        required: true
+        type: string
+      - name: "assertionResponse"
+        in: "body"
+        description: "Value you get from navigator.credentials.get()"
+        required: true
+        schema:
+          type: object
+          properties:
+            unknow_strukture:
+              type: string
+          
+      responses:
+        "200":
+          description: "Login was successful. Response contains jwt!"
+          schema: 
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'success'
+              code: 200
+              data: {
+                accesstoken: "abcd.1234.efghi"
+              }
+              error: []
+        "400":
+          description: "Invalid request schema. Read response for more information."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 400
+              data: {}
+              error:
+                - message: "\"username\" is required"
+        "401":
+          description: "Validation of assertion response failed."
+          schema:
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 401
+              data: {}
+              error:
+                - message: "Challenge has not been solved correctly"
+        "404":
+          description: "Registration token not found"
+          schema:
+            $ref: "#/definitions/ApiResponse"
+          examples:
+            application/json:
+              status: 'error'
+              code: 404
+              data: {}
+              error:
+                - message: "User test#0000 not found"
+        "500":
+          description: "Internal server error"
+          schema:
+            $ref: "#/definitions/ApiResponse"
   /fetch:
     get:
       tags:
@@ -328,13 +456,13 @@ paths:
           description: "Invalid request parameter"
           schema:
             $ref: "#/definitions/ApiResponse"
-            examples:
-              application/json:
-                status: 'error'
-                code: 400
-                data: {}
-                error:
-                  - message: "\"id\" is required"
+          examples:
+            application/json:
+              status: 'error'
+              code: 400
+              data: {}
+              error:
+                - message: "\"id\" is required"
         "401":
           description: "Invalid token!"
           schema: 
