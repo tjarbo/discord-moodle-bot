@@ -7,10 +7,8 @@
       switchViewText="Du bist bereits registriert?"
       switchViewLink="/login"
     >
-      <b-loading
-        :is-full-page="false"
-        :active="false"
-      ></b-loading>
+      <b-loading :is-full-page="false" :active="loading"></b-loading>
+
       <div class="field">
         <div class="control">
           <input
@@ -35,6 +33,7 @@
           />
         </div>
       </div>
+
       <div class="field">
         <div class="control">
           <button
@@ -53,6 +52,8 @@
 import {
   required, minLength, maxLength, alphaNum,
 } from 'vuelidate/lib/validators';
+import { startAttestation } from '@simplewebauthn/browser';
+import { notifyFailure, notifySuccess } from '../notification';
 import AuthenticationLayout from '../Layouts/AuthenticationLayout.vue';
 
 export default {
@@ -63,10 +64,83 @@ export default {
       username: '',
       token: '',
     },
+    loading: false,
   }),
   methods: {
     onSubmit(event) {
       event.preventDefault();
+      this.loading = true;
+
+      // Request challenge from sever
+      this.$store.dispatch('startAttestation', this.form)
+        .then(async (challenge) => {
+          try {
+            // Pass the challenge to the authenticator and wait for a response
+            // User will use an authenticator and will generate a response
+            const attestationResponse = await startAttestation(challenge);
+            
+            this.loading = false;
+            
+            // Verify response from authenticator
+            this.verifyAttestation(this.form, attestationResponse);
+
+          } catch (error) {
+            // Handle error during challange solving process
+            this.loading = false;
+
+            switch (error.name) {
+              case 'AbortError':
+                // Registration proccess timed out or cancled
+                notifyFailure('Registrierung wurde abgebrochen!');
+                break;
+
+              case 'InvalidStateError':
+                // Authenticator is maybe already used for this
+                notifyFailure('Authenticator wurde wahrscheinlich bereits von dir registriert!');
+                break;
+
+              default:
+                notifyFailure('Fehler! Bitte versuche es erneut!');
+                break;
+            }
+          }
+        })
+        .catch((apiResponse) => {
+          this.loading = false;
+          if (apiResponse.code) {
+            notifyFailure(apiResponse.error[0].message);
+          } else {
+          // request failed locally - maybe no internet connection etc?
+            notifyFailure(
+              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            );
+          }
+        });
+    },
+
+    verifyAttestation(formData, attestationResponse) {
+      this.loading = true;
+
+      this.$store.dispatch('finishAttestation', { username: formData.username, token: formData.token, challenge: attestationResponse })
+        .then(() => {
+          // registration was successful and jwt was received 
+          this.loading = false;
+
+          // refirect to dashboard
+          this.$router.push('dashboard');
+          notifySuccess('Anmeldung war erfolgreich!');
+        })
+        .catch((apiResponse) => {
+          this.loading = false;
+          if (apiResponse.code) {
+            notifyFailure(apiResponse.error[0].message);
+          } else {
+            // request failed locally - maybe no internet connection etc?
+            notifyFailure(
+              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            );
+          }
+        });
     },
   },
   validations: {
@@ -79,7 +153,6 @@ export default {
       },
       token: {
         required,
-        alphaNum,
         minLength: minLength(36),
         maxLength: maxLength(36),
       },

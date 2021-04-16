@@ -65,11 +65,8 @@ const envVarsSchema = object({
     })
     .description('Unique identifier of the website for webauthn'),
   RP_ORIGIN: string()
-    .when('NODE_ENV', {
-      is: string().equal('development'),
-      then: string().uri().default(`http://localhost`),
-      otherwise: string().uri().required()
-    })
+    .uri()
+    .required()
     .description('Unique identifier of the website for webauthn'),
   }).unknown()
   .required();

@@ -40,8 +40,8 @@
 export default {
   name: 'AuthenticationLayout',
   methods: {
-    onSubmit() {
-      this.$emit('submit');
+    onSubmit(event) {
+      this.$emit('submit', event);
     },
   },
   props: {

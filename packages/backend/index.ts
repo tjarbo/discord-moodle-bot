@@ -11,7 +11,7 @@ import { MoodleSettings } from './src/controllers/moodle/schemas/moodle.schema';
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(async() => {
   loggerFile.debug('Mongoose connected');
 
-  Administrator.findOne({ 'devices': { $ne: [] }}).then(user => {
+  Administrator.findOne({ $and: [{ 'devices': { $ne: [] }}, { 'devices': { $ne: null }}] }).then(user => {
       if (user !== null) return; // An admin already exists!
 
       // No admin have been found -> Create a registration token
