@@ -228,7 +228,10 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
 
       userDoc.device = authenticator;
 
-      // 6. Send jwt to user
+      // 6. Save that user is deletable or not
+      userDoc.deletable = registrationTokenDoc.userIsDeletable;
+
+      // 7. Send jwt to user
       const response = new ApiSuccess(200, { 'accesstoken': generateJWToken(userDoc) });
       next(response);
 
@@ -237,7 +240,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
       throw new ApiError(400, error.message);
 
     } finally {
-      // 7. Delete challenge from user. To try again, it is necessary to request a new challenge
+      // 8. Delete challenge from user. To try again, it is necessary to request a new challenge
       userDoc.currentChallenge = undefined;
       userDoc.save();
     }

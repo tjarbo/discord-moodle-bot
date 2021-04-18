@@ -4,8 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 
 interface IRegistrationTokenDocument extends Document {
   [_id: string]: any;
-  key: String;
+  key: string;
   createdAt: Date;
+  userIsDeletable: boolean;
 }
 
 const registrationTokenSchema = new Schema({
@@ -15,6 +16,7 @@ const registrationTokenSchema = new Schema({
     default: Date.now,
     expires: '15m',
    },
+   userIsDeletable: { type: Boolean, default: true },
 });
 
 export const RegistrationToken: Model<IRegistrationTokenDocument> = model<IRegistrationTokenDocument>('RegistrationToken', registrationTokenSchema);
