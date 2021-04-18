@@ -1,21 +1,21 @@
 // mock relevant imports
-import { getTokenFromHeader, authLoginRequest, authTokenRequest } from '../src/controllers/authentication';
-import { Administrator } from '../src/controllers/administrator/administrator.schema';
+import { getTokenFromHeader, authAssertionGetRequest, authAttestationGetRequest, authAssertionPostRequest, authAttestationPostRequest } from '../src/controllers/authentication';
+import { Administrator, IAdministratorDocument } from '../src/controllers/administrator/administrator.schema';
 import { Request, Response } from 'express';
 import mockingoose from 'mockingoose';
 import { loggerFile } from '../src/configuration/logger';
-import { ApiError, ApiSuccess } from "../src/utils/api";
-import { AuthToken } from '../src/controllers/authentication/token.schema';
-import * as discord from '../src/controllers/discord';
-import { TokenRequestMessage } from '../src/controllers/discord/templates';
+import { ApiError } from "../src/utils/api";
+import { RegistrationToken } from '../src/controllers/authentication/registrationToken.schema';
+import { v4 as uuidv4 } from "uuid";
+import { Authenticator } from '../src/controllers/authentication/authenticator.schema';
 
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/configuration/discord.ts');
 jest.mock('../src/controllers/discord/index.ts');
 
+//jest.mock('@simplewebauthn/server')
 
-
-describe('auth.ts getTokenFromHeader', () => {
+describe('auth/index.ts getTokenFromHeader', () => {
   it('should return the correct jwt', () => {
     const mockRequest = {
       headers: {},
@@ -28,19 +28,18 @@ describe('auth.ts getTokenFromHeader', () => {
   });
 });
 
-describe('auth.js authTokenRequest', () => {
+describe('auth/index.ts authAttestationGetRequest', () => {
   let mockRequest: Request;
   let mockResponse: Response;
-  let mockUser: any;
-  let mockToken: any;
+  let mockUser: IAdministratorDocument;
   let mockNext: jest.Mock;
-  let spyDiscord: jest.SpyInstance;
   let spyLogger: jest.SpyInstance;
 
   beforeEach(() => {
     mockRequest = {
       headers: {},
       body: {},
+      query: {},
     } as Request;
 
     mockResponse = {
@@ -50,99 +49,106 @@ describe('auth.js authTokenRequest', () => {
       end: jest.fn()
     } as any as Response;
 
-    mockUser = {
-      userName: 'testuser#1234',
-      userId: '123456789',
-      createdAt: Date.now(),
-    };
-
-    mockToken = {
-      key: 123456,
-      createdAt: Date.now(),
-      userId: '123456789',
-    };
-
     mockNext = jest.fn();
+
+    mockUser = new Administrator({ username : "testuser123"})
+    
     spyLogger = jest.spyOn(loggerFile, 'error');
-    spyDiscord = jest.spyOn(discord, 'sendTo');
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should log error if wrong tokenRequest is provided', () => {
+  it('should validate user input', async () => {
 
-    // no body
-    authTokenRequest(mockRequest, mockResponse, mockNext);
-    expect(spyLogger.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(400, '"username" is required'));
+    const tests = [
+      {
+        // no parameters
+        prepare: () => {},
+        expect: new ApiError(400, '"username" is required')
+      },
+      {
+        // username not alphanumeric
+        prepare: () => { mockRequest.query.username = "test#1234"; },
+        expect: new ApiError(400, '"username" must only contain alpha-numeric characters')
+      },
+      {
+        // token not provided
+        prepare: () => { mockRequest.query.username = "testuser123" },
+        expect: new ApiError(400, '"token" is required')
+      },
+      {
+        // token must be uuid
+        prepare: () => { mockRequest.query.token = "123123-1231231231231231-ljöljkök"},
+        expect: new ApiError(400, '"token" contains an invalid value')
+      }
+    ]
+    
+    for (let index = 0; index < tests.length; index++) {
+      // preparation
+      tests[index].prepare()
 
-    // number as username (userid instead of username)
-    mockRequest.body.username = 12312312312312;
-
-    authTokenRequest(mockRequest, mockResponse, mockNext);
-    expect(spyLogger.mock.calls.length).toBe(2);
-    expect(mockNext.mock.calls.length).toBe(2);
-    expect(mockNext.mock.calls[1][0]).toEqual(new ApiError(400, '"username" must be a string'));
+      // execute and compare 
+      await authAttestationGetRequest(mockRequest, mockResponse, mockNext);
+      expect(spyLogger.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls[index][0]).toEqual(tests[index].expect);
+    }  
   });
 
-  it('should log error if unknown user is provided', async () => {
-    mockRequest.body.username = 'testuser2#1234';
-    mockingoose(Administrator).toReturn(null, 'findOne');
+  it('should throw error if registration token is wrong', async () => {
+    mockRequest.query = {
+      username: 'testuser123',
+      token: uuidv4(),
+    }
 
-    await authTokenRequest(mockRequest, mockResponse, mockNext);
+    mockingoose(RegistrationToken).toReturn(null, 'findOne')
 
-    expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
+    await authAttestationGetRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, 'Registration token not found'));
+  });
+ 
+  it('should throw error if user already registered', async () => {
+    mockRequest.query = {
+      username: 'testuser123',
+      token: uuidv4(),
+    }
+
+    mockUser.device = new Authenticator();
+
+    mockingoose(Administrator).toReturn(mockUser, 'findOneAndUpdate')
+    mockingoose(RegistrationToken).toReturn(new RegistrationToken(), 'findOne')
+
+    await authAttestationGetRequest(mockRequest, mockResponse, mockNext);
+    expect(spyLogger.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(403, 'User already registered'));
   });
 
-  it('should log error if token creation fails', async () => {
-    const testError = new Error('Error!');
+  it('should return challenge if everything is okay', async () => {
+    mockRequest.query = {
+      username: 'testuser123',
+      token: uuidv4(),
+    }
 
-    mockRequest.body.username = mockUser.userName;
-    mockingoose(Administrator).toReturn(mockUser, 'findOne');
-    mockingoose(AuthToken).toReturn(testError, 'save');
+    mockingoose(RegistrationToken).toReturn(new RegistrationToken(), 'findOne')
+    mockingoose(Administrator).toReturn(mockUser, 'findOneAndUpdate')
 
-    await authTokenRequest(mockRequest, mockResponse, mockNext);
-
-    expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(testError);
-    expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toBe(testError);
-  });
-
-  it('should send token to user if everything is fine', async () => {
-    mockRequest.body.username = mockUser.userName;
-    mockingoose(Administrator).toReturn(mockUser, 'findOne');
-    mockingoose(AuthToken).toReturn(mockToken, 'save');
-    const expectedParameters = [
-      mockUser.userId,
-      new TokenRequestMessage(),
-      {'key': mockToken.key}
-    ];
-
-    await authTokenRequest(mockRequest, mockResponse, mockNext);
-
-    expect(spyDiscord).toHaveBeenCalled();
-    expect(spyDiscord).toHaveBeenCalledWith(...expectedParameters);
-
-    // no error has to be logged
-    expect(mockNext.mock.calls.length).toBe(1);
-    expect((mockNext.mock.calls[0][0] as ApiSuccess).status).toBe('success');
+    await authAttestationGetRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(0);
-
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0].code).toEqual(200);
+    expect(mockNext.mock.calls[0][0].data).not.toEqual({});
   });
 });
 
-describe('auth.js authLoginRequest', () => {
+describe('auth/index.ts authAttestationPostRequest', () => {
   let mockRequest: Request;
   let mockResponse: Response;
-  let mockUser: any;
-  let mockToken: any;
+  let mockUser: IAdministratorDocument;
   let mockNext: jest.Mock;
   let spyLogger: jest.SpyInstance;
 
@@ -150,6 +156,7 @@ describe('auth.js authLoginRequest', () => {
     mockRequest = {
       headers: {},
       body: {},
+      query: {},
     } as Request;
 
     mockResponse = {
@@ -159,102 +166,373 @@ describe('auth.js authLoginRequest', () => {
       end: jest.fn()
     } as any as Response;
 
-    mockUser = {
-      userName: 'testuser#1234',
-      userId: '123456789',
-      createdAt: Date.now(),
-    };
-
-    mockToken = {
-      key: 123456,
-      createdAt: Date.now(),
-      userId: '123456789',
-    };
-
     mockNext = jest.fn();
-    spyLogger = jest.spyOn(loggerFile, 'error');
 
+    mockUser = new Administrator({ username : "testuser123"})
+    
+    spyLogger = jest.spyOn(loggerFile, 'error');
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should log error if wrong authRequest is provided', async () => {
-    // no body
-    await authLoginRequest(mockRequest, mockResponse, mockNext);
-    expect(spyLogger.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(400, '"username" is required'));
+  it('should validate user input', async () => {
 
-    // number as username (userid instead of username)
-    mockRequest.body.username = 12312312312312;
+    const tests = [
+      {
+        // no parameters
+        prepare: () => {},
+        expect: new ApiError(400, '"username" is required')
+      },
+      {
+        // username not alphanumeric
+        prepare: () => { mockRequest.body.username = "test#1234"; },
+        expect: new ApiError(400, '"username" must only contain alpha-numeric characters')
+      },
+      {
+        // token not provided
+        prepare: () => { mockRequest.body.username = "testuser123" },
+        expect: new ApiError(400, '"token" is required')
+      },
+      {
+        // token must be uuid
+        prepare: () => { mockRequest.body.token = "123123-1231231231231231-ljöljkök"},
+        expect: new ApiError(400, '"token" contains an invalid value')
+      },
+      {
+        // attestationResponse must be provided
+        prepare: () => { mockRequest.body.token = uuidv4()},
+        expect: new ApiError(400, '"attestationResponse" is required'),
+      },
+      {
+        // attestationResponse must be object
+        prepare: () => { mockRequest.body.attestationResponse = "thisisareponse" },
+        expect: new ApiError(400, '"attestationResponse" must be of type object'),
+      }
+    ]
+    
+    for (let index = 0; index < tests.length; index++) {
+      // preparation
+      tests[index].prepare()
 
-    await authLoginRequest(mockRequest, mockResponse, mockNext);
-    expect(spyLogger.mock.calls.length).toBe(2);
-    expect(mockNext.mock.calls.length).toBe(2);
-    expect(mockNext.mock.calls[1][0]).toEqual(new ApiError(400, '"username" must be a string'));
-
-    // no token
-    mockRequest.body.username = mockUser.userName;
-
-    await authLoginRequest(mockRequest, mockResponse, mockNext);
-    expect(spyLogger.mock.calls.length).toBe(3);
-    expect(mockNext.mock.calls.length).toBe(3);
-    expect(mockNext.mock.calls[2][0]).toEqual(new ApiError(400, '"token" is required'));
-
-    // token is too small
-    mockRequest.body.username = mockUser.userName;
-    mockRequest.body.token = '12312';
-
-    await authLoginRequest(mockRequest, mockResponse, mockNext);
-    expect(spyLogger.mock.calls.length).toBe(4);
-    expect(mockNext.mock.calls.length).toBe(4);
-    expect(mockNext.mock.calls[3][0]).toEqual(new ApiError(400, '"token" must be greater than 100000'));
+      // execute and compare 
+      await authAttestationPostRequest(mockRequest, mockResponse, mockNext);
+      expect(spyLogger.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls[index][0]).toEqual(tests[index].expect);
+    }  
   });
 
-  it('should log error if unknown user is provided', async () => {
-    mockRequest.body.username = 'testuser2#1234';
-    mockRequest.body.token = mockToken.key;
-    mockingoose(Administrator).toReturn(null, 'findOne');
+  it('should throw error if registration token is wrong', async () => {
+    mockRequest.body = {
+      username: 'testuser123',
+      token: uuidv4(),
+      attestationResponse: {},
+    }
 
-    await authLoginRequest(mockRequest, mockResponse, mockNext);
+    mockingoose(RegistrationToken).toReturn(null, 'findOne')
 
-    expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
+    await authAttestationPostRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(404, `User ${mockRequest.body.username} not found`));
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, 'Registration token not found'));
+  });
+ 
+  it('should throw error if something went wrong with the user', async () => {
 
+    const tests = [
+      {
+        // unknown user
+        prepare: () => {
+          mockingoose(Administrator).toReturn(null, 'findOne')
+        },
+        expect: new ApiError(404, 'User not found')
+      },
+      {
+        // user already registered
+        prepare: () => {
+          mockUser.device = new Authenticator();
+          mockingoose(Administrator).toReturn(mockUser, 'findOne')
+        },
+        expect: new ApiError(403, 'User already registered')
+      },
+      {
+        // user has no active challenge
+        prepare: () => {
+          mockUser.device = null
+          mockingoose(Administrator).toReturn(mockUser, 'findOne')
+        },
+        expect: new ApiError(400, 'User has no pending challenge')
+      },
+
+    ]
+
+    mockRequest.body = {
+      username: "testuser123",
+      token: uuidv4(),
+      attestationResponse: {}
+    }
+    
+    mockingoose(RegistrationToken).toReturn(new RegistrationToken(), 'findOne')
+
+    for (let index = 0; index < tests.length; index++) {
+      // preparation
+      tests[index].prepare()
+
+      // execute and compare 
+      await authAttestationPostRequest(mockRequest, mockResponse, mockNext);
+      expect(spyLogger.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls[index][0]).toEqual(tests[index].expect);
+    }    
   });
 
-  it('should log error if token is unknown cause of filter options', async () => {
-    mockRequest.body.username = mockUser.userName;
-    mockRequest.body.token = mockToken.key;
-    mockingoose(Administrator).toReturn(mockUser, 'findOne');
-    mockingoose(AuthToken).toReturn(null, 'findOneAndDelete');
+  it.skip('should return jwt if everything is okay', async () => {
+    /**
+      This is not implemented, because it is not possible to mock es modules very well
+      according to https://jestjs.io/docs/ecmascript-modules
 
-    await authLoginRequest(mockRequest, mockResponse, mockNext);
+      For verifyAttestationResponse
+     */
+  });
+});
 
-    expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(401, `Invalid token!`));
-    expect(spyLogger.mock.calls.length).toBe(1);
-    expect(spyLogger.mock.calls[0][0]).toEqual(new ApiError(401, `Invalid token!`));
+describe('auth/index.ts authAssertionGetRequest', () => {
+  let mockRequest: Request;
+  let mockResponse: Response;
+  let mockUser: IAdministratorDocument;
+  let mockNext: jest.Mock;
+  let spyLogger: jest.SpyInstance;
 
+  beforeEach(() => {
+    mockRequest = {
+      headers: {},
+      body: {},
+      query: {},
+    } as Request;
+
+    mockResponse = {
+      status: jest.fn(() => mockResponse),
+      json: jest.fn(),
+      send: jest.fn(),
+      end: jest.fn()
+    } as any as Response;
+
+    mockNext = jest.fn();
+
+    mockUser = new Administrator({ username : "testuser123"})
+    
+    spyLogger = jest.spyOn(loggerFile, 'error');
   });
 
-  it('should response with jwt if everything is fine', async () => {
-    mockRequest.body.username = mockUser.userName;
-    mockRequest.body.token = mockToken.key;
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    mockingoose(Administrator).toReturn(mockUser, 'findOne');
-    mockingoose(AuthToken).toReturn(mockToken, 'findOneAndDelete');
+  it('should validate user input', async () => {
 
-    await authLoginRequest(mockRequest, mockResponse, mockNext);
+    const tests = [
+      {
+        // no parameters
+        prepare: () => {},
+        expect: new ApiError(400, '"username" is required')
+      },
+      {
+        // username not alphanumeric
+        prepare: () => { mockRequest.query.username = "test#1234"; },
+        expect: new ApiError(400, '"username" must only contain alpha-numeric characters')
+      },
+    ]
+    
+    for (let index = 0; index < tests.length; index++) {
+      // preparation
+      tests[index].prepare()
 
-    // no error has to be logged
-    expect(mockNext.mock.calls.length).toBe(1);
-    expect((mockNext.mock.calls[0][0] as ApiSuccess).status).toBe('success');
+      // execute and compare 
+      await authAssertionGetRequest(mockRequest, mockResponse, mockNext);
+      expect(spyLogger.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls[index][0]).toEqual(tests[index].expect);
+    }  
+  });
+  
+   
+  it('should throw error if something went wrong with the user', async () => {
+
+    const tests = [
+      {
+        // unknown user
+        prepare: () => {
+          mockingoose(Administrator).toReturn(null, 'findOne')
+        },
+        expect: new ApiError(404, 'User not found')
+      },
+      {
+        // user not registered
+        prepare: () => {
+          mockUser.device = null;
+          mockingoose(Administrator).toReturn(mockUser, 'findOne')
+        },
+        expect: new ApiError(403, 'User not registered')
+      },
+    ]
+
+    mockRequest.query = {
+      username: "testuser123",
+    }
+
+    for (let index = 0; index < tests.length; index++) {
+      // preparation
+      tests[index].prepare()
+
+      // execute and compare 
+      await authAssertionGetRequest(mockRequest, mockResponse, mockNext);
+      expect(spyLogger.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls[index][0]).toEqual(tests[index].expect);
+    }    
+  });
+
+  it('should return challenge if everything is okay', async () => {
+    mockRequest.query = {
+      username: 'testuser123',
+    }
+
+    mockUser.device = new Authenticator({ credentialID: 1 });
+    mockingoose(Administrator).toReturn(mockUser, 'findOne')
+
+    await authAssertionGetRequest(mockRequest, mockResponse, mockNext);   
     expect(spyLogger.mock.calls.length).toBe(0);
+    expect(mockNext.mock.calls.length).toBe(1);
+    expect(mockNext.mock.calls[0][0].code).toEqual(200);
+    expect(mockNext.mock.calls[0][0].data).not.toEqual({});
+  });
+});
+
+describe('auth/index.ts authAssertionPostRequest', () => {
+  let mockRequest: Request;
+  let mockResponse: Response;
+  let mockUser: IAdministratorDocument;
+  let mockNext: jest.Mock;
+  let spyLogger: jest.SpyInstance;
+
+  beforeEach(() => {
+    mockRequest = {
+      headers: {},
+      body: {},
+      query: {},
+    } as Request;
+
+    mockResponse = {
+      status: jest.fn(() => mockResponse),
+      json: jest.fn(),
+      send: jest.fn(),
+      end: jest.fn()
+    } as any as Response;
+
+    mockNext = jest.fn();
+
+    mockUser = new Administrator({ username : "testuser123"})
+    
+    spyLogger = jest.spyOn(loggerFile, 'error');
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should validate user input', async () => {
+
+    const tests = [
+      {
+        // no parameters
+        prepare: () => {},
+        expect: new ApiError(400, '"username" is required')
+      },
+      {
+        // username not alphanumeric
+        prepare: () => { mockRequest.body.username = "test#1234"; },
+        expect: new ApiError(400, '"username" must only contain alpha-numeric characters')
+      },
+      {
+        // assertionResponse must be provided
+        prepare: () => { mockRequest.body.username = "test123456"},
+        expect: new ApiError(400, '"assertionResponse" is required'),
+      },
+      {
+        // assertionResponse must be object
+        prepare: () => { mockRequest.body.assertionResponse = "thisisareponse" },
+        expect: new ApiError(400, '"assertionResponse" must be of type object'),
+      }
+    ]
+    
+    for (let index = 0; index < tests.length; index++) {
+      // preparation
+      tests[index].prepare()
+
+      // execute and compare 
+      await authAssertionPostRequest(mockRequest, mockResponse, mockNext);
+      expect(spyLogger.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls[index][0]).toEqual(tests[index].expect);
+    }  
+  });
+
+  it('should throw error if something went wrong with the user', async () => {
+
+    const tests = [
+      {
+        // unknown user
+        prepare: () => {
+          mockingoose(Administrator).toReturn(null, 'findOne')
+        },
+        expect: new ApiError(404, 'User not found')
+      },
+      {
+        // user already registered
+        prepare: () => {
+          mockUser.device = undefined;
+          mockingoose(Administrator).toReturn(mockUser, 'findOne')
+        },
+        expect: new ApiError(403, 'User not registered')
+      },
+      {
+        // user has no active challenge
+        prepare: () => {
+          mockUser.device = new Authenticator();
+          mockingoose(Administrator).toReturn(mockUser, 'findOne')
+        },
+        expect: new ApiError(400, 'User has no pending challenge')
+      },
+
+    ]
+
+    mockRequest.body = {
+      username: "testuser123",
+      assertionResponse: {}
+    }
+    
+    mockingoose(RegistrationToken).toReturn(new RegistrationToken(), 'findOne')
+
+    for (let index = 0; index < tests.length; index++) {
+      // preparation
+      tests[index].prepare()
+
+      // execute and compare 
+      await authAssertionPostRequest(mockRequest, mockResponse, mockNext);
+      expect(spyLogger.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls.length).toBe(index+1);
+      expect(mockNext.mock.calls[index][0]).toEqual(tests[index].expect);
+    }    
+  });
+
+  it.skip('should return jwt if everything is okay', async () => {
+    /**
+      This is not implemented, because it is not possible to mock es modules very well
+      according to https://jestjs.io/docs/ecmascript-modules
+
+      For verifyAssertionResponse
+     */
+  });
 });
