@@ -14,7 +14,7 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
   Administrator.findOne({ $and: [{ 'device': { $ne: undefined }}, { 'device': { $ne: null }}] }).then(user => {
       if (user !== null) return; // An admin already exists!
 
-      // No admin have been found -> Create a registration token and print it into the logs
+      // No admin has been found -> Create a registration token and print it into the logs
       new RegistrationToken({ userIsDeletable: false }).save().then(token => {
         loggerFile.info('No administrator found!');
         loggerFile.info(`Visit ${config.rp.origin}/#/registration and use the following token: ${token.key}`);
