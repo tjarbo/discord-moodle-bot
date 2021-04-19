@@ -228,7 +228,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
 
       userDoc.device = authenticator;
 
-      // 6. Save that user is deletable or not
+      // 6. Save whether user is deletable or not
       userDoc.deletable = registrationTokenDoc.userIsDeletable;
 
       // 7. Send jwt to user
