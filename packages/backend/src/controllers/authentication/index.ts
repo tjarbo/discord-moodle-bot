@@ -82,7 +82,7 @@ export function getTokenFromHeader(req: Request): string | null {
 }
 
 /**
- * Middleware to ensure that to user is authenticated
+ * Middleware to ensure that the user is authenticated
  */
 export const isAuth = expressjwt({
   algorithms: ['HS256'],
