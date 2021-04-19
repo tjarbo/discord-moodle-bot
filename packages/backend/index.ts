@@ -17,7 +17,7 @@ connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, us
       // No admin have been found -> Create a registration token and print it into the logs
       new RegistrationToken({ userIsDeletable: false }).save().then(token => {
         loggerFile.info('No administrator found!');
-        loggerFile.info(`Visit ${config.rp.origin}/#/registration and use to following token: ${token.key}`);
+        loggerFile.info(`Visit ${config.rp.origin}/#/registration and use the following token: ${token.key}`);
         loggerFile.info(`This token is valid for 15 minutes.`);
       });
   });
