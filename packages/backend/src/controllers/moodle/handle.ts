@@ -24,7 +24,7 @@ function formatMoodleDate(timestamp: number): string {
         minute: 'numeric'
     };
 
-    new Date(timestamp * 1000).toLocaleString('de-DE', dateOptions)
+    return new Date(timestamp * 1000).toLocaleString('de-DE', dateOptions);
 }
 
 /**
