@@ -7,10 +7,11 @@ import { Reminder } from './schemas/reminder.schema';
 import { IContentfile } from './interfaces/contentfile.interface';
 
 /**
- * Format the Moodle timestamp into a valid Date string and
- * provide a default value if the given Timestamp is null
+ * Format the Moodle timestamp into a valid date string and
+ * provide a default value if the given timestamp is null
  *
- * @param timestamp - The timestamp to format
+ * @param {number} timestamp - The timestamp to format
+ * @returns {string} - The formatted date string
  */
 function formatMoodleDate(timestamp: number): string {
     if (!timestamp) return 'keine Zeit gesetzt';
@@ -28,7 +29,7 @@ function formatMoodleDate(timestamp: number): string {
 }
 
 /**
- * Filters assignments by timestamp and notifies about changes and upcoming deadline
+ * Filters assignments by timestamp and notifies about changes and upcoming deadlines
  *
  * ! export only for unit testing (rewire doesn't work :/ )
  * @param {ICourse[]} courses - The courses containing the Assignments
