@@ -157,7 +157,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
        */
       /**
        * The optional authenticatorSelection property allows for specifying more constraints around
-       * the types of authenticators that users to can use for attestation
+       * the types of authenticators that users can use for attestation
        */
       authenticatorSelection: {
         userVerification: 'preferred',
