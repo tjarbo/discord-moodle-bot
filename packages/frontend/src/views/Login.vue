@@ -16,8 +16,8 @@
           <input
             autofocus
             class="input is-large"
-            id="discordusername"
-            placeholder="username#0000"
+            id="username"
+            placeholder="Your username"
             type="text"
             v-model="form.username"
           />
@@ -27,6 +27,7 @@
       <div class="field">
         <div class="control">
           <button
+            id="loginSubmitButton"
             class="button is-block is-primary is-large is-fullwidth is-marginless"
             :disabled="$v.$invalid"
           >
@@ -45,7 +46,7 @@ import {
 import { mapGetters } from 'vuex';
 import { startAssertion } from '@simplewebauthn/browser';
 import { notifyFailure, notifySuccess } from '../notification';
-import AuthenticationLayout from '../Layouts/AuthenticationLayout.vue';
+import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
 
 export default {
   name: 'LoginView',

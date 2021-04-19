@@ -13,8 +13,8 @@
         <div class="control">
           <input
             autofocus
+            id="username"
             class="input is-large"
-            id="discordusername"
             placeholder="Choose username"
             type="text"
             v-model="form.username"
@@ -25,8 +25,8 @@
       <div class="field">
         <div class="control">
           <input
-            class="input is-large"
             id="token"
+            class="input is-large"
             placeholder="109156be-c4fb-41ea-b1b4-efe1671c5836"
             type="text"
             v-model="form.token"
@@ -37,6 +37,7 @@
       <div class="field">
         <div class="control">
           <button
+            id="registrationSubmitButton"
             class="button is-block is-primary is-large is-fullwidth is-marginless"
             :disabled="$v.$invalid"
           >
@@ -55,7 +56,7 @@ import {
 import { startAttestation } from '@simplewebauthn/browser';
 import { mapGetters } from 'vuex';
 import { notifyFailure, notifySuccess } from '../notification';
-import AuthenticationLayout from '../Layouts/AuthenticationLayout.vue';
+import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
 
 export default {
   name: 'RegistrationView',

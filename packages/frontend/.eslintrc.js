@@ -30,6 +30,7 @@ module.exports = {
       },
       rules: {
         'no-unused-expressions': 'off',
+        'no-await-in-loop': 'off',
       },
     },
   ],
