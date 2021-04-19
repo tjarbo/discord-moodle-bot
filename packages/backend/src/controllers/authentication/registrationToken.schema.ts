@@ -1,4 +1,5 @@
 /* tslint:disable:ban-types */
+import { config } from '../../configuration/environment';
 import { Schema, model, Model, Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -14,7 +15,7 @@ const registrationTokenSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: '15m',
+    expires: config.registrationTokenLifetime,
    },
    userIsDeletable: { type: Boolean, default: true },
 });

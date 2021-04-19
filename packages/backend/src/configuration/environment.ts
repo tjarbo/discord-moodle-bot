@@ -54,6 +54,9 @@ const envVarsSchema = object({
   MOODLE_USERID: number()
     .required()
     .description('Moodle user Id required to fetch course details'),
+  REGISTRATIONTOKEN_LIFETIME: string()
+    .default('15m')
+    .description("Defines how long a registration token can be used until it expires"),
   RP_NAME: string()
     .default('Fancy Moodle Discord Bot')
     .description('Human-readable title of the website for webauthn'),
@@ -96,6 +99,7 @@ export const config = {
     userId:  envVars.MOODLE_USERID,
   },
   port: envVars.PORT,
+  registrationTokenLifetime: envVars.REGISTRATIONTOKEN_LIFETIME,
   rp: {
     name: envVars.RP_NAME,
     id: envVars.RP_ID,
