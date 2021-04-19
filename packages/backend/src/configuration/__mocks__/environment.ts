@@ -23,8 +23,8 @@ export const config = {
         userId: 123456
     },
     rp: {
-      name: "Unit Test",
-      id: "localhost",
-      origin: "http://localhost",
+      name: 'Unit Test',
+      id: 'localhost',
+      origin: 'http://localhost',
     }
   };
