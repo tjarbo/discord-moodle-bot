@@ -51,7 +51,8 @@ describe('auth/index.ts authAttestationGetRequest', () => {
 
     mockNext = jest.fn();
 
-    mockUser = new Administrator({ username : "testuser123" })
+    mockUser = new Administrator({ username : "testuser123" });
+    mockUser.save = jest.fn();
     
     spyLogger = jest.spyOn(loggerFile, 'error');
   });
@@ -326,6 +327,7 @@ describe('auth/index.ts authAssertionGetRequest', () => {
     mockNext = jest.fn();
 
     mockUser = new Administrator({ username : "testuser123" })
+    mockUser.save = jest.fn();
     
     spyLogger = jest.spyOn(loggerFile, 'error');
   });
