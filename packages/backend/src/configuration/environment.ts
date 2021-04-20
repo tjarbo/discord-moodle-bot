@@ -56,7 +56,7 @@ const envVarsSchema = object({
     .description('Moodle user Id required to fetch course details'),
   REGISTRATIONTOKEN_LIFETIME: string()
     .default('15m')
-    .description("Defines how long a registration token can be used until it expires"),
+    .description('Defines how long a registration token can be used until it expires'),
   RP_NAME: string()
     .default('Fancy Moodle Discord Bot')
     .description('Human-readable title of the website for webauthn'),

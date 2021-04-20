@@ -17,7 +17,7 @@
             autofocus
             class="input is-large"
             id="username"
-            placeholder="Your username"
+            placeholder="Dein Benutzername"
             type="text"
             v-model="form.username"
           />
@@ -61,7 +61,7 @@ export default {
     onSubmit(event) {
       event.preventDefault();
 
-      // Request assertion options from sever
+      // Request assertion options from server
       this.$store.dispatch('startAssertion', this.form.username)
         .then(async (assertionOptions) => {
           try {
@@ -72,11 +72,11 @@ export default {
             // Verify response from authenticator
             this.verifyAssertion(this.form, assertionResponse);
           } catch (error) {
-            // Handle error during challange solving process
+            // Handle error during challenge solving process
             console.log(error);
             switch (error.name) {
               case 'AbortError':
-                // Registration proccess timed out or cancled
+                // Registration process timed out or cancelled
                 notifyFailure('Registrierung wurde abgebrochen!');
                 break;
 

@@ -51,7 +51,7 @@ describe('Login.view', () => {
   it('should render username input correctly', () => {
     const testUserName = 'testusername';
 
-    expect(usernameInput.element.placeholder).to.be.equal('Your username');
+    expect(usernameInput.element.placeholder).to.be.equal('Dein Benutzername');
     expect(usernameInput.element.type).to.be.equal('text');
 
     usernameInput.setValue(testUserName);

@@ -3,7 +3,7 @@
     <authentication-layout
       @submit="onSubmit"
       title="Fancy Moodle Discord Bot"
-      subtitle="Registriere dich an, um fortzufahren!"
+      subtitle="Registriere dich, um fortzufahren!"
       switchViewText="Du bist bereits registriert?"
       switchViewLink="/login"
     >
@@ -15,7 +15,7 @@
             autofocus
             id="username"
             class="input is-large"
-            placeholder="Choose username"
+            placeholder="Wähle Benutzernamen"
             type="text"
             v-model="form.username"
           />
@@ -71,7 +71,7 @@ export default {
     onSubmit(event) {
       event.preventDefault();
 
-      // Request attestation options from sever
+      // Request attestation options from server
       this.$store.dispatch('startAttestation', this.form)
         .then(async (attestationOptions) => {
           try {
@@ -82,10 +82,10 @@ export default {
             // Verify response from authenticator
             this.verifyAttestation(this.form, attestationResponse);
           } catch (error) {
-            // Handle error during challange solving process
+            // Handle error during challenge solving process
             switch (error.name) {
               case 'AbortError':
-                // Registration proccess timed out or cancled
+                // Registration process timed out or cancelled
                 notifyFailure('Registrierung wurde abgebrochen!');
                 break;
 

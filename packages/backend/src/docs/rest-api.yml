@@ -31,7 +31,7 @@ paths:
       parameters:
       - name: "username"
         in: "query"
-        description: "Username of admin to register. Only between 8-64 characters allowed."
+        description: "Username of admin to register. Only between 8 and 64 characters allowed."
         required: true
         type: string
       - name: "token"
@@ -41,7 +41,7 @@ paths:
         type: string
       responses:
         "200":
-          description: "Attestation options has been created successfully!"
+          description: "Attestation options have been created successfully!"
           schema: 
             $ref: "#/definitions/ApiResponse"
         "400":
@@ -83,7 +83,7 @@ paths:
       parameters:
       - name: "username"
         in: "query"
-        description: "Username of admin to register. Only between 8-64 characters allowed."
+        description: "Username of admin to register. Only between 8 and 64 characters allowed."
         required: true
         type: string
       - name: "token"
@@ -93,7 +93,7 @@ paths:
         type: string
       - name: "attestationResponse"
         in: "body"
-        description: "Value you get from navigator.credentials.get()"
+        description: "Value received from navigator.credentials.get()"
         required: true
         schema:
           type: object
@@ -164,12 +164,12 @@ paths:
       parameters:
       - name: "username"
         in: "query"
-        description: "Username of registered admin. Only between 8-64 characters allowed."
+        description: "Username of registered admin. Only between 8 and 64 characters allowed."
         required: true
         type: string
       responses:
         "200":
-          description: "Assertion options has been created successfully!"
+          description: "Assertion options have been created successfully!"
           schema: 
             $ref: "#/definitions/ApiResponse"
         "400":
@@ -211,12 +211,12 @@ paths:
       parameters:
       - name: "username"
         in: "query"
-        description: "Username of registered admin. Only between 8-64 characters allowed."
+        description: "Username of registered admin. Only between 8 and 64 characters allowed."
         required: true
         type: string
       - name: "assertionResponse"
         in: "body"
-        description: "Value you get from navigator.credentials.get()"
+        description: "Value received from navigator.credentials.get()"
         required: true
         schema:
           type: object

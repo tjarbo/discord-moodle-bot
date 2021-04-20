@@ -13,8 +13,6 @@ jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/configuration/discord.ts');
 jest.mock('../src/controllers/discord/index.ts');
 
-//jest.mock('@simplewebauthn/server')
-
 describe('auth/index.ts getTokenFromHeader', () => {
   it('should return the correct jwt', () => {
     const mockRequest = {
@@ -51,7 +49,7 @@ describe('auth/index.ts authAttestationGetRequest', () => {
 
     mockNext = jest.fn();
 
-    mockUser = new Administrator({ username : "testuser123"})
+    mockUser = new Administrator({ username : "testuser123" })
     
     spyLogger = jest.spyOn(loggerFile, 'error');
   });
@@ -75,12 +73,12 @@ describe('auth/index.ts authAttestationGetRequest', () => {
       },
       {
         // token not provided
-        prepare: () => { mockRequest.query.username = "testuser123" },
+        prepare: () => { mockRequest.query.username = "testuser123"; },
         expect: new ApiError(400, '"token" is required')
       },
       {
         // token must be uuid
-        prepare: () => { mockRequest.query.token = "123123-1231231231231231-ljöljkök"},
+        prepare: () => { mockRequest.query.token = "123123-1231231231231231-ljöljkök"; },
         expect: new ApiError(400, '"token" contains an invalid value')
       }
     ]
@@ -168,7 +166,7 @@ describe('auth/index.ts authAttestationPostRequest', () => {
 
     mockNext = jest.fn();
 
-    mockUser = new Administrator({ username : "testuser123"})
+    mockUser = new Administrator({ username : "testuser123" })
     
     spyLogger = jest.spyOn(loggerFile, 'error');
   });
@@ -192,22 +190,22 @@ describe('auth/index.ts authAttestationPostRequest', () => {
       },
       {
         // token not provided
-        prepare: () => { mockRequest.body.username = "testuser123" },
+        prepare: () => { mockRequest.body.username = "testuser123"; },
         expect: new ApiError(400, '"token" is required')
       },
       {
         // token must be uuid
-        prepare: () => { mockRequest.body.token = "123123-1231231231231231-ljöljkök"},
+        prepare: () => { mockRequest.body.token = "123123-1231231231231231-ljöljkök"; },
         expect: new ApiError(400, '"token" contains an invalid value')
       },
       {
         // attestationResponse must be provided
-        prepare: () => { mockRequest.body.token = uuidv4()},
+        prepare: () => { mockRequest.body.token = uuidv4(); },
         expect: new ApiError(400, '"attestationResponse" is required'),
       },
       {
         // attestationResponse must be object
-        prepare: () => { mockRequest.body.attestationResponse = "thisisareponse" },
+        prepare: () => { mockRequest.body.attestationResponse = "thisisareponse"; },
         expect: new ApiError(400, '"attestationResponse" must be of type object'),
       }
     ]
@@ -321,7 +319,7 @@ describe('auth/index.ts authAssertionGetRequest', () => {
 
     mockNext = jest.fn();
 
-    mockUser = new Administrator({ username : "testuser123"})
+    mockUser = new Administrator({ username : "testuser123" })
     
     spyLogger = jest.spyOn(loggerFile, 'error');
   });
@@ -433,7 +431,7 @@ describe('auth/index.ts authAssertionPostRequest', () => {
 
     mockNext = jest.fn();
 
-    mockUser = new Administrator({ username : "testuser123"})
+    mockUser = new Administrator({ username : "testuser123" })
     
     spyLogger = jest.spyOn(loggerFile, 'error');
   });
@@ -457,7 +455,7 @@ describe('auth/index.ts authAssertionPostRequest', () => {
       },
       {
         // assertionResponse must be provided
-        prepare: () => { mockRequest.body.username = "test123456"},
+        prepare: () => { mockRequest.body.username = "test123456" },
         expect: new ApiError(400, '"assertionResponse" is required'),
       },
       {
