@@ -34,6 +34,8 @@ describe('auth/index.ts authAttestationGetRequest', () => {
   let spyLogger: jest.SpyInstance;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     mockRequest = {
       headers: {},
       body: {},
@@ -151,6 +153,8 @@ describe('auth/index.ts authAttestationPostRequest', () => {
   let spyLogger: jest.SpyInstance;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     mockRequest = {
       headers: {},
       body: {},
@@ -304,6 +308,8 @@ describe('auth/index.ts authAssertionGetRequest', () => {
   let spyLogger: jest.SpyInstance;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     mockRequest = {
       headers: {},
       body: {},
@@ -416,6 +422,8 @@ describe('auth/index.ts authAssertionPostRequest', () => {
   let spyLogger: jest.SpyInstance;
 
   beforeEach(() => {
+    jest.useFakeTimers();
+
     mockRequest = {
       headers: {},
       body: {},
