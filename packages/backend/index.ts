@@ -1,4 +1,5 @@
 import { connect, set } from 'mongoose';
+import { RegistrationToken } from './src/controllers/authentication/registrationToken.schema';
 import * as util from 'util';
 import { config } from './src/configuration/environment';
 import { app } from './src/configuration/express';
@@ -10,19 +11,16 @@ import { MoodleSettings } from './src/controllers/moodle/schemas/moodle.schema';
 connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(async() => {
   loggerFile.debug('Mongoose connected');
 
-  Administrator.findOne({'userName': config.admin.name}).then((user) => {
-    if (user) return; // If env-admin already exits - skip setup
+  Administrator.findOne({ $and: [{ 'device': { $ne: undefined }}, { 'device': { $ne: null }}] }).then(user => {
+      if (user !== null) return; // An admin already exists!
 
-    // add env-admin to database
-    const userObj = {
-      userName: config.admin.name,
-      userId: config.admin.id,
-      deletable: false,
-    };
-    new Administrator(userObj).save();
-    loggerFile.debug(`Added ${userObj.userName} as Initial-Administrator`);
+      // No admin has been found -> Create a registration token and print it into the logs
+      new RegistrationToken({ userIsDeletable: false }).save().then(token => {
+        loggerFile.info('No administrator found!');
+        loggerFile.info(`Visit ${config.rp.origin}/#/registration and use the following token: ${token.key}`);
+        loggerFile.info(`This token is valid for 15 minutes.`);
+      });
   });
-
 
   MoodleSettings.findOne()
   .then((moodleSettings) => {

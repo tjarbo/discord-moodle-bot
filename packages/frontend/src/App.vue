@@ -18,7 +18,7 @@ export default {
         this.$router.push({ name: 'Dashboard' });
       })
       .catch(() => {
-        if (this.$route.name === 'Login') return;
+        if (this.$route.name === 'Login' || this.$route.name === 'Registration') return;
 
         this.$router.push({ name: 'Login' });
         if (this.$store.getters.isLoggedIn) {

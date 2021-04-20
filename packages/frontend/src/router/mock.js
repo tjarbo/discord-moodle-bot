@@ -5,7 +5,6 @@ import Login from '../views/Login.vue';
 import Registration from '../views/Registration.vue';
 import Dashboard from '../views/Dashboard.vue';
 import StartLoading from '../views/StartLoading.vue';
-import store from '../store';
 
 Vue.use(VueRouter);
 
@@ -37,16 +36,6 @@ const routes = [
 
 const router = new VueRouter({
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  if (!to.matched.some((record) => record.meta.requiresAuth)) return next();
-
-  if (store.getters.isLoggedIn) {
-    next();
-  } else {
-    next('/login');
-  }
 });
 
 export default router;

@@ -1,23 +1,21 @@
 <template>
-  <div id="loginview">
+  <div id="registrationview">
     <authentication-layout
       @submit="onSubmit"
       title="Fancy Moodle Discord Bot"
-      subtitle="Melde dich an, um fortzufahren!"
-      switchViewText="Du hast einen Token bekommen?"
-      switchViewLink="/registration"
+      subtitle="Registriere dich, um fortzufahren!"
+      switchViewText="Du bist bereits registriert?"
+      switchViewLink="/login"
     >
-      <b-loading
-        :is-full-page="false"
-        :active="authGetStatus.pending"
-      ></b-loading>
+      <b-loading :is-full-page="false" :active="authGetStatus.pending"></b-loading>
+
       <div class="field">
         <div class="control">
           <input
             autofocus
-            class="input is-large"
             id="username"
-            placeholder="Dein Benutzername"
+            class="input is-large"
+            placeholder="Wähle Benutzernamen"
             type="text"
             v-model="form.username"
           />
@@ -26,12 +24,24 @@
 
       <div class="field">
         <div class="control">
+          <input
+            id="token"
+            class="input is-large"
+            placeholder="109156be-c4fb-41ea-b1b4-efe1671c5836"
+            type="text"
+            v-model="form.token"
+          />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="control">
           <button
-            id="loginSubmitButton"
+            id="registrationSubmitButton"
             class="button is-block is-primary is-large is-fullwidth is-marginless"
             :disabled="$v.$invalid"
           >
-            Anmelden
+            Registrieren
           </button>
         </div>
       </div>
@@ -41,43 +51,47 @@
 
 <script>
 import {
-  required, alphaNum, minLength, maxLength,
+  required, minLength, maxLength, alphaNum,
 } from 'vuelidate/lib/validators';
+import { startAttestation } from '@simplewebauthn/browser';
 import { mapGetters } from 'vuex';
-import { startAssertion } from '@simplewebauthn/browser';
 import { notifyFailure, notifySuccess } from '../notification';
 import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
 
 export default {
-  name: 'LoginView',
+  name: 'RegistrationView',
   components: { AuthenticationLayout },
   data: () => ({
     form: {
       username: '',
+      token: '',
     },
-    loading: true,
   }),
   methods: {
     onSubmit(event) {
       event.preventDefault();
 
-      // Request assertion options from server
-      this.$store.dispatch('startAssertion', this.form.username)
-        .then(async (assertionOptions) => {
+      // Request attestation options from server
+      this.$store.dispatch('startAttestation', this.form)
+        .then(async (attestationOptions) => {
           try {
-            // Pass the assertion options to the authenticator and wait for a response
+            // Pass the attestation options to the authenticator and wait for a response
             // User will use an authenticator and will generate a response
-            const assertionResponse = await startAssertion(assertionOptions);
+            const attestationResponse = await startAttestation(attestationOptions);
 
             // Verify response from authenticator
-            this.verifyAssertion(this.form, assertionResponse);
+            this.verifyAttestation(this.form, attestationResponse);
           } catch (error) {
             // Handle error during challenge solving process
-            console.log(error);
             switch (error.name) {
               case 'AbortError':
                 // Registration process timed out or cancelled
                 notifyFailure('Registrierung wurde abgebrochen!');
+                break;
+
+              case 'InvalidStateError':
+                // Authenticator is maybe already used for this
+                notifyFailure('Authenticator wurde wahrscheinlich bereits von dir registriert!');
                 break;
 
               default:
@@ -98,10 +112,10 @@ export default {
         });
     },
 
-    verifyAssertion(formData, assertionResponse) {
-      this.$store.dispatch('finishAssertion', { username: formData.username, assertionResponse })
+    verifyAttestation(formData, attestationResponse) {
+      this.$store.dispatch('finishAttestation', { username: formData.username, token: formData.token, attestationResponse })
         .then(() => {
-          // login was successful and jwt was received; redirect to dashboard
+          // registration was successful and jwt was received; redirect to dashboard
           this.$router.push('dashboard');
           notifySuccess('Anmeldung war erfolgreich!');
         })
@@ -128,17 +142,15 @@ export default {
         minLength: minLength(8),
         maxLength: maxLength(64),
       },
+      token: {
+        required,
+        minLength: minLength(36),
+        maxLength: maxLength(36),
+      },
     },
   },
 };
 </script>
 
-<style scoped>
-.logo {
-  width: 300px;
-}
-
-#loginview {
-  text-align: center;
-}
+<style>
 </style>

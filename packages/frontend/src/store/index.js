@@ -49,6 +49,92 @@ export default new Vuex.Store({
       });
     },
 
+    startAttestation({ commit }, formData) {
+      commit('SET_AUTH');
+      return new Promise((resolve, reject) => {
+        ApiUtil.get('/webauthn/register', { params: formData })
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              commit('SET_AUTH', null);
+              resolve(apiResponse.data);
+            } else {
+              commit('SET_AUTH', new Error(apiResponse.error[0].message));
+              reject(apiResponse);
+            }
+          })
+          .catch(() => {
+            commit('SET_AUTH', new Error());
+            reject();
+          });
+      });
+    },
+
+    finishAttestation({ commit }, payload) {
+      commit('SET_AUTH');
+      return new Promise((resolve, reject) => {
+        ApiUtil.post('/webauthn/register', payload)
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              const jwt = apiResponse.data.accesstoken;
+              ApiUtil.defaults.headers.common.Authorization = `Bearer ${jwt}`;
+              localStorage.setItem('token', jwt);
+              commit('SET_AUTH', jwt);
+              resolve();
+            } else {
+              commit('SET_AUTH', new Error(apiResponse.error[0].message));
+              reject(apiResponse);
+            }
+          })
+          .catch(() => {
+            commit('SET_AUTH', new Error());
+            reject();
+          });
+      });
+    },
+
+    startAssertion({ commit }, username) {
+      commit('SET_AUTH');
+      return new Promise((resolve, reject) => {
+        ApiUtil.get('/webauthn/login', { params: { username } })
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              commit('SET_AUTH', null);
+              resolve(apiResponse.data);
+            } else {
+              commit('SET_AUTH', new Error(apiResponse.error[0].message));
+              reject(apiResponse);
+            }
+          })
+          .catch(() => {
+            commit('SET_AUTH', new Error());
+            reject();
+          });
+      });
+    },
+
+    finishAssertion({ commit }, payload) {
+      commit('SET_AUTH');
+      return new Promise((resolve, reject) => {
+        ApiUtil.post('/webauthn/login', payload)
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              const jwt = apiResponse.data.accesstoken;
+              ApiUtil.defaults.headers.common.Authorization = `Bearer ${jwt}`;
+              localStorage.setItem('token', jwt);
+              commit('SET_AUTH', jwt);
+              resolve();
+            } else {
+              commit('SET_AUTH', new Error(apiResponse.error[0].message));
+              reject(apiResponse);
+            }
+          })
+          .catch(() => {
+            commit('SET_AUTH', new Error());
+            reject();
+          });
+      });
+    },
+
     requestToken({ commit }, username) {
       commit('SET_AUTH');
       return new Promise((resolve, reject) => {

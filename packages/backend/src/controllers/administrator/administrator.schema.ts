@@ -1,19 +1,22 @@
 /* tslint:disable:ban-types */
 import { Schema, model, Model, Document } from 'mongoose';
+import { IAuthenticatorDocument } from '../authentication/authenticator.schema';
 
 export interface IAdministratorDocument extends Document {
   [_id: string]: any;
-  userName: String;
-  userId: String;
+  username: string;
   createdAt: Date;
-  deletable: Boolean;
+  deletable: boolean;
+  currentChallenge?: string;
+  device: IAuthenticatorDocument;
 }
 
 const administratorSchema = new Schema({
-  userName: String,
-  userId: String,
+  username: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   deletable: { type: Boolean, default: true },
+  currentChallenge: { type: String, default: null },
+  device: { type: Schema.Types.ObjectId, ref: 'Authenticator' },
 });
 
 export const Administrator: Model<IAdministratorDocument> = model<IAdministratorDocument>('Administrator', administratorSchema);

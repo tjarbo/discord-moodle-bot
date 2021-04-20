@@ -2,35 +2,37 @@ import { expect } from 'chai';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import Buefy from 'buefy';
+import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
-import Login from '@/views/Login.vue';
+import Registration from '@/views/Registration.vue';
 import AuthenticationLayout from '@/layouts/AuthenticationLayout.vue';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.use(Vuelidate);
 localVue.use(Buefy);
+localVue.use(VueRouter);
 
-describe('Login.view', () => {
+describe('Registration.view', () => {
   let wrapper = null;
   let getters;
   let actions;
   let store;
 
   let usernameInput;
+  let tokenInput;
   let submitButton;
 
   beforeEach(() => {
     getters = {
       authGetStatus: () => ({
         fail: false,
-        pending: false,
       }),
     };
 
     actions = {
-      startAssertion: () => new Promise(() => {}),
-      finishAssertion: () => new Promise(() => {}),
+      startAttestation: () => new Promise(() => {}),
+      finishAttestation: () => new Promise(() => {}),
     };
 
     store = new Vuex.Store({
@@ -38,10 +40,11 @@ describe('Login.view', () => {
       actions,
     });
 
-    wrapper = shallowMount(Login, { store, localVue });
+    wrapper = shallowMount(Registration, { store, localVue });
 
     usernameInput = wrapper.find('#username');
-    submitButton = wrapper.find('#loginSubmitButton');
+    tokenInput = wrapper.find('#token');
+    submitButton = wrapper.find('#registrationSubmitButton');
   });
 
   it('should render a form', () => {
@@ -51,11 +54,16 @@ describe('Login.view', () => {
   it('should render username input correctly', () => {
     const testUserName = 'testusername';
 
-    expect(usernameInput.element.placeholder).to.be.equal('Dein Benutzername');
+    expect(usernameInput.element.placeholder).to.be.equal('Wähle Benutzernamen');
     expect(usernameInput.element.type).to.be.equal('text');
 
     usernameInput.setValue(testUserName);
     expect(wrapper.vm.$data.form.username).to.be.equal(testUserName);
+  });
+
+  it('should render token input correctly', () => {
+    expect(tokenInput.element.placeholder).not.to.be.equal('');
+    expect(tokenInput.element.type).to.be.equal('text');
   });
 
   it('should change disabled submit button based on username input', async () => {
@@ -94,13 +102,56 @@ describe('Login.view', () => {
       },
     ];
 
+    tokenInput.setValue('109156be-c4fb-41ea-b1b4-efe1671c5836');
+
     for (let i = 0; i < tests.length; i++) {
       const test = tests[i];
 
       test.prepare();
 
       await wrapper.vm.$nextTick();
-      expect(submitButton.element.disabled).to.equal(test.expect);
+      expect(submitButton.element.disabled).to.be.equal(test.expect);
+    }
+  });
+
+  it('should change disabled submit button based on token input', async () => {
+    const tests = [
+      {
+        // required
+        prepare: () => { },
+        expect: true,
+      },
+      {
+        // minLength
+        prepare: () => {
+          tokenInput.setValue('a'.repeat(35));
+        },
+        expect: true,
+      },
+      {
+        // maxLength
+        prepare: () => {
+          tokenInput.setValue('a'.repeat(37));
+        },
+        expect: true,
+      },
+      {
+        prepare: () => {
+          tokenInput.setValue('a'.repeat(36));
+        },
+        expect: false,
+      },
+    ];
+
+    usernameInput.setValue('12345testuser');
+
+    for (let i = 0; i < tests.length; i++) {
+      const test = tests[i];
+
+      test.prepare();
+
+      await wrapper.vm.$nextTick();
+      expect(submitButton.element.disabled).to.be.equal(test.expect);
     }
   });
 });
