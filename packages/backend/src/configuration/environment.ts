@@ -76,7 +76,7 @@ const envVarsSchema = object({
 
 const { error, value: envVars } = envVarsSchema.validate(process.env);
 const envDescriptionLink = 'https://github.com/tjarbo/discord-moodle-bot/wiki/What-is-inside-.env%3F';
-if (error) throw new Error(`Config validation error: ${error.message} \n See ${envDescriptionLink} for more information`);
+if (error) throw new Error(`Config validation error: ${error.message} \nSee ${envDescriptionLink} for more information`);
 
 export const config = {
   discordToken: envVars.DISCORD_TOKEN,
