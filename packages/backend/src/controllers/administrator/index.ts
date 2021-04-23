@@ -1,52 +1,46 @@
 import { Request, Response, NextFunction } from 'express';
-import { object, string } from '@hapi/joi';
 import { loggerFile } from '../../configuration/logger';
-import { Administrator } from './administrator.schema';
+import { Administrator, administratorUsernameValidationSchema } from './administrator.schema';
 import { ApiError, ApiSuccess } from '../../utils/api';
+import { RegistrationToken } from '../authentication/registrationToken.schema';
+import { config } from '../../configuration/environment';
+import { object } from '@hapi/joi';
 
-const addAdministratorRequestSchema = object({
-    username: string().required().regex(/^[\w\s]+#\d{4}$/),
-    userid: string().required().regex(/^\d{18}$/),
-});
+/****************************************
+ *       User input validation          *
+ * **************************************/
+const adminAdministratorDeleteRequestSchema = object({
+    username: administratorUsernameValidationSchema,
+}).unknown();
 
-const deleteAdministratorRequestSchema = string().required().regex(/^\d{18}$/);
+
+/****************************************
+ *          Endpoint Handlers           *
+ * **************************************/
 
 /**
- * Handles POST /api/settings/administrator requests
- * and creates a new Administrator if possible
+ * POST /settings/administrator
+ * Creates and returns a new registration token
+ *
  * @param req Request
  * @param res Response
  * @param next NextFunction
  */
-export async function addAdministratorRequest(req: Request, res: Response, next: NextFunction) {
+export async function adminAdministratorPostRequest(req: Request, res: Response, next: NextFunction) {
 
     try {
-        const administratorRequest = addAdministratorRequestSchema.validate(req.body);
-        if (administratorRequest.error) throw new ApiError(400, administratorRequest.error.message);
 
-        // check if administrator exists at the database
-        const administrator = await Administrator.findOne({ $or: [
-            { userName: administratorRequest.value.username },
-            { userId: administratorRequest.value.userid }
-        ] });
+        // 1. Create a new registration token
+        const registrationToken = await new RegistrationToken({ userIsDeletable: true }).save();
+        if (registrationToken === null && registrationToken === undefined) throw new ApiError(500, 'Unable to create registration token');
 
-        // throw error, if admin name or id is already being used
-        if (administrator) {
-            if (administratorRequest.value.username === administrator.userName)
-                throw new ApiError(400, `Administrator ${administrator.userName} already exists`);
-            if (administratorRequest.value.userid === administrator.userId)
-                throw new ApiError(400, `Administrator with ID ${administrator.userId} already exists`);
-        }
-
-        // create new administrator
-        const adminObj = {
-            userId: administratorRequest.value.userid,
-            userName: administratorRequest.value.username,
+        const responseBody = {
+            token: registrationToken.key,
+            origin: config.rp.origin,
+            lifetime: config.registrationTokenLifetime,
         };
 
-        await new Administrator(adminObj).save();
-
-        const response = new ApiSuccess(201);
+        const response = new ApiSuccess(201, responseBody);
         next(response);
 
     } catch (err) {
@@ -56,26 +50,27 @@ export async function addAdministratorRequest(req: Request, res: Response, next:
 }
 
 /**
- * Handles GET /api/settings/administrator requests
- * and responds with a list of all administrators.
+ * GET /api/settings/administrator
+ *
+ * Responds a list of all administrators.
  * @param req Request
  * @param res Response
  * @param next NextFunction
  */
-export async function getAdministratorListRequest(req: Request, res: Response, next: NextFunction) {
+export async function adminAdministratorGetRequest(req: Request, res: Response, next: NextFunction) {
 
     try {
-        // Get administrators from database
+        // 1. Get administrators from database
         const administrators = await Administrator.find({});
-        if (!administrators) throw new ApiError(503, 'Internal error while retrieving administrators');
+        if (!administrators) throw new ApiError(500, 'Internal error while retrieving administrators');
 
-        // Extract relevant details
+        // 2. Extract relevant details
         const administratorList = administrators.map(model => {
             return {
-                userName: model.get('userName'),
-                userId: model.get('userId'),
+                username: model.get('username'),
                 createdAt: new Date(model.get('createdAt')).getTime(),
                 deletable: model.get('deletable'),
+                hasDevice: !!model.get('device'),
             };
         });
 
@@ -89,37 +84,41 @@ export async function getAdministratorListRequest(req: Request, res: Response, n
 }
 
 /**
- * Handles DELETE /api/settings/administrator requests
- * and deletes an administrator specified by user id from the database
+ * DELETE /settings/administrator/{username}
+ *
+ * Deletes an administrator specified by user id from the database
  * @param req Request
  * @param res Response
  * @param next NextFunction
  */
-export async function deleteAdministratorRequest(req: Request, res: Response, next: NextFunction) {
+export async function adminAdministratorDeleteRequest(req: Request, res: Response, next: NextFunction) {
 
     try {
-        const administratorRequest = deleteAdministratorRequestSchema.validate(req.params.id);
-        if (administratorRequest.error) throw new ApiError(400, administratorRequest.error.message);
 
-        // Delete administrator from database
-        const administrator = await Administrator.findOne({
-            userId: administratorRequest.value
-        });
+        // 1. Validate user input
+        const administratorDeleteRequest = adminAdministratorDeleteRequestSchema.validate(req.params);
+        if (administratorDeleteRequest.error) throw new ApiError(400, administratorDeleteRequest.error.message);
 
-        // Throw error, if admin user id is not in database
-        if (!administrator) {
-            throw new ApiError(404, `Administrator with id ${administratorRequest.value} not found in database`);
+        // 2. Get requested admin from database
+        const administrator = await Administrator.findOne({ username: administratorDeleteRequest.value.username });
+        if (administrator === null || administrator === undefined) {
+            throw new ApiError(404, `Administrator ${administratorDeleteRequest.value.username} not found`);
         }
 
-        // Throw error, if admin is not deletable
-        if (!administrator.deletable) {
-            throw new ApiError(403, `Administrator with id ${administratorRequest.value} is not deletable`);
+        // 3. Validate that admin is deletable and throw error if not
+        if (!administrator.deletable) throw new ApiError(403, `Administrator ${administratorDeleteRequest.value.username} is not deletable`);
+
+        try {
+            // 4. Delete admin
+            await administrator.deleteOne();
+
+            const response = new ApiSuccess(204);
+            next(response);
+        } catch (error) {
+            loggerFile.error(error.message);
+            throw new ApiError(500, 'Failed to delete administrator or authenticator');
         }
 
-        administrator.deleteOne();
-
-        const response = new ApiSuccess(204);
-        next(response);
 
     } catch (err) {
         loggerFile.error(err.message);
