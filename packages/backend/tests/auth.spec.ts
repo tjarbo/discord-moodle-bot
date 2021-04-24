@@ -7,7 +7,7 @@ import { loggerFile } from '../src/configuration/logger';
 import { ApiError } from "../src/utils/api";
 import { RegistrationToken } from '../src/controllers/authentication/registrationToken.schema';
 import { v4 as uuidv4 } from "uuid";
-import { Authenticator } from '../src/controllers/authentication/authenticator.schema';
+import { IAuthenticatorDocument } from '../src/controllers/administrator/authenticator.schema';
 
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/configuration/discord.ts');
@@ -31,6 +31,7 @@ describe('auth/index.ts authAttestationGetRequest', () => {
   let mockResponse: Response;
   let mockUser: IAdministratorDocument;
   let mockNext: jest.Mock;
+  let fakeAuthenticator: IAuthenticatorDocument;
   let spyLogger: jest.SpyInstance;
 
   beforeEach(() => {
@@ -48,6 +49,12 @@ describe('auth/index.ts authAttestationGetRequest', () => {
       send: jest.fn(),
       end: jest.fn()
     } as any as Response;
+
+    fakeAuthenticator = {
+      credentialID: Buffer.from('null'),
+      credentialPublicKey: Buffer.from('null'),
+      counter: 0
+    } as IAuthenticatorDocument;
 
     mockNext = jest.fn();
 
@@ -109,7 +116,7 @@ describe('auth/index.ts authAttestationGetRequest', () => {
     await authAttestationGetRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, 'Registration token not found'));
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, 'Registration token not found or expired'));
   });
  
   it('should throw error if user already registered', async () => {
@@ -118,7 +125,7 @@ describe('auth/index.ts authAttestationGetRequest', () => {
       token: uuidv4(),
     }
 
-    mockUser.device = new Authenticator();
+    mockUser.device = fakeAuthenticator;
 
     mockingoose(Administrator).toReturn(mockUser, 'findOneAndUpdate')
     mockingoose(RegistrationToken).toReturn(new RegistrationToken(), 'findOne')
@@ -151,6 +158,7 @@ describe('auth/index.ts authAttestationPostRequest', () => {
   let mockResponse: Response;
   let mockUser: IAdministratorDocument;
   let mockNext: jest.Mock;
+  let fakeAuthenticator: IAuthenticatorDocument;
   let spyLogger: jest.SpyInstance;
 
   beforeEach(() => {
@@ -171,7 +179,13 @@ describe('auth/index.ts authAttestationPostRequest', () => {
 
     mockNext = jest.fn();
 
-    mockUser = new Administrator({ username : "testuser123" })
+    mockUser = new Administrator({ username : "testuser123" });
+
+    fakeAuthenticator = {
+      credentialID: Buffer.from('null'),
+      credentialPublicKey: Buffer.from('null'),
+      counter: 0
+    } as IAuthenticatorDocument;
     
     spyLogger = jest.spyOn(loggerFile, 'error');
   });
@@ -239,7 +253,7 @@ describe('auth/index.ts authAttestationPostRequest', () => {
     await authAttestationPostRequest(mockRequest, mockResponse, mockNext);
     expect(spyLogger.mock.calls.length).toBe(1);
     expect(mockNext.mock.calls.length).toBe(1);
-    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, 'Registration token not found'));
+    expect(mockNext.mock.calls[0][0]).toEqual(new ApiError(404, 'Registration token not found or expired'));
   });
  
   it('should throw error if something went wrong with the user', async () => {
@@ -255,7 +269,7 @@ describe('auth/index.ts authAttestationPostRequest', () => {
       {
         // user already registered
         prepare: () => {
-          mockUser.device = new Authenticator();
+          mockUser.device = fakeAuthenticator;
           mockingoose(Administrator).toReturn(mockUser, 'findOne')
         },
         expect: new ApiError(403, 'User already registered')
@@ -306,6 +320,7 @@ describe('auth/index.ts authAssertionGetRequest', () => {
   let mockResponse: Response;
   let mockUser: IAdministratorDocument;
   let mockNext: jest.Mock;
+  let fakeAuthenticator: IAuthenticatorDocument;
   let spyLogger: jest.SpyInstance;
 
   beforeEach(() => {
@@ -328,6 +343,12 @@ describe('auth/index.ts authAssertionGetRequest', () => {
 
     mockUser = new Administrator({ username : "testuser123" })
     mockUser.save = jest.fn();
+
+    fakeAuthenticator = {
+      credentialID: Buffer.from('null'),
+      credentialPublicKey: Buffer.from('null'),
+      counter: 0
+    } as IAuthenticatorDocument;
     
     spyLogger = jest.spyOn(loggerFile, 'error');
   });
@@ -405,7 +426,7 @@ describe('auth/index.ts authAssertionGetRequest', () => {
       username: 'testuser123',
     }
 
-    mockUser.device = new Authenticator({ credentialID: 1 });
+    mockUser.device = fakeAuthenticator;
     mockingoose(Administrator).toReturn(mockUser, 'findOne')
 
     await authAssertionGetRequest(mockRequest, mockResponse, mockNext);   
@@ -421,6 +442,7 @@ describe('auth/index.ts authAssertionPostRequest', () => {
   let mockResponse: Response;
   let mockUser: IAdministratorDocument;
   let mockNext: jest.Mock;
+  let fakeAuthenticator: IAuthenticatorDocument;
   let spyLogger: jest.SpyInstance;
 
   beforeEach(() => {
@@ -441,7 +463,13 @@ describe('auth/index.ts authAssertionPostRequest', () => {
 
     mockNext = jest.fn();
 
-    mockUser = new Administrator({ username : "testuser123" })
+    mockUser = new Administrator({ username : "testuser123" });
+
+    fakeAuthenticator = {
+      credentialID: Buffer.from('null'),
+      credentialPublicKey: Buffer.from('null'),
+      counter: 0
+    } as IAuthenticatorDocument;
     
     spyLogger = jest.spyOn(loggerFile, 'error');
   });
@@ -508,7 +536,7 @@ describe('auth/index.ts authAssertionPostRequest', () => {
       {
         // user has no active challenge
         prepare: () => {
-          mockUser.device = new Authenticator();
+          mockUser.device = fakeAuthenticator;
           mockingoose(Administrator).toReturn(mockUser, 'findOne')
         },
         expect: new ApiError(400, 'User has no pending challenge')
