@@ -16,10 +16,10 @@
   "dependencies": {
     "@simplewebauthn/browser": "^2.2.1",
     "axios": "^0.21.1",
-    "buefy": "^0.8.20",
-    "bulma": "^0.9.0",
+    "buefy": "^0.9.7",
     "core-js": "^3.6.4",
-    "uuid": "^3.4.0",
+    "qrcode": "^1.4.4",
+    "uuid": "^8.3.2",
     "vue": "^2.6.12",
     "vue-router": "^3.4.3",
     "vuelidate": "^0.7.5",
