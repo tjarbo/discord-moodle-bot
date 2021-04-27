@@ -77,7 +77,7 @@ export default {
             switch (error.name) {
               case 'AbortError':
                 // Registration process timed out or cancelled
-                notifyFailure('Registrierung wurde abgebrochen!');
+                notifyFailure('Anmeldung wurde abgebrochen!');
                 break;
 
               default:
@@ -87,14 +87,10 @@ export default {
           }
         })
         .catch((apiResponse) => {
-          if (apiResponse.code) {
-            notifyFailure(apiResponse.error[0].message);
-          } else {
-          // request failed locally - maybe no internet connection etc?
-            notifyFailure(
-              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
-            );
-          }
+          if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
+
+          // Request failed locally - maybe no internet connection etc?
+          return notifyFailure('Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.');
         });
     },
 

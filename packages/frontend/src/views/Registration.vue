@@ -55,6 +55,7 @@ import {
 } from 'vuelidate/lib/validators';
 import { startAttestation } from '@simplewebauthn/browser';
 import { mapGetters } from 'vuex';
+import { validate } from 'uuid';
 import { notifyFailure, notifySuccess } from '../notification';
 import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
 
@@ -67,6 +68,16 @@ export default {
       token: '',
     },
   }),
+  mounted() {
+    // Check is token paramter is available
+    if (!this.$route.query.token) return;
+
+    // Validate token
+    const { token } = this.$route.query;
+    if (!validate(token)) return;
+
+    this.form.token = token;
+  },
   methods: {
     onSubmit(event) {
       event.preventDefault();
