@@ -2,16 +2,15 @@ import { expect } from 'chai';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import Buefy from 'buefy';
-import VueRouter from 'vue-router';
 import Vuelidate from 'vuelidate';
 import Registration from '@/views/Registration.vue';
 import AuthenticationLayout from '@/layouts/AuthenticationLayout.vue';
+import { v4 } from 'uuid';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
 localVue.use(Vuelidate);
 localVue.use(Buefy);
-localVue.use(VueRouter);
 
 describe('Registration.view', () => {
   let wrapper = null;
@@ -22,6 +21,8 @@ describe('Registration.view', () => {
   let usernameInput;
   let tokenInput;
   let submitButton;
+
+  let fakeToken;
 
   beforeEach(() => {
     getters = {
@@ -40,7 +41,19 @@ describe('Registration.view', () => {
       actions,
     });
 
-    wrapper = shallowMount(Registration, { store, localVue });
+    fakeToken = v4();
+
+    const mocks = {
+      $route: {
+        query: {
+          token: fakeToken,
+        },
+      },
+    };
+
+    wrapper = shallowMount(Registration, {
+      store, localVue, mocks,
+    });
 
     usernameInput = wrapper.find('#username');
     tokenInput = wrapper.find('#token');
@@ -143,6 +156,7 @@ describe('Registration.view', () => {
       },
     ];
 
+    tokenInput.setValue('');
     usernameInput.setValue('12345testuser');
 
     for (let i = 0; i < tests.length; i++) {
@@ -153,5 +167,10 @@ describe('Registration.view', () => {
       await wrapper.vm.$nextTick();
       expect(submitButton.element.disabled).to.be.equal(test.expect);
     }
+  });
+
+  it('should parse token query parameter to token input', async () => {
+    await wrapper.vm.$nextTick();
+    expect(tokenInput.element.value).to.be.equal(fakeToken);
   });
 });
