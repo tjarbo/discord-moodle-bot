@@ -76,7 +76,7 @@ export default {
             console.log(error);
             switch (error.name) {
               case 'AbortError':
-                // Registration process timed out or cancelled
+                // Login process timed out or cancelled
                 notifyFailure('Anmeldung wurde abgebrochen!');
                 break;
 
