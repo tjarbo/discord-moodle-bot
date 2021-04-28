@@ -49,7 +49,7 @@
                   <strong>QR-Code anzeigen</strong>
                   <br />
                   Klicke hier, um den Link als QR-Code anzuzeigen. Somit kannst du beispielweise
-                  den Token einfacher auf deinem Handy benutzten.
+                  den Token einfacher auf deinem Handy benutzen.
                 </p>
               </div>
             </div>
