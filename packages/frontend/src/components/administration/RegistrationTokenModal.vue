@@ -2,7 +2,7 @@
   <div id="registrationtokenmodal">
     <b-modal v-model="active" scroll="keep">
       <div class="box">
-        <h1 class="title">Neuer Registrierung Token</h1>
+        <h1 class="title">Neuer Registrierungs Token</h1>
         <div class="container">
           <div class="notification is-light has-text-centered has-text-weight-bold">
             {{ token }}
