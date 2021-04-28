@@ -69,7 +69,7 @@ export default {
     },
   }),
   mounted() {
-    // Check is token paramter is available
+    // Check if token parameter is available
     if (!this.$route.query.token) return;
 
     // Validate token

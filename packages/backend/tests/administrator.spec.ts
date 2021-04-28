@@ -196,8 +196,8 @@ describe('administrator/index.ts adminAdministratorDeleteRequest', () => {
   it.skip('should return 204 if deletion was successful', async () => {
 
     /**
-     * Need to skip, because mocking deleteOne does not possible.
-     * Test failed due to timeout :()
+     * Need to skip, because mocking deleteOne does not work.
+     * Test failed due to timeout :(
      */
     mockRequest.params.username = "useruser";
     expect.assertions(1);

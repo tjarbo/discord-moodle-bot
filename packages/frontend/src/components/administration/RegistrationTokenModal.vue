@@ -48,8 +48,8 @@
                 <p>
                   <strong>QR-Code anzeigen</strong>
                   <br />
-                  Klicke hier, um den Link als QR-Code anzuzeigen. Somit kannst du einfacher den
-                  Token auf, beispielweise, deinem Handy benutzten.
+                  Klicke hier, um den Link als QR-Code anzuzeigen. Somit kannst du beispielweise
+                  den Token einfacher auf deinem Handy benutzten.
                 </p>
               </div>
             </div>
