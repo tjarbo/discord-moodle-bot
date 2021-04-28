@@ -1,7 +1,8 @@
 /* tslint:disable:ban-types */
 import { config } from '../../configuration/environment';
 import { Schema, model, Model, Document } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, validate as validateUUID } from 'uuid';
+import { string, CustomHelpers } from '@hapi/joi';
 
 interface IRegistrationTokenDocument extends Document {
   [_id: string]: any;
@@ -21,3 +22,10 @@ const registrationTokenSchema = new Schema({
 });
 
 export const RegistrationToken: Model<IRegistrationTokenDocument> = model<IRegistrationTokenDocument>('RegistrationToken', registrationTokenSchema);
+
+const isUUID = (value: any, helper: CustomHelpers) : any => {
+  if (!validateUUID(value)) return helper.error('any.invalid');
+  return value;
+};
+
+export const registrationTokenValidationSchema = string().required().custom(isUUID).description('Registration token');

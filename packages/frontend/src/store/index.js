@@ -135,49 +135,6 @@ export default new Vuex.Store({
       });
     },
 
-    requestToken({ commit }, username) {
-      commit('SET_AUTH');
-      return new Promise((resolve, reject) => {
-        ApiUtil.post('/token', { username })
-          .then(({ data: apiResponse }) => {
-            if (apiResponse.status === 'success') {
-              commit('SET_AUTH', null);
-              resolve();
-            } else {
-              commit('SET_AUTH', new Error(apiResponse.error[0].message));
-              reject(apiResponse);
-            }
-          })
-          .catch(() => {
-            commit('SET_AUTH', new Error());
-            reject();
-          });
-      });
-    },
-
-    loginWithToken({ commit }, credentials) {
-      commit('SET_AUTH');
-      return new Promise((resolve, reject) => {
-        ApiUtil.post('/login', credentials)
-          .then(({ data: apiResponse }) => {
-            if (apiResponse.status === 'success') {
-              const jwt = apiResponse.data.accesstoken;
-              ApiUtil.defaults.headers.common.Authorization = `Bearer ${jwt}`;
-              localStorage.setItem('token', jwt);
-              commit('SET_AUTH', jwt);
-              resolve();
-            } else {
-              commit('SET_AUTH', new Error(apiResponse.error[0].message));
-              reject(apiResponse);
-            }
-          })
-          .catch(() => {
-            commit('SET_AUTH', new Error());
-            reject();
-          });
-      });
-    },
-
     logout(context) {
       context.commit('SET_AUTH', null);
       ApiUtil.defaults.headers.common.Authorization = '';

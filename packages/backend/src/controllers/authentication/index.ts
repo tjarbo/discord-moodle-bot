@@ -3,43 +3,37 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { object, string, CustomHelpers } from '@hapi/joi';
-import { Administrator, IAdministratorDocument } from '../administrator/administrator.schema';
+import { object } from '@hapi/joi';
+import { Administrator, administratorUsernameValidationSchema, IAdministratorDocument } from '../administrator/administrator.schema';
 import { loggerFile } from '../../configuration/logger';
 import jwt from 'jsonwebtoken';
 import expressjwt from 'express-jwt';
 import { config } from '../../configuration/environment';
 import { ApiError, ApiSuccess } from '../../utils/api';
 import { generateAssertionOptions, generateAttestationOptions, GenerateAttestationOptionsOpts, verifyAssertionResponse, verifyAttestationResponse } from '@simplewebauthn/server';
-import { validate as validateUUID } from 'uuid';
-import { RegistrationToken } from './registrationToken.schema';
-import { Authenticator, IAuthenticatorDocument } from './authenticator.schema';
+import { RegistrationToken, registrationTokenValidationSchema } from './registrationToken.schema';
+import { IAuthenticatorDocument } from '../administrator/authenticator.schema';
 
 /****************************************
  *       User input validation          *
  * **************************************/
-const isUUID = (value: any, helper: CustomHelpers) : any => {
-  if (!validateUUID(value)) return helper.error('any.invalid');
-  return value;
-};
-
 const authAssertionGetRequestSchema = object({
-  username: string().alphanum().required().min(8).max(64).description('Username of admin to register'),
+  username: administratorUsernameValidationSchema,
 });
 
 const authAssertionPostRequestSchema = object({
-  username: string().alphanum().required().min(8).max(64).description('Username of admin to register'),
+  username: administratorUsernameValidationSchema,
   assertionResponse: object().unknown().required().description('Webauthn challenge')
 });
 
 const authAttestationGetRequestSchema = object({
-  username: string().alphanum().required().min(8).max(64).description('Username of admin to register'),
-  token: string().required().custom(isUUID).description('Registration token'),
+  username: administratorUsernameValidationSchema,
+  token: registrationTokenValidationSchema,
 });
 
 const authAttestationPostRequestSchema = object({
-  username: string().alphanum().required().min(8).max(64).description('Username of admin to register'),
-  token: string().required().custom(isUUID).description('Registration token'),
+  username: administratorUsernameValidationSchema,
+  token: registrationTokenValidationSchema,
   attestationResponse: object().unknown().required().description('Webauthn challenge')
 });
 
@@ -129,7 +123,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
 
     // 2. Validate registration token
     const registrationTokenDoc = await RegistrationToken.findOne({ 'key': attestationGetRequest.value.token });
-    if (registrationTokenDoc === null) throw new ApiError(404, 'Registration token not found');
+    if (registrationTokenDoc === null) throw new ApiError(404, 'Registration token not found or expired');
 
     // 3. Get user document; create if it does not exist
     const userDoc = await Administrator.findOneAndUpdate({ username: attestationGetRequest.value.username }, {}, { upsert: true, new: true });
@@ -198,7 +192,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
 
     // 2. Validate registration token
     const registrationTokenDoc = await RegistrationToken.findOne({ 'key': attestationPostRequest.value.token });
-    if (registrationTokenDoc === null) throw new ApiError(404, 'Registration token not found');
+    if (registrationTokenDoc === null) throw new ApiError(404, 'Registration token not found or expired');
 
     // 3. Get user document
     const userDoc = await Administrator.findOne({ username: attestationPostRequest.value.username });
@@ -220,13 +214,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
 
       // 5. Save authenticator
       const { credentialPublicKey, credentialID, counter } = attestationInfo;
-      const authenticator = await new Authenticator({
-        credentialID,
-        credentialPublicKey,
-        counter
-      }).save();
-
-      userDoc.device = authenticator;
+      userDoc.device = { credentialID, credentialPublicKey, counter } as IAuthenticatorDocument;
 
       // 6. Save whether user is deletable or not
       userDoc.deletable = registrationTokenDoc.userIsDeletable;
@@ -269,7 +257,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     if (assertionGetRequest.error) throw new ApiError(400, assertionGetRequest.error.message);
 
     // 2. Get user document
-    const userDoc = await Administrator.findOne({ username: assertionGetRequest.value.username }).populate('device');
+    const userDoc = await Administrator.findOne({ username: assertionGetRequest.value.username });
     if (userDoc === null) throw new ApiError(404, 'User not found');
     if (userDoc.device === null || userDoc.device === undefined) throw new ApiError(403, 'User not registered');
 
@@ -313,7 +301,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     if (assertionPostRequest.error) throw new ApiError(400, assertionPostRequest.error.message);
 
     // 2. Get user document
-    const userDoc: IAdministratorDocument = await Administrator.findOne({ username: assertionPostRequest.value.username }).populate('device');
+    const userDoc: IAdministratorDocument = await Administrator.findOne({ username: assertionPostRequest.value.username });
     if (userDoc === null) throw new ApiError(404, 'User not found');
     if (userDoc.device === null || userDoc.device === undefined) throw new ApiError(403, 'User not registered');
     if (userDoc.currentChallenge === undefined || userDoc.currentChallenge === null) throw new ApiError(400, 'User has no pending challenge');

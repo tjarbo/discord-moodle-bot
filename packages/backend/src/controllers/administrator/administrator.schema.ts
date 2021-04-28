@@ -1,6 +1,7 @@
 /* tslint:disable:ban-types */
 import { Schema, model, Model, Document } from 'mongoose';
-import { IAuthenticatorDocument } from '../authentication/authenticator.schema';
+import { IAuthenticatorDocument, authenticatorSchema } from './authenticator.schema';
+import { string } from '@hapi/joi';
 
 export interface IAdministratorDocument extends Document {
   [_id: string]: any;
@@ -16,7 +17,9 @@ const administratorSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   deletable: { type: Boolean, default: true },
   currentChallenge: { type: String, default: null },
-  device: { type: Schema.Types.ObjectId, ref: 'Authenticator' },
+  device: { type: authenticatorSchema, default: null },
 });
 
 export const Administrator: Model<IAdministratorDocument> = model<IAdministratorDocument>('Administrator', administratorSchema);
+
+export const administratorUsernameValidationSchema = string().alphanum().required().min(8).max(64).description('Username of administrator');

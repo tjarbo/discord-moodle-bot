@@ -9,7 +9,7 @@ import store from './store';
 import './fmdb.scss';
 
 Vue.use(Vuelidate);
-Vue.use(Buefy);
+Vue.use(Buefy, { defaultIconPack: 'fas' });
 
 Vue.prototype.$http = Axios;
 

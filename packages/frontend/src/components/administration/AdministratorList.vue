@@ -8,127 +8,98 @@
           <b-table
             :data="rows"
             :hoverable="true"
-            checkable
-            :checkbox-position="'left'"
-            :checked-rows.sync="checkedRows"
-            :is-row-checkable="(row) => row.deletable">
-            <template v-slot="{row}" >
-              <b-table-column
-                v-for="(column, index) in columns"
-                :key="index"
-                :label="column.label"
-                >{{ row[column.field] }}</b-table-column>
-            </template>
+          >
+            <b-table-column field="username" label="Benutzername" v-slot="props">
+              {{ props.row.username }}
+            </b-table-column>
+
+            <b-table-column field="createdAt" label="Erstellungsdatum" v-slot="props">
+              {{ new Date(props.row.createdAt).toLocaleString() }}
+            </b-table-column>
+
+            <b-table-column field="hasDevice" label="Authenticator" centered v-slot="props">
+              <span class="tag" :class="props.row.hasDevice ? 'is-success':'is-danger'">
+                {{ props.row.hasDevice ? 'Registriert' : 'Nicht gefunden!' }}
+              </span>
+            </b-table-column>
+
+            <b-table-column field="delete" label="Verwaltung" v-slot="props">
+              <b-button
+                @click="onDelete(props.row.username)"
+                :disabled="!props.row.deletable"
+                outlined
+                size="is-small"
+                type="is-danger"
+                >
+                Löschen
+             </b-button>
+            </b-table-column>
           </b-table>
         </p>
       </a>
       <div class="panel-block">
         <button
           @click="onSubmit"
-          :disabled="!(this.checkedRows.length)"
           class="button is-outlined is-fullwidth is-primary"
-          >Entfernen</button>
+          >Neuen Registrierungstoken erstellen</button>
       </div>
     </article>
+    <registration-token-modal ref="registrationTokenModal" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import { notifySuccess, notifyFailure } from '../../notification';
+import RegistrationTokenModal from './RegistrationTokenModal.vue';
 
 export default {
   name: 'AdministratorList',
+  components: { RegistrationTokenModal },
+  computed: {
+    rows() {
+      // Avoid console errors at early loading time
+      if (!this.administratorListGetData) return [];
+
+      return this.administratorListGetData;
+    },
+    ...mapGetters(['administratorListGetData', 'administratorListGetStatus']),
+  },
+  data: () => ({ active: false }),
+  methods: {
+    onDelete(username) {
+      this.$store.dispatch('deleteAdministrator', username)
+        .then(() => {
+          notifySuccess('Administrator erfolgreich gelöscht!');
+        })
+        .catch((apiResponse) => {
+          if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
+          // Request failed locally - maybe no internet connection etc?
+          return notifyFailure('Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.');
+        });
+    },
+
+    onSubmit() {
+      this.$store.dispatch('requestToken')
+        .then((apiResponse) => {
+          this.$refs.registrationTokenModal.show(apiResponse.data);
+        })
+        .catch((apiResponse) => {
+          if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
+          // Request failed locally - maybe no internet connection etc?
+          return notifyFailure('Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.');
+        });
+    },
+  },
   mounted() {
     // Import list data at loading time
-    this.$store
-      .dispatch('getAdministrators')
+    this.$store.dispatch('getAdministrators')
       .then(() => {})
       .catch((apiResponse) => {
         if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
         // Request failed locally - maybe no internet connection etc?
         return notifyFailure('Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.');
       });
-  },
-  data: () => ({
-    // Column titles
-    columns: [
-      {
-        field: 'userName',
-        label: 'Anzeigename',
-      },
-      {
-        field: 'userId',
-        label: 'User ID',
-      },
-      {
-        field: 'createdAt',
-        label: 'Erstellungsdatum',
-      },
-    ],
-    checkedRows: [],
-  }),
-  methods: {
-    onSubmit() {
-      // Delete admins
-      const results = [];
-      this.checkedRows.forEach((row) => {
-        results.push(this.$store.dispatch('deleteAdministrator', row.userId));
-      });
-      Promise.all(results)
-        .then(() => {
-          // Clear checkboxes and update list
-          this.checkedRows = [];
-          this.$store.dispatch('getAdministrators');
-          notifySuccess('Löschen erfolgreich!');
-        })
-        .catch((apiResponse) => {
-          if (apiResponse.code) {
-            notifyFailure(apiResponse.error[0].message);
-
-            if (apiResponse.code === 401) {
-              notifyFailure(
-                'Zugang leider abgelaufen! Bitte melde dich erneut an!',
-              );
-              this.$store.dispatch('logout');
-              this.$router.push({ name: 'Login' });
-            }
-          } else {
-            // request failed locally - maybe no internet connection etc?
-            notifyFailure(
-              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
-            );
-          }
-        });
-    },
-  },
-  computed: {
-    rows() {
-      // Avoid console errors at early loading time
-      if (!this.administratorListGetData) return [];
-
-      // Prepare data
-      const data = this.administratorListGetData.map((admin) => ({
-        userName: admin.userName,
-        userId: admin.userId,
-        deletable: admin.deletable,
-        createdAt: new Date(admin.createdAt).toLocaleString(),
-      }));
-      return data;
-    },
-    /**
-     * Returns the id of the first admin (time based).
-     * This admin should not be deletable.
-     */
-    firstAdminId() {
-      if (this.administratorListGetData) {
-        const firstAdm = this.administratorListGetData.slice()
-          .sort((adm1, adm2) => adm1.createdAt - adm2.createdAt)[0];
-        return firstAdm.userId;
-      }
-      return ''; // Data not ready
-    },
-    ...mapGetters(['administratorListGetData', 'administratorListGetStatus']),
   },
 };
 </script>

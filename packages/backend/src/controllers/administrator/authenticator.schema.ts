@@ -6,16 +6,12 @@ export interface IAuthenticatorDocument extends Document {
   credentialID: Buffer;
   credentialPublicKey: Buffer;
   counter: number;
-  // ['usb' | 'ble' | 'nfc' | 'internal']
   transports?: AuthenticatorTransport[];
 }
 
-const authenticatorSchema = new Schema({
+export const authenticatorSchema = new Schema({
   credentialID: { type: Buffer, required: true },
   credentialPublicKey: { type: Buffer, required: true },
   counter: { type: Number, required: true },
-  // ['usb' | 'ble' | 'nfc' | 'internal']
   transports: Array,
 });
-
-export const Authenticator: Model<IAuthenticatorDocument> = model<IAuthenticatorDocument>('Authenticator', authenticatorSchema);

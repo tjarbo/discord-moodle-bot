@@ -3,66 +3,69 @@ import StoreUtil from '../utils/StoreUtil';
 
 export default {
   state: {
-    changeRequest: StoreUtil.state(),
     administrators: StoreUtil.state(),
   },
   mutations: {
-    SET_CHANGE_REQUEST(state, payload) {
-      state.newAdministrator = StoreUtil.updateState(state.changeRequest, payload);
-    },
     SET_ADMINISTRATORS(state, payload) {
       state.administrators = StoreUtil.updateState(state.administrators, payload);
     },
+    UNLOCK_ADMINISTRATORS(state, payload) {
+      state.administrators = StoreUtil.unlockState(state.administrators, payload);
+    },
+    LOCK_ADMINISTRATORS(state) {
+      state.administrators = StoreUtil.unlockState(state.administrators);
+    },
   },
   actions: {
-    addAdministrator({ commit }, administratorObject) {
-      commit('SET_CHANGE_REQUEST');
+    requestToken({ commit }) {
+      commit('LOCK_ADMINISTRATORS');
       return new Promise((resolve, reject) => {
-        ApiUtil.post('/settings/administrator', administratorObject)
+        ApiUtil.post('/settings/administrators')
           .then(({ data: apiResponse }) => {
             if (apiResponse.status === 'success') {
-              commit('SET_CHANGE_REQUEST', {});
-              resolve();
+              commit('UNLOCK_ADMINISTRATORS', true);
+              resolve(apiResponse);
             } else {
-              commit('SET_CHANGE_REQUEST', new Error(apiResponse.error[0].message));
+              commit('SET_ADMINISTRATORS', new Error(apiResponse.error[0].message));
               reject(apiResponse);
             }
           })
           .catch((err) => {
             console.log(err);
-            commit('SET_CHANGE_REQUEST', err);
+            commit('SET_ADMINISTRATORS', err);
             reject(err);
           });
       });
     },
-    deleteAdministrator({ commit }, administratorId) {
-      commit('SET_CHANGE_REQUEST');
+    deleteAdministrator({ commit }, username) {
+      commit('LOCK_ADMINISTRATORS');
       return new Promise((resolve, reject) => {
-        ApiUtil.delete(`/settings/administrator/${administratorId}`)
+        ApiUtil.delete(`/settings/administrators/${username}`)
           .then(({ status, data: apiResponse }) => {
-          /**
-           * Axios doesn't pass the response body of a successful
-           * delete operation.
-           */
+            /**
+             * Axios doesn't pass the response body of a successful
+             * delete operation.
+             */
             if (status === 204 || apiResponse.status === 'success') {
-              commit('SET_CHANGE_REQUEST', {});
+              commit('UNLOCK_ADMINISTRATORS', true);
               resolve();
             } else {
-              commit('SET_CHANGE_REQUEST', new Error(apiResponse.error[0].message));
+              // Do not use SET_ADMINISTRATORS to avoid empty table
+              commit('UNLOCK_ADMINISTRATORS', false);
               reject(apiResponse);
             }
           })
           .catch((err) => {
             console.log(err);
-            commit('SET_CHANGE_REQUEST', err);
+            commit('SET_ADMINISTRATORS', err);
             reject();
           });
       });
     },
     getAdministrators({ commit }) {
-      commit('SET_ADMINISTRATORS');
+      commit('LOCK_ADMINISTRATORS');
       return new Promise((resolve, reject) => {
-        ApiUtil.get('/settings/administrator')
+        ApiUtil.get('/settings/administrators')
           .then(({ data: apiResponse }) => {
             if (apiResponse.status === 'success') {
               commit('SET_ADMINISTRATORS', apiResponse.data);
@@ -81,7 +84,6 @@ export default {
     },
   },
   getters: {
-    administratorChangeRequestGetStatus: (state) => state.changeRequest.status,
     administratorListGetData: (state) => state.administrators.data,
     administratorListGetStatus: (state) => state.administrators.status,
   },
