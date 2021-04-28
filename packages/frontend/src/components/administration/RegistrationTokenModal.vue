@@ -2,7 +2,7 @@
   <div id="registrationtokenmodal">
     <b-modal v-model="active" scroll="keep">
       <div class="box">
-        <h1 class="title">Neuer Registrierungs Token</h1>
+        <h1 class="title">Neuer Registrierungstoken</h1>
         <div class="container">
           <div class="notification is-light has-text-centered has-text-weight-bold">
             {{ token }}
@@ -11,8 +11,8 @@
         <div class="content">
           <p>
             Du hast einen neuen Registrierungstoken angefordert. Dieser ist für
-            {{ this.lifetime }} gültig. Diesen Token kannst du entweder selber
-            benutzten um ein weiteres Gerät zu registrieren (eigener neuer
+            {{ this.lifetime }} gültig. Diesen Token kannst du entweder selbst
+            benutzen, um ein weiteres Gerät zu registrieren (eigener neuer
             Benutzername ist notwendig!) oder ihn an deine Freunde:innen
             schicken, damit sie ebenfalls den Service konfigurieren können.
           </p>
@@ -30,9 +30,9 @@
                 <p>
                   <strong>{{ link }}</strong>
                   <br />
-                  Klicke hier, um den Link in deinen Zwischenspeicher zu speichern. Teile diesen
+                  Klicke hier, um den Link in deine Zwischenablage zu speichern. Teile diesen
                   mit der Person, welche du als weiteren Benutzer hinzufügen möchstest oder öffne
-                  diesen selber in einem neuen Browsertab.
+                  ihn selbst in einem neuen Browsertab.
                 </p>
               </div>
             </div>
@@ -107,7 +107,7 @@ export default {
       QRCode.toCanvas(qrCanvas, this.link, (error) => {
         if (error) {
           console.error(error);
-          notifyFailure('QRCode konnte nicht erstellt werden');
+          notifyFailure('QR-Code konnte nicht erstellt werden');
         } else {
           // Show canvas element
           this.displayQRC = true;
