@@ -27,7 +27,7 @@ The FMDB notifies you on a discord server about new activities on the Moodle pla
 ## 📮 News from core team!
 Hey 👋 Almost a year ago, we made the first commit to this repo 🤯. While back then, the focus was mainly on getting any notification on Discord. Since than we have added many improvements and new features. But over time, our tools have changed as well. That's why we are in the process of becoming more independent from Discord with the upcoming versions, so you can be notified on **all your favorite channels ❤️ like Matrix, Slack, MS Teams etc.** even if you do not have a Discord Account! 
 
-With the next two (maybe three) versions, **we will make fundamental changes**, so the code will not be backward compatible. Do not forget to read the changelog if you start an upgrade 🧐.
+With the next two (maybe three) versions, **we will make fundamental changes**, so the code will not be backward compatible. Do not forget to read the changelog if you start an upgrade 🧐. More information [here](https://github.com/tjarbo/discord-moodle-bot/discussions/89)!
 
 To stay up to date and get notified as soon as a new release is available, click on *watch* in the upper right corner, than *custom* and activate *Releases* and *Discussions* ✅ (so that your inbox is not spammed 😉)! And if you like the fmdb, give it a 🌟 - thank you 🤩!
 
