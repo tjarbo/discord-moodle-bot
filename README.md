@@ -29,7 +29,7 @@ Hey 👋 Almost a year ago, we made the first commit to this repo 🤯. While ba
 
 With the next two (maybe three) versions, **we will make fundamental changes**, so the code will not be backward compatible. Do not forget to read the changelog if you start an upgrade 🧐. More information [here](https://github.com/tjarbo/discord-moodle-bot/discussions/89)!
 
-To stay up to date and get notified as soon as a new release is available, click on *watch* in the upper right corner, than *custom* and activate *Releases* and *Discussions* ✅ (so that your inbox is not spammed 😉)! And if you like the fmdb, give it a 🌟 - thank you 🤩!
+To stay up to date and get notified as soon as a new release is available, click on *watch* in the upper right corner, then *custom* and activate *Releases* and *Discussions* ✅ (so that your inbox is not spammed 😉)! And if you like the fmdb, give it a 🌟 - thank you 🤩!
 
 Cheers 🍻!
 
