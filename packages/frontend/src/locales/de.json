@@ -1,0 +1,38 @@
+{
+  "name": "Name",
+  "value": "Wert",
+  "none": "Keine",
+  "unknown": "Unbekannt",
+  "status": {
+    "title": "Status",
+    "update": "Status aktualisieren",
+    "updated": "Statusdaten aktualisiert!",
+    "checkForMoodleUpdatesNow": "Jetzt auf Moodle Updates prüfen",
+    "moodleConnectionStatus": "Status der Moodle Verbindung",
+    "moodleLastFetch": "Letzte erfolgreiche Moodle Aktualisierung",
+    "moodleNextFetch": "Nächste Moodle Aktualisierung",
+    "moodleCurrentFetchInterval": "Aktuelles Fetch-Intervall",
+    "discordLastReady": "Letzter erfolgreicher Discord Verbindungaufbau",
+    "discordCurrentChannel": "Aktueller Discord Channel",
+    "successfullyFetchedMoodleUpdates": "Moodle Updates erfolgreich abgerufen!"
+  },
+  "time": {
+    "in": "In {time} {unit} ({date})",
+    "ago": "Vor {time} {unit} ({date})",
+    "every": "Alle {time} {unit}",
+    "millisecond": "Millisekunde",
+    "milliseconds": "Millisekunden",
+    "second": "Sekunde",
+    "seconds": "Sekunden",
+    "minute": "Minute",
+    "minutes": "Minuten",
+    "hour": "Stunde",
+    "hours": "Stunden",
+    "day": "Tag",
+    "days": "Tage"
+  },
+  "notify": {
+    "accessExpired": "Zugang leider abgelaufen! Bitte melde dich erneut an!",
+    "requestFailedLocally": "Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung."
+  }
+}
