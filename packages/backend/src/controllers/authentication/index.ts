@@ -137,22 +137,6 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
       userName: userDoc.username.toString(),
       timeout: 60000,
       attestationType: 'indirect',
-      /**
-       * Passing in a user's list of already-registered authenticator IDs here prevents users from
-       * registering the same device multiple times. The authenticator will simply throw an error in
-       * the browser if it's asked to perform an attestation when one of these ID's already resides
-       * on it.
-       *
-       * excludeCredentials: [{
-       *  id: userDoc.device.credentialID,
-       *  type: 'public-key',
-       *  transports: userDoc.device.transports,
-       * }],
-       */
-      /**
-       * The optional authenticatorSelection property allows for specifying more constraints around
-       * the types of authenticators that users can use for attestation
-       */
       authenticatorSelection: {
         userVerification: 'preferred',
         requireResidentKey: false,
