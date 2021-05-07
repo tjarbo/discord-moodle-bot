@@ -2,7 +2,7 @@
   <div id="statusboard">
     <article class="panel is-status">
       <b-loading :is-full-page="false" :active="statusBoardGetStatus.pending"></b-loading>
-      <p class="panel-heading">Status:</p>
+      <p class="panel-heading">{{ $t('components.statusboard.status.panelHeading') }}:</p>
       <a class="panel-block">
         <p class="control">
           <b-table :data="rows" :hoverable="true">
@@ -24,7 +24,7 @@
           class="button is-outlined is-status"
           style="width: 50%; margin: 5px;"
         >
-          {{ $t('status.update') }}
+          {{ $t('components.statusboard.status.updateStatusButton') }}
         </b-button>
         <b-button
           @click="fetchAndNotify"
@@ -32,7 +32,7 @@
           style="width: 50%; margin: 5px;"
           :loading="fetchGetStatus.pending"
         >
-          {{ $t('status.checkForMoodleUpdatesNow') }}
+          {{ $t('components.statusboard.status.checkForMoodleUpdatesButton') }}
         </b-button>
       </div>
     </article>
@@ -45,7 +45,7 @@ import { notifySuccess, notifyFailure } from '../../notification';
 import i18n from '../../i18n';
 
 export default {
-  name: i18n.t('status.title'),
+  name: 'Status',
   mounted() {
     // Import status data at loading time
     this.$store
@@ -55,7 +55,7 @@ export default {
         if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
 
         // Request failed locally - maybe no internet connection etc?
-        return notifyFailure(i18n.t('notify.requestFailedLocally'));
+        return notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
       });
   },
   data: () => ({
@@ -63,21 +63,21 @@ export default {
     columns: [
       {
         field: 'key',
-        label: i18n.t('name'),
+        label: i18n.t('general.name'),
       },
       {
         field: 'value',
-        label: i18n.t('value'),
+        label: i18n.t('general.value'),
       },
     ],
     // First-column values
     keys: {
-      moodleConnectionStatus: i18n.t('status.moodleConnectionStatus'),
-      moodleLastFetch: i18n.t('status.moodleLastFetch'),
-      moodleNextFetch: i18n.t('status.moodleNextFetch'),
-      moodleCurrentFetchInterval: i18n.t('status.moodleCurrentFetchInterval'),
-      discordLastReady: i18n.t('status.discordLastReady'),
-      discordCurrentChannel: i18n.t('status.discordCurrentChannel'),
+      moodleConnectionStatus: i18n.t('components.statusboard.status.columnValues.moodleConnectionStatusKey'),
+      moodleLastFetch: i18n.t('components.statusboard.status.columnValues.moodleLastFetchKey'),
+      moodleNextFetch: i18n.t('components.statusboard.status.columnValues.moodleNextFetchKey'),
+      moodleCurrentFetchInterval: i18n.t('components.statusboard.status.columnValues.moodleCurrentFetchIntervalKey'),
+      discordLastReady: i18n.t('components.statusboard.status.columnValues.discordLastReadyKey'),
+      discordCurrentChannel: i18n.t('components.statusboard.status.columnValues.discordCurrentChannelKey'),
     },
     fetchInProgress: false,
   }),
@@ -87,20 +87,20 @@ export default {
       this.$store
         .dispatch('getStatus')
         .then(() => {
-          notifySuccess(i18n.t('status.updated'));
+          notifySuccess(i18n.t('components.statusboard.status.notifications.updatedStatusData'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure(i18n.t('notify.accessExpired'));
+              notifyFailure(i18n.t('general.notifications.accessExpired'));
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?
-            notifyFailure(i18n.t('notify.requestFailedLocally'));
+            notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
           }
         });
     },
@@ -109,7 +109,7 @@ export default {
       this.$store
         .dispatch('triggerFetch')
         .then(() => {
-          notifySuccess(i18n.t('status.successfullyFetchedMoodleUpdates'));
+          notifySuccess(i18n.t('components.statusboard.status.notifications.fetchedMoodleUpdates'));
           this.$store.dispatch('getStatus');
         })
         .catch((apiResponse) => {
@@ -117,13 +117,13 @@ export default {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure(i18n.t('notify.accessExpired'));
+              notifyFailure(i18n.t('general.notifications.accessExpired'));
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?
-            notifyFailure(i18n.t('notify.requestFailedLocally'));
+            notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
           }
         });
     },
@@ -175,16 +175,16 @@ export default {
       const minutes = Math.round(ms / (1000 * 60));
       const hours = Math.round(ms / (1000 * 60 * 60));
       const days = Math.round(ms / (1000 * 60 * 60 * 24));
-      if (ms === 1) return { time: ms, unit: i18n.t('time.millisecond')};
-      if (ms < 1000) return { time: ms, unit: i18n.t('time.milliseconds')};
-      if (seconds === 1) return { time: seconds, unit: i18n.t('time.second')};
-      if (seconds < 60) return { time: seconds, unit: i18n.t('time.seconds')};
-      if (minutes === 1) return { time: minutes, unit: i18n.t('time.minute')};
-      if (minutes < 60) return { time: minutes, unit: i18n.t('time.minutes')};
-      if (hours === 1) return { time: hours, unit: i18n.t('time.hour')};
-      if (hours < 24) return { time: hours, unit: i18n.t('time.hours')};
-      if (days === 1) return { time: days, unit: i18n.t('time.day')};
-      return { time: days, unit: i18n.t('time.days')};
+      if (ms === 1) return { time: ms, unit: i18n.t('general.time.millisecond') };
+      if (ms < 1000) return { time: ms, unit: i18n.t('general.time.milliseconds') };
+      if (seconds === 1) return { time: seconds, unit: i18n.t('general.time.second') };
+      if (seconds < 60) return { time: seconds, unit: i18n.t('general.time.seconds') };
+      if (minutes === 1) return { time: minutes, unit: i18n.t('general.time.minute') };
+      if (minutes < 60) return { time: minutes, unit: i18n.t('general.time.minutes') };
+      if (hours === 1) return { time: hours, unit: i18n.t('general.time.hour') };
+      if (hours < 24) return { time: hours, unit: i18n.t('general.time.hours') };
+      if (days === 1) return { time: days, unit: i18n.t('general.time.day') };
+      return { time: days, unit: i18n.t('general.time.days') };
     },
 
     /**
@@ -230,31 +230,31 @@ export default {
       // Generate default (error) strings
       let moodleLastFetchString = 'N/A';
       let moodleNextFetchString = 'N/A';
-      let moodleCurrentFetchIntervalString = 'Error';
+      let moodleCurrentFetchIntervalString = i18n.t('general.error');
       if (moodleLastFetchTimestamp !== 'Error') {
         // Calculate lastFetch
-        if (moodleLastFetchTimestamp === 0) moodleLastFetchString = i18n.t('none');
+        if (moodleLastFetchTimestamp === 0) moodleLastFetchString = i18n.t('general.none');
         else {
           const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
-          moodleLastFetchString = i18n.t('time.ago', this.getTimeObject(moodleLastFetchTimestamp * 1000, moodleLastFetchDate));
+          moodleLastFetchString = i18n.t('general.time.ago', this.getTimeObject(moodleLastFetchTimestamp * 1000, moodleLastFetchDate));
         }
       }
       if (moodleCurrentFetchInterval !== 'Error') {
         // Calculate currentFetchIntervall
-        moodleCurrentFetchIntervalString = `${i18n.t('time.every', this.getFormattedTime(moodleCurrentFetchInterval))} (${moodleCurrentFetchInterval} ms)`;
+        moodleCurrentFetchIntervalString = `${i18n.t('general.time.every', this.getFormattedTime(moodleCurrentFetchInterval))} (${moodleCurrentFetchInterval} ms)`;
       }
       if (moodleNextFetchTimestamp !== 'Error' && (moodleNextFetchTimestamp > Date.now() / 1000)) {
         // Calculate nextFetch
         const moodleNextFetchDate = new Date(moodleNextFetchTimestamp * 1000).toLocaleString();
-        moodleNextFetchString = i18n.t('time.in', this.getTimeObject(moodleNextFetchTimestamp * 1000, moodleNextFetchDate));
+        moodleNextFetchString = i18n.t('general.time.in', this.getTimeObject(moodleNextFetchTimestamp * 1000, moodleNextFetchDate));
       }
 
       // Generate discordLastReady string
       const discordLastReadyDate = new Date(discordLastReadyTimestamp).toLocaleString();
-      const discordLastReadyString = i18n.t('time.ago', this.getTimeObject(discordLastReadyTimestamp, discordLastReadyDate));
+      const discordLastReadyString = i18n.t('general.time.ago', this.getTimeObject(discordLastReadyTimestamp, discordLastReadyDate));
 
       // Generate discordCurrentChannel string
-      let discordCurrentChannelString = `${i18n.t('unknown')} (${discordCurrentChannelId})`;
+      let discordCurrentChannelString = `${i18n.t('general.unknown')} (${discordCurrentChannelId})`;
       if (discordCurrentChannelName !== 'Unknown') {
         discordCurrentChannelString = `${discordCurrentChannelName} (${discordCurrentChannelId})`;
       }

@@ -1,38 +1,51 @@
 {
-  "name": "Name",
-  "value": "Value",
-  "none": "None",
-  "unknown": "Unknown",
-  "status": {
-    "title": "Status",
-    "update": "Refresh status",
-    "updated": "Updated status data!",
-    "checkForMoodleUpdatesNow": "Check for moodle updates now",
-    "moodleConnectionStatus": "Moodle connection state",
-    "moodleLastFetch": "Last successful moodle update",
-    "moodleNextFetch": "Next moodle update",
-    "moodleCurrentFetchInterval": "Current fetch-interval",
-    "discordLastReady": "Last successful discord connection",
-    "discordCurrentChannel": "Current discord channel",
-    "successfullyFetchedMoodleUpdates": "Successfully fetched moodle updates!"
+  "components": {
+    "statusboard": {
+      "status": {
+        "panelHeading": "Status",
+        "checkForMoodleUpdatesButton": "Check for moodle updates now",
+        "columnValues": {
+          "discordCurrentChannelKey": "Current discord channel",
+          "discordLastReadyKey": "Last successful discord connection",
+          "moodleConnectionStatusKey": "Moodle connection state",
+          "moodleCurrentFetchIntervalKey": "Current fetch-interval",
+          "moodleLastFetchKey": "Last successful moodle update",
+          "moodleNextFetchKey": "Next moodle update"
+        },
+        "notifications": {
+          "updatedStatusData": "Updated status data!",
+          "fetchedMoodleUpdates": "Successfully fetched moodle updates!"
+        },
+        "updateStatusButton": "Refresh status"
+      }
+    }
   },
-  "time": {
-    "in": "In {time} {unit} ({date})",
-    "ago": "{time} {unit} ago ({date})",
-    "every": "Every {time} {unit}",
-    "millisecond": "millisecond",
-    "milliseconds": "milliseconds",
-    "second": "second",
-    "seconds": "seconds",
-    "minute": "minute",
-    "minutes": "minutes",
-    "hour": "hour",
-    "hours": "hours",
-    "day": "day",
-    "days": "days"
+  "general": {
+    "error": "Error",
+    "name": "Name",
+    "none": "None",
+    "notifications": {
+      "accessExpired": "Access expired! Please sign in again!",
+      "requestFailedLocally": "Request failed! Please check your internet connection."
+    },
+    "time": {
+      "in": "In {time} {unit} ({date})",
+      "ago": "{time} {unit} ago ({date})",
+      "every": "Every {time} {unit}",
+      "millisecond": "millisecond",
+      "milliseconds": "milliseconds",
+      "second": "second",
+      "seconds": "seconds",
+      "minute": "minute",
+      "minutes": "minutes",
+      "hour": "hour",
+      "hours": "hours",
+      "day": "day",
+      "days": "days"
+    },
+    "unknown": "Unknown",
+    "value": "Value"
   },
-  "notify": {
-    "accessExpired": "Access expired! Please sign in again!",
-    "requestFailedLocally": "Request failed! Please check your internet connection."
-  }
+  "layouts": {},
+  "views": {}
 }

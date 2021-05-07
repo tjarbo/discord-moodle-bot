@@ -1,38 +1,51 @@
 {
-  "name": "Name",
-  "value": "Wert",
-  "none": "Keine",
-  "unknown": "Unbekannt",
-  "status": {
-    "title": "Status",
-    "update": "Status aktualisieren",
-    "updated": "Statusdaten aktualisiert!",
-    "checkForMoodleUpdatesNow": "Jetzt auf Moodle Updates prüfen",
-    "moodleConnectionStatus": "Status der Moodle Verbindung",
-    "moodleLastFetch": "Letzte erfolgreiche Moodle Aktualisierung",
-    "moodleNextFetch": "Nächste Moodle Aktualisierung",
-    "moodleCurrentFetchInterval": "Aktuelles Fetch-Intervall",
-    "discordLastReady": "Letzter erfolgreicher Discord Verbindungaufbau",
-    "discordCurrentChannel": "Aktueller Discord Channel",
-    "successfullyFetchedMoodleUpdates": "Moodle Updates erfolgreich abgerufen!"
+  "components": {
+    "statusboard": {
+      "status": {
+        "panelHeading": "Status",
+        "checkForMoodleUpdatesButton": "Jetzt auf Moodle Updates prüfen",
+        "columnValues": {
+          "discordCurrentChannelKey": "Aktueller Discord Channel",
+          "discordLastReadyKey": "Letzter erfolgreicher Discord Verbindungaufbau",
+          "moodleConnectionStatusKey": "Status der Moodle Verbindung",
+          "moodleCurrentFetchIntervalKey": "Aktuelles Fetch-Intervall",
+          "moodleLastFetchKey": "Letzte erfolgreiche Moodle Aktualisierung",
+          "moodleNextFetchKey": "Nächste Moodle Aktualisierung"
+        },
+        "notifications": {
+          "updatedStatusData": "Statusdaten aktualisiert!",
+          "fetchedMoodleUpdates": "Moodle Updates erfolgreich abgerufen!"
+        },
+        "updateStatusButton": "Status aktualisieren"
+      }
+    }
   },
-  "time": {
-    "in": "In {time} {unit} ({date})",
-    "ago": "Vor {time} {unit} ({date})",
-    "every": "Alle {time} {unit}",
-    "millisecond": "Millisekunde",
-    "milliseconds": "Millisekunden",
-    "second": "Sekunde",
-    "seconds": "Sekunden",
-    "minute": "Minute",
-    "minutes": "Minuten",
-    "hour": "Stunde",
-    "hours": "Stunden",
-    "day": "Tag",
-    "days": "Tage"
+  "general": {
+    "error": "Fehler",
+    "name": "Name",
+    "none": "Keine",
+    "notifications": {
+      "accessExpired": "Zugang leider abgelaufen! Bitte melde dich erneut an!",
+      "requestFailedLocally": "Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung."
+    },
+    "time": {
+      "ago": "Vor {time} {unit} ({date})",
+      "day": "Tag",
+      "days": "Tage",
+      "every": "Alle {time} {unit}",
+      "hour": "Stunde",
+      "hours": "Stunden",
+      "in": "In {time} {unit} ({date})",
+      "millisecond": "Millisekunde",
+      "milliseconds": "Millisekunden",
+      "minute": "Minute",
+      "minutes": "Minuten",
+      "second": "Sekunde",
+      "seconds": "Sekunden"
+    },
+    "unknown": "Unbekannt",
+    "value": "Wert"
   },
-  "notify": {
-    "accessExpired": "Zugang leider abgelaufen! Bitte melde dich erneut an!",
-    "requestFailedLocally": "Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung."
-  }
+  "layouts": {},
+  "views": {}
 }
