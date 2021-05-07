@@ -1,12 +1,13 @@
 import { ApiError } from '../../utils/api';
 import { loggerFile } from '../../configuration/logger';
-import { MessageTemplate } from '../messages/message.class';
 import { ConnectorPlugin, ConnectorType, DiscordBotConnectorPlugin } from './plugins';
 import { Connector, IConnectorDocument } from './schemas/connector.schema';
+import { Message } from '../messages/templates';
+import { config } from '../../configuration/environment';
 
 class ConnectorService {
 
-  private connectors: ConnectorPlugin[];
+  private connectors: ConnectorPlugin[] = [];
 
   /**
    * Creates an instance of ConnectorService.
@@ -39,15 +40,31 @@ class ConnectorService {
   }
 
   /**
-   * Creates new connectors based on environment
+   * Creates new connectors based on environment variables
    *
    * @private
+   * @async
    * @memberof ConnectorService
    */
-  private createConnectorsFromEnv(): void {
+  private async createConnectorsFromEnv(): Promise<void> {
     loggerFile.debug('Start creating connectors from environment variables');
-    // TODO: To be continue
 
+    // Create optional discord Bot
+    if (!!config.discordChannel && !!config.discordToken) {
+      const options: IConnectorDocument = {
+        name: 'Discord Bot (Environment)',
+        type: ConnectorType.Discord,
+        default: true,
+        socket: {
+          channel: config.discordChannel,
+          token: config.discordToken,
+        },
+      } as IConnectorDocument;
+
+      const connector = await new Connector(options).save();
+      this.connectors.push(new DiscordBotConnectorPlugin(connector));
+      loggerFile.debug(`Connector of type Discord (${connector._id}) has been created`);
+    }
   }
 
   /**
@@ -61,9 +78,11 @@ class ConnectorService {
    * @param {*} options content that will be applied on template
    * @memberof ConnectorService
    */
-  public publish(moodleId: string, courseId: string, template: MessageTemplate, options: any): void {
+  public publish(moodleId: string, courseId: string, template: Message, options: any): void {
     const message = template.apply(options);
     let messageWasSent: boolean = false;
+
+    loggerFile.info('Got new message publish order');
 
     this.connectors.forEach(connector => {
       const course = connector.courses.find(element => element.moodleId === moodleId && element.courseId === courseId);
@@ -78,6 +97,8 @@ class ConnectorService {
     // If the message was sent to a plugin, stop here
     if (messageWasSent) return;
 
+    loggerFile.info(`No connector for course ${courseId} of moodle ${moodleId} found. Use default connectors!`);
+
     // If not, send the message to all default connectors
     this.connectors.forEach(connector => {
       if (connector.isDefault) connector.send(message);
@@ -90,7 +111,7 @@ class ConnectorService {
    *
    * @param {string} connectorId objectId of the connector
    * @param {[key: string]: any} body body of http request
-   * @returns Updated document
+   * @returns {Promise<IConnectorDocument>} Updated document
    * @memberof ConnectorService
    */
   public async update(connectorId: string, body: { [key: string]: any }) : Promise<IConnectorDocument> {

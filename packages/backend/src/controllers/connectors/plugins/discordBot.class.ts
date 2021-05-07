@@ -3,12 +3,11 @@ import { config } from '../../../configuration/environment';
 import { IConnectorDocument } from '../schemas/connector.schema';
 import { ConnectorLogItem, IConnectorLogItemDocument } from '../schemas/connectorLogItem.schema';
 import { connectorLogger } from '../logger';
-import { ConnectorPlugin } from '.';
+import { ConnectorPlugin } from './connectorPlugin.class';
 import { object, ObjectSchema, string } from '@hapi/joi';
 import { ApiError } from '../../../utils/api';
 
 export class DiscordBotConnectorPlugin extends ConnectorPlugin {
-  private document: IConnectorDocument;
   private readonly client: Discord.Client = new Discord.Client();
   private readonly updateRequestSchema: ObjectSchema = object({
     channel: string().alphanum().length(18),
@@ -17,12 +16,11 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
   /**
    * Creates an instance of DiscordBotConnectorPlugin.
    *
-   * @param {IConnectorDocument} doc mongoose document
+   * @param {IConnectorDocument} document mongoose document
    * @memberof DiscordBotConnectorPlugin
    */
-  constructor(doc: IConnectorDocument) {
+  constructor(private document: IConnectorDocument) {
     super();
-    this.document = doc;
 
     this.setUpListeners();
     this.client.login(config.discordToken);
@@ -74,10 +72,10 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
 
     (discordChannel as TextChannel).send(message)
       .then(() => {
-        connectorLogger.info('Successfully send message via discord bot!', this.objectId);
+        connectorLogger.info('Successfully send message via Discord bot!', this.objectId);
       })
       .catch((error) => {
-        connectorLogger.info(`Failed to send message via discord bot! ${error.message}`, this.objectId);
+        connectorLogger.info(`Failed to send message via Discord bot! ${error.message}`, this.objectId);
       });
   }
 

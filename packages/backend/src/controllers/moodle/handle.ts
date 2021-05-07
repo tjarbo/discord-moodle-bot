@@ -1,8 +1,8 @@
 import { config } from '../../configuration/environment';
 import { ICourse } from './interfaces/course.interface';
 import { IResource } from './interfaces/resource.interface';
-import { publish } from '../discord';
-import { AssignmentMessage, AssignmentMessageOptions, AssignmentReminderMessage, AssignmentReminderMessageOptions, ResourceMessage, ResourceMessageOptions  } from '../discord/templates';
+import { connectorService } from '../connectors/service';
+import { AssignmentMessage, AssignmentMessageOptions, AssignmentReminderMessage, AssignmentReminderMessageOptions, ResourceMessage, ResourceMessageOptions  } from '../messages/templates';
 import { Reminder } from './schemas/reminder.schema';
 import { IContentfile } from './interfaces/contentfile.interface';
 
@@ -22,7 +22,7 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
         day: 'numeric',
         hour: 'numeric',
         minute: 'numeric'
-    };
+    } as Intl.DateTimeFormatOptions;
 
     for (const course of courses) {
         for (const assignment of course.assignments) {
@@ -36,7 +36,7 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
                     dueDate: new Date(assignment.duedate * 1000).toLocaleString('de-DE', dateOptions)
                 };
 
-                await publish(new AssignmentMessage(), options);
+                connectorService.publish(null, null, new AssignmentMessage(), options);
             }
 
             // check if new deadline is incoming that hasn`t been notified about
@@ -50,7 +50,7 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
                     title: assignment.name
                 };
                 await new Reminder({assignment_id: assignment.id}).save();
-                await publish(new AssignmentReminderMessage(), options);
+                connectorService.publish(null, null, new AssignmentReminderMessage(), options);
             }
         }
     }
@@ -104,7 +104,7 @@ export async function handleContents(contents: any, courseName: string, lastFetc
             title: file.filename,
             link: file.fileurl.replace('/webservice', '')
         };
-        await publish(new ResourceMessage(), options);
+        connectorService.publish(null, null, new ResourceMessage(), options);
     }
 }
 
@@ -128,7 +128,7 @@ export async function handleResources(resources: IResource[], courseMap: Map<num
                 title: file.filename,
                 link: file.fileurl.replace('/webservice', '')
             };
-            publish(new ResourceMessage(), options);
+            connectorService.publish(null, null, new ResourceMessage(), options);
         }
     }
 }
