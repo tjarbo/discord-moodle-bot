@@ -6,23 +6,9 @@ dotenvConfig();
 
 // define validation for all the env vars
 const envVarsSchema = object({
-  NODE_ENV: string()
-    .allow('development')
-    .allow('production')
-    .allow('test')
-    .allow('provision')
-    .default('production'),
-  PORT: number()
-    .default(4040),
-  MONGOOSE_DEBUG: boolean()
-    .when('NODE_ENV', {
-      is: string().equal('development'),
-      then: boolean().default(true),
-      otherwise: boolean().default(false)
-    }),
-  MONGO_HOST: string()
-    .required()
-    .description('Path to your mongodb instance.'),
+  CONNECTOR_LOG_LIFETIME: string()
+    .default('31d')
+    .description('Defines how long log entries/items will be stored'),
   DISCORD_TOKEN: string()
     .required()
     .description('Discord Token for bot'),
@@ -35,6 +21,15 @@ const envVarsSchema = object({
   JWT_EXPIRESIN: string()
     .default('10m')
     .description('Defines how long a user will be logged in'),
+  MONGOOSE_DEBUG: boolean()
+    .when('NODE_ENV', {
+      is: string().equal('development'),
+      then: boolean().default(true),
+      otherwise: boolean().default(false)
+    }),
+  MONGO_HOST: string()
+    .required()
+    .description('Path to your mongodb instance.'),
   MOODLE_BASE_URL: string()
     .required()
     .uri()
@@ -54,7 +49,15 @@ const envVarsSchema = object({
   MOODLE_USERID: number()
     .required()
     .description('Moodle user Id required to fetch course details'),
-  REGISTRATIONTOKEN_LIFETIME: string()
+  NODE_ENV: string()
+    .allow('development')
+    .allow('production')
+    .allow('test')
+    .allow('provision')
+    .default('production'),
+  PORT: number()
+    .default(4040),
+  REGISTRATION_TOKEN_LIFETIME: string()
     .default('15m')
     .description('Defines how long a registration token can be used until it expires'),
   RP_NAME: string()
@@ -79,6 +82,7 @@ const envDescriptionLink = 'https://github.com/tjarbo/discord-moodle-bot/wiki/Wh
 if (error) throw new Error(`Config validation error: ${error.message} \nSee ${envDescriptionLink} for more information`);
 
 export const config = {
+  connectorLogLifetime: envVars.CONNECTOR_LOG_LIFETIME,
   discordToken: envVars.DISCORD_TOKEN,
   discordChannel: envVars.DISCORD_CHANNEL,
   env: envVars.NODE_ENV,
@@ -99,7 +103,7 @@ export const config = {
     userId:  envVars.MOODLE_USERID,
   },
   port: envVars.PORT,
-  registrationTokenLifetime: envVars.REGISTRATIONTOKEN_LIFETIME,
+  registrationTokenLifetime: envVars.REGISTRATION_TOKEN_LIFETIME,
   rp: {
     name: envVars.RP_NAME,
     id: envVars.RP_ID,
