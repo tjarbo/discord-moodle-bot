@@ -2,7 +2,7 @@
   <div id="registrationtokenmodal">
     <b-modal v-model="active" scroll="keep">
       <div class="box">
-        <h1 class="title">Neuer Registrierungstoken</h1>
+        <h1 class="title">{{ $t('components.registrationTokenModal.registrationTokenTitle') }}</h1>
         <div class="container">
           <div class="notification is-light has-text-centered has-text-weight-bold">
             {{ token }}
@@ -10,11 +10,7 @@
         </div>
         <div class="content">
           <p>
-            Du hast einen neuen Registrierungstoken angefordert. Dieser ist für
-            {{ this.lifetime }} gültig. Diesen Token kannst du entweder selbst
-            benutzen, um ein weiteres Gerät zu registrieren (eigener neuer
-            Benutzername ist notwendig!) oder ihn an deine Freunde:innen
-            schicken, damit sie ebenfalls den Service konfigurieren können.
+            {{ $t('components.registrationTokenModal.registrationTokenContent', this.lifetime) }}
           </p>
         </div>
         <div class="container has-text-centered" v-show="displayQRC">
@@ -30,9 +26,7 @@
                 <p>
                   <strong>{{ link }}</strong>
                   <br />
-                  Klicke hier, um den Link in deine Zwischenablage zu speichern. Teile diesen
-                  mit der Person, welche du als weiteren Benutzer hinzufügen möchstest oder öffne
-                  ihn selbst in einem neuen Browsertab.
+                  {{ $t('components.registrationTokenModal.clipboardContent') }}
                 </p>
               </div>
             </div>
@@ -46,10 +40,9 @@
             <div class="media-content">
               <div class="content">
                 <p>
-                  <strong>QR-Code anzeigen</strong>
+                  <strong>{{ $t('components.registrationTokenModal.qrCodeTitle') }}</strong>
                   <br />
-                  Klicke hier, um den Link als QR-Code anzuzeigen. Somit kannst du beispielweise
-                  den Token einfacher auf deinem Handy benutzen.
+                  {{ $t('components.registrationTokenModal.qrCodeContent') }}
                 </p>
               </div>
             </div>
@@ -91,11 +84,11 @@ export default {
       // Add link to user's clipboard
       navigator.clipboard.writeText(this.link)
         .then(() => {
-          notifySuccess('Link kopiert!');
+          notifySuccess($t('components.registrationTokenModal.notifications.copiedLink'));
         })
         .catch((error) => {
           console.error(error);
-          notifyFailure('Link konnte nicht kopiert werden!');
+          notifyFailure($t('components.registrationTokenModal.notifications.failedToCopyLink'));
         });
     },
 
@@ -107,7 +100,7 @@ export default {
       QRCode.toCanvas(qrCanvas, this.link, (error) => {
         if (error) {
           console.error(error);
-          notifyFailure('QR-Code konnte nicht erstellt werden');
+          notifyFailure($t('components.registrationTokenModal.notifications.failedToCreateQrCode'));
         } else {
           // Show canvas element
           this.displayQRC = true;

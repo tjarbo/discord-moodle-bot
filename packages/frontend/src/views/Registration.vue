@@ -3,9 +3,9 @@
     <authentication-layout
       @submit="onSubmit"
       title="Fancy Moodle Discord Bot"
-      subtitle="Registriere dich, um fortzufahren!"
-      switchViewText="Du bist bereits registriert?"
       switchViewLink="/login"
+      :subtitle="$t('views.registration.subtitle')"
+      :switchViewText="$t('views.registration.switchViewText')"
     >
       <b-loading :is-full-page="false" :active="authGetStatus.pending"></b-loading>
 
@@ -15,9 +15,9 @@
             autofocus
             id="username"
             class="input is-large"
-            placeholder="Wähle Benutzernamen"
             type="text"
             v-model="form.username"
+            :placeholder="$t('views.registration.usernamePlaceholder')"
           />
         </div>
       </div>
@@ -41,7 +41,7 @@
             class="button is-block is-primary is-large is-fullwidth is-marginless"
             :disabled="$v.$invalid"
           >
-            Registrieren
+            {{ $t('views.registration.registrationSubmitButton') }}
           </button>
         </div>
       </div>
@@ -58,6 +58,7 @@ import { mapGetters } from 'vuex';
 import { validate } from 'uuid';
 import { notifyFailure, notifySuccess } from '../notification';
 import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
+import i18n from '../i18n';
 
 export default {
   name: 'RegistrationView',
@@ -97,16 +98,16 @@ export default {
             switch (error.name) {
               case 'AbortError':
                 // Registration process timed out or cancelled
-                notifyFailure('Registrierung wurde abgebrochen!');
+                notifyFailure(i18n.t('views.registration.notifications.abortError'));
                 break;
 
               case 'InvalidStateError':
                 // Authenticator is maybe already used for this
-                notifyFailure('Authenticator wurde wahrscheinlich bereits von dir registriert!');
+                notifyFailure(i18n.t('views.registration.notifications.invalidStateError'));
                 break;
 
               default:
-                notifyFailure('Fehler! Bitte versuche es erneut!');
+                notifyFailure(i18n.t('views.registration.notifications.defaultError'));
                 break;
             }
           }
@@ -117,7 +118,7 @@ export default {
           } else {
           // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+              i18n.t('general.notifications.requestFailedLocally'),
             );
           }
         });
@@ -129,7 +130,7 @@ export default {
         .then(() => {
           // registration was successful and jwt was received; redirect to dashboard
           this.$router.push('dashboard');
-          notifySuccess('Anmeldung war erfolgreich!');
+          notifySuccess(i18n.t('views.registration.notifications.registrationSuccess'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
@@ -137,7 +138,7 @@ export default {
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+              i18n.t('general.notifications.requestFailedLocally'),
             );
           }
         });

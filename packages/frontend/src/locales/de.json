@@ -1,33 +1,80 @@
 {
   "components": {
-    "statusboard": {
-      "status": {
-        "panelHeading": "Status",
-        "checkForMoodleUpdatesButton": "Jetzt auf Moodle Updates prüfen",
-        "columnValues": {
-          "discordCurrentChannelKey": "Aktueller Discord Channel",
-          "discordLastReadyKey": "Letzter erfolgreicher Discord Verbindungaufbau",
-          "moodleConnectionStatusKey": "Status der Moodle Verbindung",
-          "moodleCurrentFetchIntervalKey": "Aktuelles Fetch-Intervall",
-          "moodleLastFetchKey": "Letzte erfolgreiche Moodle Aktualisierung",
-          "moodleNextFetchKey": "Nächste Moodle Aktualisierung"
-        },
-        "notifications": {
-          "updatedStatusData": "Statusdaten aktualisiert!",
-          "fetchedMoodleUpdates": "Moodle Updates erfolgreich abgerufen!"
-        },
-        "updateStatusButton": "Status aktualisieren"
+    "administratorList": {
+      "createdAtLabel": "Erstellungsdatum",
+      "createNewRegistrationTokenButton": "Neuen Registrierungstoken erstellen",
+      "deleteLabel": "Verwaltung",
+      "hasDeviceLabel": "Authentifikator",
+      "notifications": {
+        "deletedAdministrator": "Administrator erfolgreich gelöscht!"
+      },
+      "panelHeading": "Administratoren",
+      "usernameLabel": "Benutzername"
+    },
+    "discordPanel": {
+      "changeDiscordChannelLabel": "Discord Channel ändern",
+      "newChannelIdPlaceholder": "Neue Channel-ID",
+      "notifications": {
+        "changedDiscordChannel": "Channel auf Discord wurde erfolgreich geändert!"
       }
+    },
+    "registrationTokenModal": {
+      "clipboardContent": "Klicke hier, um den Link in deine Zwischenablage zu speichern. Teile diesen mit der Person, welche du als weiteren Benutzer hinzufügen möchstest oder öffne ihn selbst in einem neuen Browsertab.",
+      "notifications": {
+        "copiedLink": "Link kopiert!",
+        "failedToCopyLink": "Link konnte nicht kopiert werden!",
+        "failedToCreateQrCode": "QR-Code konnte nicht erstellt werden!"
+      },
+      "registrationTokenContent": "Du hast einen neuen Registrierungstoken angefordert. Dieser ist für {0} gültig. Diesen Token kannst du entweder selbst benutzen, um ein weiteres Gerät zu registrieren (eigener neuer Benutzername ist notwendig!) oder ihn an deine Freunde:innen schicken, damit sie ebenfalls den Service konfigurieren können.",
+      "registrationTokenTitle": "Neuer Registrierungstoken",
+      "qrCodeContent": "Klicke hier, um den Link als QR-Code anzuzeigen. Somit kannst du beispielweise den Token einfacher auf deinem Handy benutzen.",
+      "qrCodeTitle": "QR-Code anzeigen"
+    },
+    "status": {
+      "checkForMoodleUpdatesButton": "Jetzt auf Moodle Updates prüfen",
+      "columnValues": {
+        "discordCurrentChannelKey": "Aktueller Discord Channel",
+        "discordLastReadyKey": "Letzter erfolgreicher Discord Verbindungaufbau",
+        "moodleConnectionStatusKey": "Status der Moodle Verbindung",
+        "moodleCurrentFetchIntervalKey": "Aktuelles Fetch-Intervall",
+        "moodleLastFetchKey": "Letzte erfolgreiche Moodle Aktualisierung",
+        "moodleNextFetchKey": "Nächste Moodle Aktualisierung"
+      },
+      "notifications": {
+        "updatedStatusData": "Statusdaten aktualisiert!",
+        "fetchedMoodleUpdates": "Moodle Updates erfolgreich abgerufen!"
+      },
+      "panelHeading": "Status",
+      "updateStatusButton": "Status aktualisieren"
+    },
+    "setCourseNotifications": {
+      "notifications": {
+        "updatedNotifications": "Benachrichtigung für {0} aktualisiert!"
+      },
+      "panelHeading": "Kurse mit aktivierten Benachrichtigungen"
+    },
+    "setRefreshRate": {
+      "newIntervalLabel": "Neues Intervall in ms",
+      "notifications": {
+        "updatedInterval": "Die Aktualisierungsrate wurde erfolgreich gespeichert!"
+      },
+      "panelHeading": "Aktualisierungsintervall ändern"
+    },
+    "theNavBar": {
+      "logoutButton": "Logout"
     }
   },
   "general": {
+    "delete": "Löschen",
     "error": "Fehler",
     "name": "Name",
     "none": "Keine",
+    "notFound": "Nicht gefunden",
     "notifications": {
       "accessExpired": "Zugang leider abgelaufen! Bitte melde dich erneut an!",
       "requestFailedLocally": "Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung."
     },
+    "registered": "Registriert",
     "time": {
       "ago": "Vor {time} {unit} ({date})",
       "day": "Tag",
@@ -43,9 +90,45 @@
       "second": "Sekunde",
       "seconds": "Sekunden"
     },
+    "update": "Aktualisieren",
     "unknown": "Unbekannt",
     "value": "Wert"
   },
-  "layouts": {},
-  "views": {}
+  "layouts": {
+    "authenticationLayout": {
+      "needHelpLink": "Brauchst du Hilfe?"
+    }
+  },
+  "views": {
+    "dashboard": {
+      "systemLabel": "System"
+    },
+    "login": {
+      "loginSubmitButton": "Anmelden",
+      "notifications": {
+        "abortError": "Anmeldung wurde abgebrochen!",
+        "defaultError": "Fehler! Bitte versuche es erneut!",
+        "loginSuccess": "Anmeldung war erfolgreich!"
+      },
+      "subtitle": "Melde dich an, um fortzufahren!",
+      "switchViewText": "Du hast einen Token bekommen?",
+      "usernamePlaceholder": "Dein Benutzername"
+    },
+    "registration": {
+      "notifications": {
+        "abortError": "Registrierung wurde abgebrochen!",
+        "defaultError": "Fehler! Bitte versuche es erneut!",
+        "invalidStateError": "Authentifikator wurde wahrscheinlich bereits von dir registriert!",
+        "registrationSuccess": "Anmeldung war erfolgreich!"
+      },
+      "registrationSubmitButton": "Registrieren",
+      "subtitle": "Registriere dich, um fortzufahren!",
+      "switchViewText": "Du bist bereits registriert?",
+      "usernamePlaceholder": "Wähle Benutzernamen"
+    },
+    "startLoading": {
+      "subtitle": "App wird geladen ...",
+      "needHelpLink": "Brauchst du Hilfe?"
+    }
+  }
 }

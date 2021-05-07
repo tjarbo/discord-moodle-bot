@@ -27,7 +27,7 @@
             <a
               class="has-text-link"
               href="https://github.com/tjarbo/discord-moodle-bot/wiki"
-              >Brauchst du Hilfe?</a
+              >{{ $t('layouts.authenticationLayout.needHelpLink') }}</a
             >
           </p>
         </div>

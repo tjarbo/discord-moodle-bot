@@ -9,7 +9,7 @@
       <b-navbar-item tag="div">
         <div class="buttons">
           <a class="button is-primary" @click="onClick">
-            <strong>Logout</strong>
+            <strong>{{ $t('components.theNavBar.logoutButton') }}</strong>
           </a>
         </div>
       </b-navbar-item>

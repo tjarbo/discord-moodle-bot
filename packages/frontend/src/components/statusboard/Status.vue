@@ -2,7 +2,7 @@
   <div id="statusboard">
     <article class="panel is-status">
       <b-loading :is-full-page="false" :active="statusBoardGetStatus.pending"></b-loading>
-      <p class="panel-heading">{{ $t('components.statusboard.status.panelHeading') }}:</p>
+      <p class="panel-heading">{{ $t('components.status.panelHeading') }}:</p>
       <a class="panel-block">
         <p class="control">
           <b-table :data="rows" :hoverable="true">
@@ -24,7 +24,7 @@
           class="button is-outlined is-status"
           style="width: 50%; margin: 5px;"
         >
-          {{ $t('components.statusboard.status.updateStatusButton') }}
+          {{ $t('components.status.updateStatusButton') }}
         </b-button>
         <b-button
           @click="fetchAndNotify"
@@ -32,7 +32,7 @@
           style="width: 50%; margin: 5px;"
           :loading="fetchGetStatus.pending"
         >
-          {{ $t('components.statusboard.status.checkForMoodleUpdatesButton') }}
+          {{ $t('components.status.checkForMoodleUpdatesButton') }}
         </b-button>
       </div>
     </article>
@@ -72,12 +72,12 @@ export default {
     ],
     // First-column values
     keys: {
-      moodleConnectionStatus: i18n.t('components.statusboard.status.columnValues.moodleConnectionStatusKey'),
-      moodleLastFetch: i18n.t('components.statusboard.status.columnValues.moodleLastFetchKey'),
-      moodleNextFetch: i18n.t('components.statusboard.status.columnValues.moodleNextFetchKey'),
-      moodleCurrentFetchInterval: i18n.t('components.statusboard.status.columnValues.moodleCurrentFetchIntervalKey'),
-      discordLastReady: i18n.t('components.statusboard.status.columnValues.discordLastReadyKey'),
-      discordCurrentChannel: i18n.t('components.statusboard.status.columnValues.discordCurrentChannelKey'),
+      moodleConnectionStatus: i18n.t('components.status.columnValues.moodleConnectionStatusKey'),
+      moodleLastFetch: i18n.t('components.status.columnValues.moodleLastFetchKey'),
+      moodleNextFetch: i18n.t('components.status.columnValues.moodleNextFetchKey'),
+      moodleCurrentFetchInterval: i18n.t('components.status.columnValues.moodleCurrentFetchIntervalKey'),
+      discordLastReady: i18n.t('components.status.columnValues.discordLastReadyKey'),
+      discordCurrentChannel: i18n.t('components.status.columnValues.discordCurrentChannelKey'),
     },
     fetchInProgress: false,
   }),
@@ -87,7 +87,7 @@ export default {
       this.$store
         .dispatch('getStatus')
         .then(() => {
-          notifySuccess(i18n.t('components.statusboard.status.notifications.updatedStatusData'));
+          notifySuccess(i18n.t('components.status.notifications.updatedStatusData'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
@@ -109,7 +109,7 @@ export default {
       this.$store
         .dispatch('triggerFetch')
         .then(() => {
-          notifySuccess(i18n.t('components.statusboard.status.notifications.fetchedMoodleUpdates'));
+          notifySuccess(i18n.t('components.status.notifications.fetchedMoodleUpdates'));
           this.$store.dispatch('getStatus');
         })
         .catch((apiResponse) => {
