@@ -36,7 +36,7 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
                     dueDate: new Date(assignment.duedate * 1000).toLocaleString('de-DE', dateOptions)
                 };
 
-                connectorService.publish(null, null, new AssignmentMessage(), options);
+                connectorService.publish(course.id, new AssignmentMessage(), options);
             }
 
             // check if new deadline is incoming that hasn`t been notified about
@@ -50,7 +50,7 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
                     title: assignment.name
                 };
                 await new Reminder({assignment_id: assignment.id}).save();
-                connectorService.publish(null, null, new AssignmentReminderMessage(), options);
+                connectorService.publish(course.id, new AssignmentReminderMessage(), options);
             }
         }
     }
@@ -104,7 +104,7 @@ export async function handleContents(contents: any, courseName: string, lastFetc
             title: file.filename,
             link: file.fileurl.replace('/webservice', '')
         };
-        connectorService.publish(null, null, new ResourceMessage(), options);
+        connectorService.publish(undefined, new ResourceMessage(), options);
     }
 }
 
@@ -128,7 +128,7 @@ export async function handleResources(resources: IResource[], courseMap: Map<num
                 title: file.filename,
                 link: file.fileurl.replace('/webservice', '')
             };
-            connectorService.publish(null, null, new ResourceMessage(), options);
+            connectorService.publish(undefined, new ResourceMessage(), options);
         }
     }
 }

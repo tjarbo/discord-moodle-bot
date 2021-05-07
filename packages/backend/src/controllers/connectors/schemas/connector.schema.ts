@@ -5,7 +5,7 @@ import { ConnectorType } from '../plugins';
 export interface IConnectorDocument extends Document {
   [_id: string]: any;
   active: boolean;
-  courses: { [key: string]: string }[];
+  courses: number[];
   createdAt: Date;
   default: boolean;
   name: string;

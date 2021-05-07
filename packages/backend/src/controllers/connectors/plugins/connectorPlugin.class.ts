@@ -6,6 +6,6 @@ export abstract class ConnectorPlugin {
   public abstract getLogs(limit: number): Promise<IConnectorLogItemDocument[]>;
   public abstract update(body: { [key: string]: any }): Promise<IConnectorDocument>;
   public abstract get objectId(): string;
-  public abstract get courses(): { [key: string]: string; }[];
+  public abstract get courses(): number[];
   public abstract get isDefault(): boolean;
 }

@@ -21,7 +21,7 @@ class ConnectorService {
       connectorList.forEach(connector =>  {
         switch (connector.type) {
           case ConnectorType.Discord:
-            loggerFile.debug(`Found connector of type Discord (${connector._id})`);
+            loggerFile.debug(`Found connector of type Discord Bot (${connector._id})`);
             this.connectors.push(new DiscordBotConnectorPlugin(connector));
             break;
 
@@ -72,21 +72,20 @@ class ConnectorService {
    * If the course is assigned to no course, it will send the message to all
    * connectors with the default flag.
    *
-   * @param {string} moodleId objectId of MoodleInstance
    * @param {number} courseId id of the moodle course
    * @param {MessageTemplate} template message template that will be used
    * @param {*} options content that will be applied on template
    * @memberof ConnectorService
    */
-  public publish(moodleId: string, courseId: string, template: Message, options: any): void {
+  public publish(courseId: number, template: Message, options: any): void {
     const message = template.apply(options);
     let messageWasSent: boolean = false;
 
     loggerFile.info('Got new message publish order');
 
     this.connectors.forEach(connector => {
-      const course = connector.courses.find(element => element.moodleId === moodleId && element.courseId === courseId);
-      if (course === undefined) return;
+      // See if course is assigned to this connector - skip if not
+      if (connector.courses.indexOf(courseId) === -1) return;
 
       messageWasSent = true;
 
@@ -97,7 +96,7 @@ class ConnectorService {
     // If the message was sent to a plugin, stop here
     if (messageWasSent) return;
 
-    loggerFile.info(`No connector for course ${courseId} of moodle ${moodleId} found. Use default connectors!`);
+    loggerFile.info(`No connector for course ${courseId} found. Use default connectors!`);
 
     // If not, send the message to all default connectors
     this.connectors.forEach(connector => {

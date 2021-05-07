@@ -117,7 +117,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
    * @type {{ [key: string]: string; }[]}
    * @memberof DiscordBotConnectorPlugin
    */
-  public get courses(): { [key: string]: string; }[] {
+  public get courses(): number[] {
     return this.document.courses;
   }
 
