@@ -16,7 +16,7 @@ class ConnectorService {
    */
   constructor() {
     loggerFile.info('ConnectorService has been started');
-    // Get all connectors from Database
+    // Get all connectors from database
     Connector.find().then((connectorList: IConnectorDocument[]) => {
       connectorList.forEach(connector =>  {
         switch (connector.type) {
@@ -33,7 +33,7 @@ class ConnectorService {
 
       // If no connector has been found, start to create connectors based on .env
       if (connectorList.length === 0) {
-        loggerFile.warn('Not connector found at database');
+        loggerFile.warn('No connector found within database');
         this.createConnectorsFromEnv();
       }
     });
@@ -69,7 +69,7 @@ class ConnectorService {
 
   /**
    * Publish a message to connectors that have this course assigned
-   * If the course is assigned to no course, it will send the message to all
+   * If the course is not assigned to a connector, it will send the message to all
    * connectors with the default flag.
    *
    * @param {number} courseId id of the moodle course
@@ -106,8 +106,8 @@ class ConnectorService {
 
   /**
    * Updates a selected connector
-   * Throws ApiError
-   *
+   * 
+   * @throws ApiError
    * @param {string} connectorId objectId of the connector
    * @param {[key: string]: any} body body of http request
    * @returns {Promise<IConnectorDocument>} Updated document

@@ -72,7 +72,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
 
     (discordChannel as TextChannel).send(message)
       .then(() => {
-        connectorLogger.info('Successfully send message via Discord bot!', this.objectId);
+        connectorLogger.info('Successfully sent message via Discord bot!', this.objectId);
       })
       .catch((error) => {
         connectorLogger.info(`Failed to send message via Discord bot! ${error.message}`, this.objectId);
@@ -122,8 +122,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
   }
 
   /**
-   * Returns true, if the bot is an default handler for not
-   * assigned courses.
+   * Returns true, if the bot is a default handler for unassigned courses.
    *
    * @readonly
    * @type {boolean}
