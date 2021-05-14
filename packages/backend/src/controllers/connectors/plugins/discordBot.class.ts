@@ -1,7 +1,6 @@
 import Discord, { TextChannel } from 'discord.js';
 import { config } from '../../../configuration/environment';
 import { IConnectorDocument } from '../schemas/connector.schema';
-import { ConnectorLogItem, IConnectorLogItemDocument } from '../schemas/connectorLogItem.schema';
 import { connectorLogger } from '../logger';
 import { ConnectorPlugin } from './connectorPlugin.class';
 import { object, ObjectSchema, string } from '@hapi/joi';
@@ -19,7 +18,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
    * @param {IConnectorDocument} document mongoose document
    * @memberof DiscordBotConnectorPlugin
    */
-  constructor(private document: IConnectorDocument) {
+  constructor(protected document: IConnectorDocument) {
     super();
 
     this.setUpListeners();
@@ -44,21 +43,6 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     this.client.on('disconnect', (info) => {
       connectorLogger.error(`discord.js: ${info}`, this.objectId);
     });
-  }
-
-  /**
-   * Returns an array of the newest log items of this bot.
-   * The amount of items can be limited by parameter. Default is 50.
-   *
-   * @param {number} [limit=50] Set a limit to the amount of items
-   * @return {Promise<IConnectorLogItemDocument[]>} Array of ConnectorLogItemDocuments
-   * @memberof DiscordBotConnectorPlugin
-   */
-  public async getLogs(limit: number = 50): Promise<IConnectorLogItemDocument[]> {
-    const query = {
-      connector: this.objectId
-    };
-    return await ConnectorLogItem.find(query).sort({ createdAt: -1 }).limit(limit);
   }
 
   /**
@@ -99,37 +83,5 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     connectorLogger.info('New values have been applied', this.objectId);
 
     return result;
-  }
-
-  /**
-   * Returns the mongoDb objectId, this plugin is build on.
-   *
-   * @readonly
-   * @type {string}
-   * @memberof DiscordBotConnectorPlugin
-   */
-  public get objectId(): string { return this.document.id; }
-
-  /**
-   * Returns all courses, that are assigned to this bot.
-   *
-   * @readonly
-   * @type {{ [key: string]: string; }[]}
-   * @memberof DiscordBotConnectorPlugin
-   */
-  public get courses(): number[] {
-    return this.document.courses;
-  }
-
-  /**
-   * Returns true, if the bot is an default handler for not
-   * assigned courses.
-   *
-   * @readonly
-   * @type {boolean}
-   * @memberof DiscordBotConnectorPlugin
-   */
-  public get isDefault(): boolean {
-    return this.document.default;
-  }
+  }  
 }
