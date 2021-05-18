@@ -19,7 +19,7 @@ class ConnectorLogger {
   }
 
   /**
-   * Prints and stores a info message
+   * Prints and stores an info message
    *
    * @param message message that needs to be stored
    * @param objectId objectId of the connector
@@ -53,7 +53,7 @@ class ConnectorLogger {
   }
 
   /**
-   * Prints and stores a error message
+   * Prints and stores an error message
    *
    * @param message message that needs to be stored
    * @param objectId objectId of the connector
