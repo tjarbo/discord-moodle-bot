@@ -2,10 +2,8 @@ import { loggerFile } from '../../src/configuration/logger';
 import { connectorLogger } from '../../src/controllers/connectors/logger';
 import { ConnectorLogItem } from '../../src/controllers/connectors/schemas/connectorLogItem.schema';
 
+jest.mock('../../src/configuration/environment.ts');
 jest.mock('../../src/controllers/connectors/schemas/connectorLogItem.schema');
-//jest.mock('../../src/configuration/environment.ts');
-jest.mock('../../src/configuration/logger.ts');
-
 
 describe('connectors/logger.ts info()', () => {
   let spyLogger: jest.SpyInstance;

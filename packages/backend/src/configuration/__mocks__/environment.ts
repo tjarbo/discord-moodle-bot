@@ -1,9 +1,7 @@
 export const config = {
-    admin: {
-      id: '1234567890123456789',
-      name: 'testuser#00000',
-    },
+    connectorLogLifetime: 1,
     discordToken: 'xxxxxxxxxxxxxx',
+    discordChannel: 'xxxxxxxxxxxxxx',
     env: 'test',
     jwt: {
       secret: 'secret',
@@ -11,17 +9,18 @@ export const config = {
     },
     mongo: {
       host: 'mongodb://localhost:27017/fmdb',
-      port: 27017
     },
     mongooseDebug: true,
-    port: 4040,
     moodle: {
         baseURL: 'https://moodle.example.com',
+        fetchInterval: '12',
         reminderTimeLeft: 86400,
         token: 'MOODLETOKEN123',
         useCourseShortname: true,
         userId: 123456
     },
+    port: 8080,
+    registrationTokenLifetime: 123,
     rp: {
       name: 'Unit Test',
       id: 'localhost',
