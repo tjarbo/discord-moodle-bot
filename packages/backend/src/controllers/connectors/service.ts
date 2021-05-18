@@ -106,7 +106,7 @@ class ConnectorService {
 
   /**
    * Updates a selected connector
-   * 
+   *
    * @throws ApiError
    * @param {string} connectorId objectId of the connector
    * @param {[key: string]: any} body body of http request

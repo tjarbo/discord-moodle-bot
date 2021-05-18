@@ -22,7 +22,7 @@ export abstract class ConnectorPlugin {
     };
     return await ConnectorLogItem.find(query).sort({ createdAt: -1 }).limit(limit);
   }
-  
+
   /**
    * Returns the mongoDb objectId, this connector is build on.
    *

@@ -83,5 +83,5 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     connectorLogger.info('New values have been applied', this.objectId);
 
     return result;
-  }  
+  }
 }
