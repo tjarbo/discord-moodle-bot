@@ -10,20 +10,20 @@ describe('connectors/logger.ts info()', () => {
   const message = "Test";
 
   beforeEach(() => {
-    spyLogger = jest.spyOn(loggerFile,'info');
+    spyLogger = jest.spyOn(loggerFile, 'info');
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should save message to logs', () => {
+  it('should save the message to logs', () => {
     connectorLogger.info(message, "123");
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).toHaveBeenCalled();
   });
 
-  it('should skip to save the message to logs', () => {
+  it('should skip saving the message to logs', () => {
     connectorLogger.info(message, "123", true);
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).not.toHaveBeenCalled();
@@ -42,13 +42,13 @@ describe('connectors/logger.ts warn()', () => {
     jest.clearAllMocks();
   });
 
-  it('should save message to logs', () => {
+  it('should save the message to logs', () => {
     connectorLogger.warn(message, "123");
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).toHaveBeenCalled();
   });
 
-  it('should skip to save the message to logs', () => {
+  it('should skip saving the message to logs', () => {
     connectorLogger.warn(message, "123", true);
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).not.toHaveBeenCalled();
@@ -67,13 +67,13 @@ describe('connectors/logger.ts error()', () => {
     jest.clearAllMocks();
   });
 
-  it('should save message to logs', () => {
+  it('should save the message to logs', () => {
     connectorLogger.error(message, "123");
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).toHaveBeenCalled();
   });
 
-  it('should skip to save the message to logs', () => {
+  it('should skip saving the message to logs', () => {
     connectorLogger.error(message, "123", true);
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).not.toHaveBeenCalled();

@@ -24,7 +24,7 @@ export abstract class ConnectorPlugin {
   }
 
   /**
-   * Returns the mongoDb objectId, this connector is build on.
+   * Returns the mongoDB objectId, this connector is build on.
    *
    * @readonly
    * @type {string}
