@@ -3,8 +3,6 @@ import { Request, Response, NextFunction } from 'express';
 import { ApiSuccess } from '../../utils/api';
 import { fetchEnrolledCourses } from '../moodle/fetch';
 import { getBaseUrl } from '../moodle/index';
-import { client } from '../../configuration/discord';
-import { getDiscordChannel } from '../discordChannel/discordChannel';
 import { MoodleSettings } from '../moodle/schemas/moodle.schema';
 
 /**
@@ -33,23 +31,11 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
         const moodleLastFetchTimestamp = await MoodleSettings.getLastFetch();
         const moodleNextFetchTimestamp = await MoodleSettings.getNextFetch();
 
-        const discordLastReadyTimestamp = client.readyTimestamp;
-        const discordCurrentChannelId = await getDiscordChannel();
-
-        let discordCurrentChannelName = 'Unknown';
-        try {
-            discordCurrentChannelName = (client.channels.cache.get(discordCurrentChannelId) as any).name;
-        }
-        catch { /* continue */ }
-
         const responseObject = {
             moodleConnectionStatus,
             moodleLastFetchTimestamp,
             moodleNextFetchTimestamp,
             moodleCurrentFetchInterval,
-            discordLastReadyTimestamp,
-            discordCurrentChannelId,
-            discordCurrentChannelName,
         };
 
         const response = new ApiSuccess(200, responseObject);

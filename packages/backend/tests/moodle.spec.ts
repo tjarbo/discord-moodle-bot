@@ -11,8 +11,6 @@ import { ICourseDetails } from '../src/controllers/moodle/interfaces/coursedetai
 
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/controllers/moodle/fetch.ts');
-jest.mock('../src/configuration/discord.ts');
-jest.mock('../src/controllers/discord/index.ts');
 
 jest.useFakeTimers();
 

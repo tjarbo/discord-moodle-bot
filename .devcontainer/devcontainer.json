@@ -18,6 +18,11 @@
 		"aaron-bond.better-comments",
 		"streetsidesoftware.code-spell-checker",
 		"coenraads.bracket-pair-colorizer-2",
+		"docsmsft.docs-markdown",
+		"oouo-diogo-perdigao.docthis",
+		"octref.vetur",
+		"benjaminadk.emojis4git",
+		"fabiospampinato.vscode-todo-plus"
 	]
 
 	// Uncomment the next line if you want start specific services in your Docker Compose config.

@@ -10,8 +10,6 @@ import { v4 as uuidv4 } from "uuid";
 import { IAuthenticatorDocument } from '../src/controllers/administrator/authenticator.schema';
 
 jest.mock('../src/configuration/environment.ts');
-jest.mock('../src/configuration/discord.ts');
-jest.mock('../src/controllers/discord/index.ts');
 
 describe('auth/index.ts getTokenFromHeader', () => {
   it('should return the correct jwt', () => {
