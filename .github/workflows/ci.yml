@@ -63,7 +63,7 @@ jobs:
 
   dependency-check:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.ref == 'refs/heads/release'
+    if: github.event.pull_request.base.ref == 'release'
     strategy:
       matrix:
         directory: ['./packages/backend', './packages/frontend']
@@ -84,7 +84,7 @@ jobs:
   SAST:
     needs: [test, lint, dependency-check]
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.ref == 'refs/heads/release'
+    if: github.event.pull_request.base.ref == 'release'
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v2
