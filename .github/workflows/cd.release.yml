@@ -30,7 +30,7 @@ jobs:
 
     - name: "Create tags for Docker image"
       id: docker_meta
-      uses: crazy-max/ghaction-docker-meta@v2.2.0
+      uses: docker/metadata-action@v3.2.0
       with:
         tag-latest: true
         images: tjarbo/fmdb

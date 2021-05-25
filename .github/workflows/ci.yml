@@ -63,7 +63,7 @@ jobs:
 
   dependency-check:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.ref == 'refs/heads/release'
+    if: github.event.pull_request.base.ref == 'release'
     strategy:
       matrix:
         directory: ['./packages/backend', './packages/frontend']
@@ -77,6 +77,7 @@ jobs:
         node-version: 12.x
 
     - name: "Run audit"
+      continue-on-error: true
       working-directory: ${{ matrix.directory }}
       run: npm audit
 
@@ -84,7 +85,7 @@ jobs:
   SAST:
     needs: [test, lint, dependency-check]
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.ref == 'refs/heads/release'
+    if: github.event.pull_request.base.ref == 'release'
     steps:
       - name: "Checkout repository"
         uses: actions/checkout@v2

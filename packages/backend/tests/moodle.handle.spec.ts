@@ -22,8 +22,8 @@ describe('moodle/handle.ts handleAssignments', () => {
         spyDiscordPublish = jest.spyOn(discord, 'publish');
         spyReminderSave = jest.spyOn(new Reminder(), 'save');
         mockCourses = [
-            { fullname: "Course01", shortname: "C1", assignments: [{ id: 0, name: "As1", duedate: 0, timemodified: 999 }] },
-            { fullname: "Course02", shortname: "C2", assignments: [{ id: 1, name: "As2", duedate: 0, timemodified: 1001 }] }
+            { fullname: "Course01", shortname: "C1", assignments: [{ id: 0, name: "As1", duedate: 1, timemodified: 999 }] },
+            { fullname: "Course02", shortname: "C2", assignments: [{ id: 1, name: "As2", duedate: 1, timemodified: 1001 }] }
         ] as ICourse[];
     });
 
@@ -37,11 +37,11 @@ describe('moodle/handle.ts handleAssignments', () => {
             new AssignmentMessage(),
             {
                 "course": "C2",
-                "dueDate": new Date(0).toLocaleString('de-DE', dateOptions),
+                "dueDate": new Date(1).toLocaleString('de-DE', dateOptions),
                 "title": "As2",
             }
         ]
-        
+
         await handleAssignments(mockCourses, 1000);
         expect(spyDiscordPublish).toBeCalledTimes(1);
         expect(spyDiscordPublish).toBeCalledWith(...expectedParameters);

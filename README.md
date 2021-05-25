@@ -2,13 +2,13 @@
     <a href="#"><img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/master/logo.png" alt="FMDB" width="200"></a>
     <br>
     <h1>Fancy-Moodle-Discord-Bot </h1>
-    <sub>Built with ❤︎ by
+    <small>Built with ❤︎ by
     <a href="https://github.com/tjarbo">Tjark</a>,
     <a href="https://github.com/antonplagemann">Anton</a>,
     <a href="https://github.com/p-fruck">Philipp</a>,
     <a href="https://github.com/NoWo2000">Noah</a> and
     <a href="https://github.com/tjarbo/discord-moodle-bot/graphs/contributors">contributors</a>
-    </sub>
+    </small>
 </div>
 
 ---
@@ -23,15 +23,29 @@ The FMDB notifies you on a discord server about new activities on the Moodle pla
 - Notification of new assignments
 - Notification of assignments due soon
 
+---
+## 📮 News from core team!
+Hey 👋 Almost a year ago, we made the first commit to this repo 🤯. While back then, the focus was mainly on getting any notification on Discord. Since then we have added many improvements and new features. But over time, our tools have changed as well. That's why we are in the process of becoming more independent from Discord with the upcoming versions, so you can be notified on **all your favorite channels ❤️ like Matrix, Slack, MS Teams, etc.**, even if you do not have a Discord Account! 
+
+With the next two (maybe three) versions, **we will make fundamental changes**, so the code will not be backward compatible. Do not forget to read the changelog if you start an upgrade 🧐. More information [here](https://github.com/tjarbo/discord-moodle-bot/discussions/89)!
+
+To stay up to date and get notified as soon as a new release is available, click on *watch* in the upper right corner, then *custom* and activate *Releases* and *Discussions* ✅ (so that your inbox is not spammed 😉)! And if you like the fmdb, give it a 🌟 - thank you 🤩!
+
+Cheers 🍻!
+
+---
+
 ## 🚀 Setup your own bot
 [![Deploy with Docker](https://img.shields.io/badge/deploy%20with-docker-0db7ed)](https://github.com/tjarbo/discord-moodle-bot/wiki/Setup-with-docker)
 [![Deploy to Heroku](https://img.shields.io/badge/deploy%20to-herkou-79589F)](https://github.com/tjarbo/discord-moodle-bot/wiki/Setup-with-heroku-and-mongodb-atlas)
+[![CD - Release](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.release.yml/badge.svg)](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.release.yml)
+[![CD - Main](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.main.yml/badge.svg)](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.main.yml)
 
 The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](https://github.com/tjarbo/discord-moodle-bot/wiki/).
 
 ## ⚒️ Development
-![CI](https://github.com/tjarbo/discord-moodle-bot/workflows/Node%20CI/badge.svg?branch=master)
-![CD](https://github.com/tjarbo/discord-moodle-bot/workflows/CD/badge.svg)
+[![CI](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/ci.yml)
+![GitHub last commit](https://img.shields.io/github/last-commit/tjarbo/discord-moodle-bot)
 ![GitHub issues](https://img.shields.io/github/issues/tjarbo/discord-moodle-bot)
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.

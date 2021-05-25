@@ -7,13 +7,14 @@ import { Reminder } from './schemas/reminder.schema';
 import { IContentfile } from './interfaces/contentfile.interface';
 
 /**
- * Filters assignments by timestamp and notifies about changes and upcoming deadline
+ * Format the Moodle timestamp into a valid date string and
+ * provide a default value if the given timestamp is null
  *
- * ! export only for unit testing (rewire doesn't work :/ )
- * @param {ICourse[]} courses - The courses containing the Assignments
- * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
+ * @param {number} timestamp - The timestamp to format
+ * @returns {string} - The formatted date string
  */
-export async function handleAssignments(courses: ICourse[], lastFetch: number): Promise<void> {
+function formatMoodleDate(timestamp: number): string {
+    if (!timestamp) return 'keine Zeit gesetzt';
 
     const dateOptions = {
         weekday: 'long',
@@ -24,6 +25,17 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
         minute: 'numeric'
     };
 
+    return new Date(timestamp * 1000).toLocaleString('de-DE', dateOptions);
+}
+
+/**
+ * Filters assignments by timestamp and notifies about changes and upcoming deadlines
+ *
+ * ! export only for unit testing (rewire doesn't work :/ )
+ * @param {ICourse[]} courses - The courses containing the Assignments
+ * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
+ */
+export async function handleAssignments(courses: ICourse[], lastFetch: number): Promise<void> {
     for (const course of courses) {
         for (const assignment of course.assignments) {
             const coursename = config.moodle.useCourseShortname ? course.shortname : course.fullname;
@@ -33,7 +45,7 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
                 const options: AssignmentMessageOptions = {
                     course: coursename,
                     title: assignment.name,
-                    dueDate: new Date(assignment.duedate * 1000).toLocaleString('de-DE', dateOptions)
+                    dueDate: formatMoodleDate(assignment.duedate)
                 };
 
                 await publish(new AssignmentMessage(), options);
