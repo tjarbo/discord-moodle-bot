@@ -1,0 +1,33 @@
+categories:
+  - title: ':sparkles: New Features'
+    label: ':sparkles: new feature'
+  - title: ':bug: Bug Fixes'
+    labels:
+      - ':butterfly: bugfix'
+      - ':bug: bug'
+  - title: ':zap: Improvements'
+    label: ':zap: improvement'
+  - title: ':lock: Security and others'
+    labels:
+      - ':lock: security'
+      - '⬆️ dependencies'
+template: |
+  <img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/master/logo.png" alt="FMDB Logo" align="right" width="128">
+
+  ## Hey there :wave:
+  <<ENTER TEXT>>
+
+  To stay up to date and get notified as soon as a new release is available, click on watch in the upper right corner, then custom and activate Releases and Discussions :white_check_mark: (so that your inbox is not spammed :wink:)! And if you like the fmdb, give it a :star2: - thank you :star_struck:!
+
+  $CHANGES
+
+  ### Available Docker Images:
+  - `tjarbo/fmdb:latest` - the latest release based on `release`
+  - `tjarbo/fmdb:next` - the latest release based on `main` (⚠️ possibly unstable, due to the preparation for version 2.0!)
+
+  All images can be found [here](https://hub.docker.com/r/tjarbo/fmdb/)
+
+  ---
+  You want to setup your own bot? Visit our [wiki](https://github.com/tjarbo/discord-moodle-bot/wiki/Setup-your-own-bot) to find more about!
+
+  
