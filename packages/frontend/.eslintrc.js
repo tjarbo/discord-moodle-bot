@@ -17,6 +17,11 @@ module.exports = {
     'no-underscore-dangle': ['error', { allowAfterThis: true }],
     'no-alert': 'off',
     'no-plusplus': 'off',
+    'max-len': ['error', {
+      code: 120,
+      ignoreTrailingComments: true,
+      ignoreTemplateLiterals: true,
+    }],
   },
   overrides: [
     {

@@ -124,7 +124,8 @@ export default {
     },
 
     verifyAttestation(formData, attestationResponse) {
-      this.$store.dispatch('finishAttestation', { username: formData.username, token: formData.token, attestationResponse })
+      const payload = { username: formData.username, token: formData.token, attestationResponse };
+      this.$store.dispatch('finishAttestation', payload)
         .then(() => {
           // registration was successful and jwt was received; redirect to dashboard
           this.$router.push('dashboard');
