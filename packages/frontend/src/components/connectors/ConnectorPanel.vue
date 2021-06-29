@@ -43,9 +43,9 @@
             </b-tooltip>
           </div>
         </a>
-        <component :is="connectorSlot" v-model="connectorDataChanged.socket"></component>
+        <component :is="connectorSocket" v-model="connectorDataChanged.socket"></component>
         <div class="panel-block">
-          <div class="columns container is-fluid mx-0 px-0">
+          <div class="columns control">
             <div class="column">
               <button
                 @click="onSubmit"
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import DiscordConnector from './DiscordConnector.vue';
+import DiscordSocket from './sockets/DiscordSocket.vue';
 
 export default {
   name: 'ConnectorPanel',
@@ -90,7 +90,7 @@ export default {
     },
   },
   data: () => ({
-    connectorSlot: undefined,
+    connectorSocket: undefined,
     connectorDataChanged: null,
   }),
   methods: {
@@ -104,14 +104,14 @@ export default {
   mounted() {
     // Copy connector so that changes (active, default) do not affect header until the data is stored
     this.connectorDataChanged = JSON.parse(JSON.stringify(this.connector));
-    
+
     switch (this.connector.type) {
       case 'discord':
-        this.connectorSlot = DiscordConnector;
+        this.connectorSocket = DiscordSocket;
         break;
 
       default:
-        this.connectorSlot = undefined;
+        this.connectorSocket = undefined;
         break;
     }
   },

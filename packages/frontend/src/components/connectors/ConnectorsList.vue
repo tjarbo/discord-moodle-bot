@@ -5,9 +5,6 @@
       <nav class="level">
         <div class="level-left"></div>
         <div class="level-right">
-          <p class="level-item">All</p>
-          <p class="level-item">Active</p>
-          <p class="level-item">Inactive</p>
           <p class="level-item"><a class="button is-success">Create</a></p>
         </div>
       </nav>
