@@ -33,9 +33,6 @@ export default {
     prop: 'socket',
     event: 'change',
   },
-  mounted() {
-    console.log('Hello World');
-  },
   props: {
     socket: {
       channel: {

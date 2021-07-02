@@ -24,7 +24,7 @@
         <a class="panel-block">
           <div class="control">
             <b-tooltip
-              label="Bestimmt ob Nachrichten über diesen Connector versendet werden sollen"
+              label="Bestimmt, ob Nachrichten über diesen Connector versendet werden sollen"
               position="is-right"
               :delay="500"
               :type="color">
@@ -95,10 +95,10 @@ export default {
   }),
   methods: {
     onSubmit() {
-      console.log('Not tdb');
+      console.log('Not implemented yet');
     },
     onShowLogs() {
-      console.log('Not tdb 2');
+      console.log('Not implemented yet');
     },
   },
   mounted() {
