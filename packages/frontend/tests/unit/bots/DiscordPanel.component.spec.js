@@ -28,7 +28,7 @@ describe('DiscordPanel.component', () => {
     wrapper = mount(DiscordPanel, { localVue, store });
   });
 
-  it('should render the component', () => {
+  it.skip('should render the component', () => {
     expect(wrapper.contains('#discordpanel')).is.true;
   });
 

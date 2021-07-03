@@ -1,5 +1,5 @@
 import { connectorService } from '../src/controllers/connectors/service';
-import mockingoose from 'mockingoose';
+import * as mockingoose from 'mockingoose';
 import { handleResources, handleAssignments } from '../src/controllers/moodle/handle';
 import { IResource } from '../src/controllers/moodle/interfaces/resource.interface';
 import { ResourceMessage, AssignmentMessage } from '../src/controllers/messages/templates';
@@ -8,7 +8,6 @@ import { Reminder } from '../src/controllers/moodle/schemas/reminder.schema';
 
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/controllers/moodle/fetch.ts');
-
 
 describe('moodle/handle.ts handleAssignments', () => {
     let spyConnectorServicePublish: jest.SpyInstance;

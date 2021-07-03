@@ -1,7 +1,7 @@
 import * as moodle from '../src/controllers/moodle/';
 import * as moodleFetch from '../src/controllers/moodle/fetch';
 import * as moodleHandle from '../src/controllers/moodle/handle';
-import mockingoose from 'mockingoose';
+import * as mockingoose from 'mockingoose';
 import { loggerFile } from '../src/configuration/logger';
 import { MoodleSettings } from '../src/controllers/moodle/schemas/moodle.schema';
 import { ICourse } from '../src/controllers/moodle/interfaces/course.interface';
