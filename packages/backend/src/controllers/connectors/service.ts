@@ -4,10 +4,11 @@ import { ConnectorPlugin, ConnectorType, DiscordBotConnectorPlugin } from './plu
 import { Connector, IConnectorDocument } from './schemas/connector.schema';
 import { Message } from '../messages/templates';
 import { config } from '../../configuration/environment';
+import { LeanDocument } from 'mongoose';
 
 class ConnectorService {
 
-  private connectors: ConnectorPlugin[] = [];
+  #connectors: ConnectorPlugin[] = [];
 
   /**
    * Creates an instance of ConnectorService.
@@ -22,7 +23,7 @@ class ConnectorService {
         switch (connector.type) {
           case ConnectorType.Discord:
             loggerFile.debug(`Found connector of type Discord Bot (${connector._id})`);
-            this.connectors.push(new DiscordBotConnectorPlugin(connector));
+            this.#connectors.push(new DiscordBotConnectorPlugin(connector));
             break;
 
           default:
@@ -62,7 +63,7 @@ class ConnectorService {
       } as IConnectorDocument;
 
       const connector = await new Connector(options).save();
-      this.connectors.push(new DiscordBotConnectorPlugin(connector));
+      this.#connectors.push(new DiscordBotConnectorPlugin(connector));
       loggerFile.debug(`Connector of type Discord (${connector._id}) has been created`);
     }
   }
@@ -83,7 +84,7 @@ class ConnectorService {
 
     loggerFile.info('Got new message publish order');
 
-    this.connectors.forEach(connector => {
+    this.#connectors.forEach(connector => {
       // See if course is assigned to this connector - skip if not
       if (connector.courses.indexOf(courseId) === -1) return;
 
@@ -99,7 +100,7 @@ class ConnectorService {
     loggerFile.info(`No connector for course ${courseId} found. Use default connectors!`);
 
     // If not, send the message to all default connectors
-    this.connectors.forEach(connector => {
+    this.#connectors.forEach(connector => {
       if (connector.isDefault) connector.send(message);
     });
   }
@@ -114,10 +115,23 @@ class ConnectorService {
    * @memberof ConnectorService
    */
   public async update(connectorId: string, body: { [key: string]: any }) : Promise<IConnectorDocument> {
-    const connector = this.connectors.find(element => element.objectId === connectorId);
+    const connector = this.#connectors.find(element => element.objectId === connectorId);
     if (!connector) throw new ApiError(404, `Connector with id ${connectorId} not found!`);
 
     return await connector.update(body);
+  }
+
+  /**
+   * Returns an array of readonly documents of all connectors
+   *
+   * @readonly
+   * @type {Readonly<LeanDocument<IConnectorDocument>>[]}
+   * @memberof ConnectorService
+   */
+  get connectors() : Readonly<LeanDocument<IConnectorDocument>>[] {
+    const result: Readonly<LeanDocument<IConnectorDocument>>[]  = [];
+    this.#connectors.forEach(connector => result.push(connector.Document));
+    return result;
   }
 }
 

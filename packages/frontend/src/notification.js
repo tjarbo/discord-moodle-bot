@@ -4,6 +4,7 @@ const defaultOptions = {
   duration: 5000,
   position: 'is-bottom-right',
   hasIcon: false,
+  queue: false,
 };
 
 export function notifyFailure(message) {

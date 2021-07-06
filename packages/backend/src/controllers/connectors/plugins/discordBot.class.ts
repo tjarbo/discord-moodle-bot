@@ -84,4 +84,13 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
 
     return result;
   }
+
+  get Document() {
+    const doc = this.document.toObject();
+
+    // Hide sensitive information
+    doc.socket.token = 'hidden';
+
+    return Object.freeze(doc);
+  }
 }

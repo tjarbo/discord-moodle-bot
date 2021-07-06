@@ -1,3 +1,4 @@
+import { LeanDocument } from 'mongoose';
 import { IConnectorDocument } from '../schemas/connector.schema';
 import { ConnectorLogItem, IConnectorLogItemDocument } from '../schemas/connectorLogItem.schema';
 
@@ -7,6 +8,7 @@ export abstract class ConnectorPlugin {
 
   public abstract send(message: string): void;
   public abstract update(body: { [key: string]: any }): Promise<IConnectorDocument>;
+  public abstract get Document(): Readonly<LeanDocument<IConnectorDocument>>
 
   /**
    * Returns an array of the newest log items of this connector.

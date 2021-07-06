@@ -1,6 +1,6 @@
 import { loggerFile } from "../src/configuration/logger";
 import { adminAdministratorPostRequest, adminAdministratorDeleteRequest, adminAdministratorGetRequest } from "../src/controllers/administrator";
-import mockingoose from 'mockingoose';
+import * as mockingoose from 'mockingoose';
 import { Request, Response } from "express";
 import { RegistrationToken } from "../src/controllers/authentication/registrationToken.schema";
 import { Administrator } from '../src/controllers/administrator/administrator.schema';

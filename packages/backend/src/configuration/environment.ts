@@ -10,10 +10,8 @@ const envVarsSchema = object({
     .default('31d')
     .description('Defines how long log entries/items will be stored'),
   DISCORD_TOKEN: string()
-    .required()
     .description('Discord Token for bot'),
   DISCORD_CHANNEL: string()
-    .required()
     .description('Channel ID to receive notifications'),
   JWT_SECRET: string()
     .required()

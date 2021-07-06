@@ -23,7 +23,8 @@
     "include": [
         "src/**/*",
         "tests/*",
-        "index.ts"
+        "index.ts",
+        "missing.d.ts"
     ],
     "exclude": [
         "node_modules",

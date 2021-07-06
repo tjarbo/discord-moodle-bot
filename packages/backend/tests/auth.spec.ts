@@ -2,7 +2,7 @@
 import { getTokenFromHeader, authAssertionGetRequest, authAttestationGetRequest, authAssertionPostRequest, authAttestationPostRequest } from '../src/controllers/authentication';
 import { Administrator, IAdministratorDocument } from '../src/controllers/administrator/administrator.schema';
 import { Request, Response } from 'express';
-import mockingoose from 'mockingoose';
+import * as mockingoose from 'mockingoose';
 import { loggerFile } from '../src/configuration/logger';
 import { ApiError } from "../src/utils/api";
 import { RegistrationToken } from '../src/controllers/authentication/registrationToken.schema';

@@ -12,8 +12,8 @@
             <SetCourseNotifications></SetCourseNotifications>
             <SetRefreshRate></SetRefreshRate>
           </b-tab-item>
-          <b-tab-item class="spacing" label="Discord">
-            <DiscordPanel></DiscordPanel>
+          <b-tab-item class="spacing" label="Connectors">
+            <ConnectorList></ConnectorList>
           </b-tab-item>
         </b-tabs>
       </div>
@@ -24,7 +24,7 @@
 <script>
 import AdministratorList from '../components/administration/AdministratorList.vue';
 import SetCourseNotifications from '../components/moodle/SetCourseNotifications.vue';
-import DiscordPanel from '../components/discord/DiscordPanel.vue';
+import ConnectorList from '../components/connectors/ConnectorList.vue';
 import SetRefreshRate from '../components/moodle/SetRefreshRate.vue';
 import TheNavBar from '../components/TheNavBar.vue';
 import Status from '../components/statusboard/Status.vue';
@@ -34,7 +34,7 @@ export default {
   components: {
     AdministratorList,
     SetCourseNotifications,
-    DiscordPanel,
+    ConnectorList,
     SetRefreshRate,
     TheNavBar,
     Status,

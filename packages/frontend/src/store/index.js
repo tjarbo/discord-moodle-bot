@@ -5,7 +5,7 @@ import ApiUtil from './utils/ApiUtil';
 import StoreUtil from './utils/StoreUtil';
 
 import administrationModule from './modules/administration';
-import discordModule from './modules/discord';
+import connectorsModule from './modules/connectors';
 import moodleModule from './modules/moodle';
 import statusModule from './modules/status';
 
@@ -147,7 +147,7 @@ export default new Vuex.Store({
   },
   modules: {
     administration: administrationModule,
-    discord: discordModule,
+    connectors: connectorsModule,
     moodle: moodleModule,
     status: statusModule,
   },
