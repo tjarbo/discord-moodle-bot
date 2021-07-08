@@ -27,6 +27,14 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     this.setupClient();
   }
 
+  /**
+   * Set up the discord client with the token provided by the document.
+   * Can be called after a document update as well.
+   *
+   * @private
+   * @return {*} {Promise<void>}
+   * @memberof DiscordBotConnectorPlugin
+   */
   private async setupClient(): Promise<void> {
     this.isReady = false;
     this.client.destroy();
@@ -94,7 +102,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     const updateRequest = this.updateRequestSchema.validate(patch);
     if (updateRequest.error) throw new ApiError(400, updateRequest.error.message);
 
-    // Do not delete attributes of sockets caused by REST PUT method
+    // Do not delete attributes of socket caused by REST PUT method
     Object.assign(this.document.socket, updateRequest.value.socket);
     delete updateRequest.value.socket;
 

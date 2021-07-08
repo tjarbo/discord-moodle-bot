@@ -46,15 +46,15 @@ export function connectorsGetRequest(req: Request, res: Response, next: NextFunc
 export async function connectorsIdPatchRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     // 1. Validate given id
-    const connectorIdValidation = connectorsIdSchema.validate(req.params);
-    if (connectorIdValidation.error) throw new ApiError(400, connectorIdValidation.error.message);
+    const connectorsIdValidation = connectorsIdSchema.validate(req.params);
+    if (connectorsIdValidation.error) throw new ApiError(400, connectorsIdValidation.error.message);
 
     // 2. Validate request body
     const connectorsIdPatchRequestValidation = connectorsIdPatchRequestSchema.validate(req.body);
     if (connectorsIdPatchRequestValidation.error) throw new ApiError(400, connectorsIdPatchRequestValidation.error.message);
 
     // 3. Update connector
-    const updatedConnector = await connectorService.update(connectorIdValidation.value.id, connectorsIdPatchRequestValidation.value);
+    const updatedConnector = await connectorService.update(connectorsIdValidation.value.id, connectorsIdPatchRequestValidation.value);
 
     // 4. Send response
     const response = new ApiSuccess(200, updatedConnector);

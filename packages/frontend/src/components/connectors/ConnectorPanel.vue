@@ -30,7 +30,7 @@
               :type="color">
               <b-switch
                 v-model="connectorDataChanged.active"
-                @input="onChange"
+                @input="onInput"
                 :type="color"
               >Aktiviert</b-switch>
             </b-tooltip>
@@ -45,7 +45,7 @@
               :type="color">
               <b-switch
                 v-model="connectorDataChanged.default"
-                @input="onChange"
+                @input="onInput"
                 :type="color"
               >Default</b-switch>
             </b-tooltip>
@@ -53,7 +53,7 @@
         </a>
         <component
           v-model="connectorDataChanged.socket"
-          @input="onChange"
+          @input="onInput"
           :is="connectorSocket"
         />
         <div class="panel-block">
@@ -127,7 +127,7 @@ export default {
         },
       };
 
-      if (payload.body.socket.token === 'hidden') delete payload.body.socket.token;
+      if (payload.body.socket.token === this.connector.socket.token) delete payload.body.socket.token;
 
       this.$store.dispatch('updateConnector', payload)
         .then(() => {
@@ -145,7 +145,7 @@ export default {
     onShowLogs() {
       console.log('Not implemented yet');
     },
-    onChange() {
+    onInput() {
       this.hasBeenModified = true;
     },
   },
