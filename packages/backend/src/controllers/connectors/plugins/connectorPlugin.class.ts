@@ -7,7 +7,7 @@ export abstract class ConnectorPlugin {
   protected abstract document: IConnectorDocument;
 
   public abstract send(message: string): void;
-  public abstract update(body: { [key: string]: any }): Promise<IConnectorDocument>;
+  public abstract update(body: { [key: string]: any }): Promise<Readonly<LeanDocument<IConnectorDocument>>>;
   public abstract get Document(): Readonly<LeanDocument<IConnectorDocument>>
 
   /**
