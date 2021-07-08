@@ -28,7 +28,11 @@
               position="is-right"
               :delay="500"
               :type="color">
-              <b-switch :type="color" v-model="connectorDataChanged.active">Aktivieren</b-switch>
+              <b-switch
+                v-model="connectorDataChanged.active"
+                @input="onChange"
+                :type="color"
+              >Aktiviert</b-switch>
             </b-tooltip>
           </div>
         </a>
@@ -39,26 +43,36 @@
               position="is-right"
               :delay="500"
               :type="color">
-              <b-switch :type="color" v-model="connectorDataChanged.default">Default</b-switch>
+              <b-switch
+                v-model="connectorDataChanged.default"
+                @input="onChange"
+                :type="color"
+              >Default</b-switch>
             </b-tooltip>
           </div>
         </a>
-        <component :is="connectorSocket" v-model="connectorDataChanged.socket"></component>
+        <component
+          v-model="connectorDataChanged.socket"
+          @input="onChange"
+          :is="connectorSocket"
+        />
         <div class="panel-block">
           <div class="columns control">
             <div class="column">
-              <button
-                @click="onSubmit"
-                class="button is-outlined is-fullwidth"
-                :class="color"
-              >Aktualisieren</button>
+              <b-button
+                expanded
+                @click="onSave"
+                :outlined="!this.hasBeenModified"
+                :type="this.hasBeenModified ? 'is-danger' : this.color"
+              >Aktualisieren</b-button>
             </div>
             <div class="column">
-              <button
+              <b-button
+                expanded
+                outlined
                 @click="onShowLogs"
-                class="button is-outlined is-fullwidth"
-                :class="color"
-              >Logs anzeigen</button>
+                :type="color"
+              >Logs anzeigen</b-button>
             </div>
           </div>
         </div>
@@ -68,6 +82,7 @@
 
 <script>
 import DiscordSocket from './sockets/DiscordSocket.vue';
+import { notifySuccess, notifyFailure } from '../../notification';
 
 export default {
   name: 'ConnectorPanel',
@@ -91,14 +106,47 @@ export default {
   },
   data: () => ({
     connectorSocket: undefined,
-    connectorDataChanged: null,
+    connectorDataChanged: {
+      active: false,
+    },
+    hasBeenModified: false,
   }),
   methods: {
-    onSubmit() {
-      console.log('Not implemented yet');
+    onSave(event) {
+      event.preventDefault();
+
+      const payload = {
+        /* eslint-disable no-underscore-dangle */
+        id: this.connector._id,
+        body: {
+          active: this.connectorDataChanged.active,
+          courses: this.connectorDataChanged.courses,
+          default: this.connectorDataChanged.default,
+          name: this.connectorDataChanged.name,
+          socket: this.connectorDataChanged.socket,
+        },
+      };
+
+      if (payload.body.socket.token === 'hidden') delete payload.body.socket.token;
+
+      this.$store.dispatch('updateConnector', payload)
+        .then(() => {
+          notifySuccess('Connector erfolgreich aktualisiert!');
+          this.hasBeenModified = false;
+        })
+        .catch((apiResponse) => {
+          if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
+          // Request failed locally - maybe no internet connection etc?
+          return notifyFailure(
+            'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+          );
+        });
     },
     onShowLogs() {
       console.log('Not implemented yet');
+    },
+    onChange() {
+      this.hasBeenModified = true;
     },
   },
   mounted() {
