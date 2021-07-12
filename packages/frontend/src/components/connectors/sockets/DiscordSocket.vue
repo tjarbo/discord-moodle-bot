@@ -7,6 +7,7 @@
             id="channelinput"
             placeholder="Neue Channel-ID"
             v-model="socket.channel"
+            @input="onInput"
           ></b-input>
         </b-field>
       </p>
@@ -19,6 +20,7 @@
             type="password"
             placeholder="Neuer Token"
             v-model="socket.token"
+            @input="onInput"
           ></b-input>
         </b-field>
       </p>
@@ -32,6 +34,11 @@ export default {
   model: {
     prop: 'socket',
     event: 'change',
+  },
+  methods: {
+    onInput() {
+      this.$emit('input');
+    },
   },
   props: {
     socket: {

@@ -9,10 +9,16 @@ export default {
     SET_CONNECTORS(state, payload) {
       state.connectors = StoreUtil.updateState(state.connectors, payload);
     },
+    LOCK_CONNECTORS(state) {
+      state.connectors = StoreUtil.lockState(state.connectors);
+    },
+    UNLOCK_CONNECTORS(state) {
+      state.connectors = StoreUtil.unlockState(state.connectors);
+    },
   },
   actions: {
     loadConnectors({ commit }) {
-      commit('SET_CONNECTORS');
+      commit('LOCK_CONNECTORS');
       return new Promise((resolve, reject) => {
         ApiUtil.get('/connectors')
           .then(({ data: apiResponse }) => {
@@ -27,6 +33,27 @@ export default {
           .catch((err) => {
             console.log(err);
             commit('SET_CONNECTORS', err);
+            reject();
+          });
+      });
+    },
+
+    updateConnector({ commit, dispatch }, payload) {
+      commit('LOCK_CONNECTORS');
+      return new Promise((resolve, reject) => {
+        ApiUtil.patch(`/connectors/${payload.id}`, payload.body)
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              resolve();
+              dispatch('loadConnectors');
+            } else {
+              reject(apiResponse);
+              commit('UNLOCK_CONNECTORS');
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            commit('UNLOCK_CONNECTORS');
             reject();
           });
       });

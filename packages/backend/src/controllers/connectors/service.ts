@@ -114,11 +114,11 @@ class ConnectorService {
    * @returns {Promise<IConnectorDocument>} Updated document
    * @memberof ConnectorService
    */
-  public async update(connectorId: string, body: { [key: string]: any }) : Promise<IConnectorDocument> {
+  public update(connectorId: string, body: { [key: string]: any }) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
     const connector = this.#connectors.find(element => element.objectId === connectorId);
     if (!connector) throw new ApiError(404, `Connector with id ${connectorId} not found!`);
 
-    return await connector.update(body);
+    return connector.update(body);
   }
 
   /**
