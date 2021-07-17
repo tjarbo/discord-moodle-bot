@@ -43,13 +43,25 @@ export function connectorsGetRequest(req: Request, res: Response, next: NextFunc
   }
 }
 
+
+/**
+ * PATCH /api/connectors/:id
+ * Expects id of connector as path parameter 
+ *
+ * Updates whitelisted attributes of a given connector and its database document
+ * @export
+ * @param {Request} req Request
+ * @param {Response} res Response
+ * @param {NextFunction} next NextFunction
+ * @return {*}  {Promise<void>}
+ */
 export async function connectorsIdPatchRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     // 1. Validate given id
     const connectorsIdValidation = connectorsIdSchema.validate(req.params);
     if (connectorsIdValidation.error) throw new ApiError(400, connectorsIdValidation.error.message);
 
-    // 2. Validate request body
+    // 2. Validate request body - except req.body.socket!!
     const connectorsIdPatchRequestValidation = connectorsIdPatchRequestSchema.validate(req.body);
     if (connectorsIdPatchRequestValidation.error) throw new ApiError(400, connectorsIdPatchRequestValidation.error.message);
 
@@ -58,6 +70,34 @@ export async function connectorsIdPatchRequest(req: Request, res: Response, next
 
     // 4. Send response
     const response = new ApiSuccess(200, updatedConnector);
+    next(response);
+  } catch (error) {
+    loggerFile.error(error.message);
+    next(error);
+  }
+}
+
+/**
+ * DELETE /api/connectors/:id
+ * Removes connector 
+ * 
+ * @export
+ * @param {Request} req Request
+ * @param {Response} res Response
+ * @param {NextFunction} next NextFunction
+ * @return {*}  {Promise<void>}
+ */
+export async function connectorsIdDeleteRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    // 1. Validate given id
+    const connectorsIdValidation = connectorsIdSchema.validate(req.params);
+    if (connectorsIdValidation.error) throw new ApiError(400, connectorsIdValidation.error.message);
+
+    // 2. Delete connector
+    await connectorService.delete(connectorsIdValidation.value.id);
+
+    // 3. Send response
+    const response = new ApiSuccess(204);
     next(response);
   } catch (error) {
     loggerFile.error(error.message);
