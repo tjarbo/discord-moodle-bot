@@ -169,6 +169,7 @@ export default {
         confirmText: 'Connector löschen',
         type: 'is-danger',
         hasIcon: true,
+        cancelText: 'Abbrechen',
         onConfirm: this.onDeleteConfirm,
       });
     },
