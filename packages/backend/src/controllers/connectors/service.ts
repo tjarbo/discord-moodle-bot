@@ -69,6 +69,23 @@ class ConnectorService {
   }
 
   /**
+   * Returns connector from internal array with given id
+   * Throws Error if connector does not exist
+   *  
+   * @private
+   * @throws Error
+   * @param {string} id objectId of the wanted connector
+   * @return {ConnectorPlugin}  {*}
+   * @memberof ConnectorService
+   */
+  private findConnectorWith(id: string): ConnectorPlugin {
+    const connector = this.#connectors.find(element => element.objectId === id);
+    if (!connector) throw new Error(`Connector with id ${id} not found!`);
+
+    return connector
+  }
+
+  /**
    * Publish a message to connectors that have this course assigned
    * If the course is not assigned to a connector, it will send the message to all
    * connectors with the default flag.
