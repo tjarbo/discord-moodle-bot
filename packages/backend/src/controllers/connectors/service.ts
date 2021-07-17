@@ -71,7 +71,7 @@ class ConnectorService {
   /**
    * Returns connector from internal array with given id
    * Throws Error if connector does not exist
-   *  
+   *
    * @private
    * @throws Error
    * @param {string} id objectId of the wanted connector
@@ -82,7 +82,7 @@ class ConnectorService {
     const connector = this.#connectors.find(element => element.objectId === id);
     if (!connector) throw new Error(`Connector with id ${id} not found!`);
 
-    return connector
+    return connector;
   }
 
   /**
@@ -132,18 +132,18 @@ class ConnectorService {
    * @memberof ConnectorService
    */
   public update(id: string, body: { [key: string]: any }) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
-    
+
     let connector;
-    
+
     try {
       connector = this.findConnectorWith(id);
     } catch (error) {
       throw new ApiError(404, error.message);
     }
-    
+
     return connector.update(body);
   }
-  
+
   /**
    * Deletes a connector with given id
    *
@@ -154,9 +154,9 @@ class ConnectorService {
    * @memberof ConnectorService
    */
   public async delete(id: string) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
-    
+
     let connector;
-    
+
     try {
       connector = this.findConnectorWith(id);
     } catch (error) {
@@ -164,7 +164,7 @@ class ConnectorService {
     }
     await connector.destroy();
     this.#connectors.splice(this.#connectors.indexOf(connector), 1);
-    
+
     return connector.Document;
   }
 

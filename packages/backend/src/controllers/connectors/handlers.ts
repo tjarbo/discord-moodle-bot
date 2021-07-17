@@ -46,7 +46,7 @@ export function connectorsGetRequest(req: Request, res: Response, next: NextFunc
 
 /**
  * PATCH /api/connectors/:id
- * Expects id of connector as path parameter 
+ * Expects id of connector as path parameter
  *
  * Updates whitelisted attributes of a given connector and its database document
  * @export
@@ -79,8 +79,8 @@ export async function connectorsIdPatchRequest(req: Request, res: Response, next
 
 /**
  * DELETE /api/connectors/:id
- * Removes connector 
- * 
+ * Removes connector
+ *
  * @export
  * @param {Request} req Request
  * @param {Response} res Response
