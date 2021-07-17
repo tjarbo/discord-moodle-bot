@@ -7,8 +7,10 @@ export abstract class ConnectorPlugin {
   protected abstract document: IConnectorDocument;
 
   public abstract send(message: string): void;
+  public abstract destroy(): Promise<Readonly<LeanDocument<IConnectorDocument>>>;
   public abstract update(body: { [key: string]: any }): Promise<Readonly<LeanDocument<IConnectorDocument>>>;
   public abstract get Document(): Readonly<LeanDocument<IConnectorDocument>>
+
 
   /**
    * Returns an array of the newest log items of this connector.
