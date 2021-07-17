@@ -126,16 +126,43 @@ class ConnectorService {
    * Updates a selected connector
    *
    * @throws ApiError
-   * @param {string} connectorId objectId of the connector
+   * @param {string} id objectId of the connector
    * @param {[key: string]: any} body body of http request
    * @returns {Promise<IConnectorDocument>} Updated document
    * @memberof ConnectorService
    */
-  public update(connectorId: string, body: { [key: string]: any }) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
-    const connector = this.#connectors.find(element => element.objectId === connectorId);
-    if (!connector) throw new ApiError(404, `Connector with id ${connectorId} not found!`);
-
+  public update(id: string, body: { [key: string]: any }) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
+    
+    let connector;
+    
+    try {
+      connector = this.findConnectorWith(id);
+    } catch (error) {
+      throw new ApiError(404, error.message);
+    }
+    
     return connector.update(body);
+  }
+  
+  /**
+   * Deletes a connector with given id
+   *
+   * @throws ApiError
+   * @param {string} id objectId of the connector
+   * @returns {Promise<IConnectorDocument>} Delete connector document
+   * @memberof ConnectorService
+   */
+  public delete(id: string) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
+    
+    let connector;
+    
+    try {
+      connector = this.findConnectorWith(id);
+    } catch (error) {
+      throw new ApiError(404, error.message);
+    }
+
+    return connector.destroy();
   }
 
   /**
