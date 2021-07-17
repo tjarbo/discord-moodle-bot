@@ -74,6 +74,14 @@
                 :type="color"
               >Logs anzeigen</b-button>
             </div>
+            <div class="column is-1">
+              <b-button
+                expanded
+                outlined
+                type="is-danger"
+                @click="onDelete"
+              >Löschen</b-button>
+            </div>
           </div>
         </div>
      </article>
@@ -147,6 +155,36 @@ export default {
     },
     onInput() {
       this.hasBeenModified = true;
+    },
+    onDelete() {
+      this.$buefy.dialog.confirm({
+        title: 'Connector löschen',
+        message: `Bist du dir sicher, dass die diesen Connector <b>löschen</b> möchtest?
+          Das kann nicht rückgängig gemacht werden.<br>
+          <br>
+          <b>Hinweis:</b><br>
+          Wenn kein Connector mehr vorhanden ist, aber in .env entsprechende Variablen hinterlegt sind, wird
+          bei einem Neustart ein neuer "default" Connector automatisch angelegt. 
+          `,
+        confirmText: 'Connector löschen',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: this.onDeleteConfirm,
+      });
+    },
+
+    onDeleteConfirm() {
+      this.$store.dispatch('deleteConnector', this.connector._id)
+        .then(() => {
+          notifySuccess('Connector erfolgreich gelöscht!');
+        })
+        .catch((apiResponse) => {
+          if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
+          // Request failed locally - maybe no internet connection etc?
+          return notifyFailure(
+            'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+          );
+        });
     },
   },
   mounted() {

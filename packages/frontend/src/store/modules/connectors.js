@@ -58,6 +58,27 @@ export default {
           });
       });
     },
+
+    deleteConnector({ commit, dispatch }, id) {
+      commit('LOCK_CONNECTORS');
+      return new Promise((resolve, reject) => {
+        ApiUtil.delete(`/connectors/${id}`)
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              resolve();
+              dispatch('loadConnectors');
+            } else {
+              reject(apiResponse);
+              commit('UNLOCK_CONNECTORS');
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            commit('UNLOCK_CONNECTORS');
+            reject();
+          });
+      });
+    },
   },
   getters: {
     connectorsListGetData: (state) => state.connectors.data,
