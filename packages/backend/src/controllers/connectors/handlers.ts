@@ -97,7 +97,7 @@ export async function connectorsIdDeleteRequest(req: Request, res: Response, nex
     await connectorService.delete(connectorsIdValidation.value.id);
 
     // 3. Send response
-    const response = new ApiSuccess(204);
+    const response = new ApiSuccess(200);
     next(response);
   } catch (error) {
     loggerFile.error(error.message);

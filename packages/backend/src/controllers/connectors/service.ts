@@ -147,12 +147,13 @@ class ConnectorService {
   /**
    * Deletes a connector with given id
    *
+   * @async
    * @throws ApiError
    * @param {string} id objectId of the connector
    * @returns {Promise<IConnectorDocument>} Delete connector document
    * @memberof ConnectorService
    */
-  public delete(id: string) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
+  public async delete(id: string) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
     
     let connector;
     
@@ -161,8 +162,10 @@ class ConnectorService {
     } catch (error) {
       throw new ApiError(404, error.message);
     }
-
-    return connector.destroy();
+    await connector.destroy();
+    this.#connectors.splice(this.#connectors.indexOf(connector), 1);
+    
+    return connector.Document;
   }
 
   /**
