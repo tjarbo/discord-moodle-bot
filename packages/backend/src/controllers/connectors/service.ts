@@ -70,7 +70,7 @@ class ConnectorService {
 
   /**
    * Returns connector from internal array with given id
-   * Throws Error if connector does not exist
+   * Throws error if connector does not exist
    *
    * @private
    * @throws Error
