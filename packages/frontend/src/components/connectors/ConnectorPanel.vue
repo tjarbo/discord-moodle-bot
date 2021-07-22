@@ -164,7 +164,7 @@ export default {
           <br>
           <b>Hinweis:</b><br>
           Wenn kein Connector mehr vorhanden ist, aber in .env entsprechende Variablen hinterlegt sind, wird
-          bei einem Neustart ein neuer "default" Connector automatisch angelegt. 
+          bei einem Neustart ein neuer "default" Connector angelegt. 
           `,
         confirmText: 'Connector löschen',
         type: 'is-danger',
