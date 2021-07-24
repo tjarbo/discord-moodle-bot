@@ -159,7 +159,7 @@ export default {
     onDelete() {
       this.$buefy.dialog.confirm({
         title: 'Connector löschen',
-        message: `Bist du dir sicher, dass die diesen Connector <b>löschen</b> möchtest?
+        message: `Bist du dir sicher, dass du diesen Connector <b>löschen</b> möchtest?
           Das kann nicht rückgängig gemacht werden.<br>
           <br>
           <b>Hinweis:</b><br>
