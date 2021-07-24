@@ -81,6 +81,14 @@ jobs:
       working-directory: ${{ matrix.directory }}
       run: npm audit
 
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
 
   SAST:
     needs: [test, lint, dependency-check]
