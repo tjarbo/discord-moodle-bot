@@ -69,6 +69,23 @@ class ConnectorService {
   }
 
   /**
+   * Returns connector from internal array with given id
+   * Throws error if connector does not exist
+   *
+   * @private
+   * @throws Error
+   * @param {string} id objectId of the wanted connector
+   * @return {ConnectorPlugin}  {*}
+   * @memberof ConnectorService
+   */
+  private findConnectorWith(id: string): ConnectorPlugin {
+    const connector = this.#connectors.find(element => element.objectId === id);
+    if (!connector) throw new Error(`Connector with id ${id} not found!`);
+
+    return connector;
+  }
+
+  /**
    * Publish a message to connectors that have this course assigned
    * If the course is not assigned to a connector, it will send the message to all
    * connectors with the default flag.
@@ -109,16 +126,46 @@ class ConnectorService {
    * Updates a selected connector
    *
    * @throws ApiError
-   * @param {string} connectorId objectId of the connector
+   * @param {string} id objectId of the connector
    * @param {[key: string]: any} body body of http request
    * @returns {Promise<IConnectorDocument>} Updated document
    * @memberof ConnectorService
    */
-  public update(connectorId: string, body: { [key: string]: any }) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
-    const connector = this.#connectors.find(element => element.objectId === connectorId);
-    if (!connector) throw new ApiError(404, `Connector with id ${connectorId} not found!`);
+  public update(id: string, body: { [key: string]: any }) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
+
+    let connector;
+
+    try {
+      connector = this.findConnectorWith(id);
+    } catch (error) {
+      throw new ApiError(404, error.message);
+    }
 
     return connector.update(body);
+  }
+
+  /**
+   * Deletes a connector with given id
+   *
+   * @async
+   * @throws ApiError
+   * @param {string} id objectId of the connector
+   * @returns {Promise<IConnectorDocument>} Delete connector document
+   * @memberof ConnectorService
+   */
+  public async delete(id: string) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
+
+    let connector;
+
+    try {
+      connector = this.findConnectorWith(id);
+    } catch (error) {
+      throw new ApiError(404, error.message);
+    }
+    await connector.destroy();
+    this.#connectors.splice(this.#connectors.indexOf(connector), 1);
+
+    return connector.Document;
   }
 
   /**

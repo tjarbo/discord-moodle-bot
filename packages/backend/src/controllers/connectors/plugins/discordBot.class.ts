@@ -118,6 +118,21 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     return this.Document;
   }
 
+  /**
+   * Destroys the connector and deletes the document from the database
+   *
+   * @return {*}  {Promise<Readonly<LeanDocument<IConnectorDocument>>>}
+   * @memberof DiscordBotConnectorPlugin
+   */
+  public async destroy(): Promise<Readonly<LeanDocument<IConnectorDocument>>> {
+    this.isReady = false;
+    this.client.destroy();
+
+    await this.document.delete();
+
+    return this.Document;
+  }
+
   get Document() {
     const doc = this.document.toObject();
 
