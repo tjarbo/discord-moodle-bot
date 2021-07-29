@@ -56,6 +56,7 @@
 <script>
 import QRCode from 'qrcode';
 import { notifyFailure, notifySuccess } from '../../notification';
+import i18n from '../../i18n';
 
 export default {
   name: 'RegistrationTokenModal',
@@ -84,11 +85,11 @@ export default {
       // Add link to user's clipboard
       navigator.clipboard.writeText(this.link)
         .then(() => {
-          notifySuccess($t('components.registrationTokenModal.notifications.copiedLink'));
+          notifySuccess(i18n.t('components.registrationTokenModal.notifications.copiedLink'));
         })
         .catch((error) => {
           console.error(error);
-          notifyFailure($t('components.registrationTokenModal.notifications.failedToCopyLink'));
+          notifyFailure(i18n.t('components.registrationTokenModal.notifications.failedToCopyLink'));
         });
     },
 
@@ -100,7 +101,7 @@ export default {
       QRCode.toCanvas(qrCanvas, this.link, (error) => {
         if (error) {
           console.error(error);
-          notifyFailure($t('components.registrationTokenModal.notifications.failedToCreateQrCode'));
+          notifyFailure(i18n.t('components.registrationTokenModal.notifications.failedToCreateQrCode'));
         } else {
           // Show canvas element
           this.displayQRC = true;

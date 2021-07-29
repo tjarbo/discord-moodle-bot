@@ -236,22 +236,29 @@ export default {
         if (moodleLastFetchTimestamp === 0) moodleLastFetchString = i18n.t('general.none');
         else {
           const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
-          moodleLastFetchString = i18n.t('general.time.ago', this.getTimeObject(moodleLastFetchTimestamp * 1000, moodleLastFetchDate));
+          moodleLastFetchString = i18n.t(
+            'general.time.ago', this.getTimeObject(moodleLastFetchTimestamp * 1000, moodleLastFetchDate),
+          );
         }
       }
       if (moodleCurrentFetchInterval !== 'Error') {
         // Calculate currentFetchIntervall
-        moodleCurrentFetchIntervalString = `${i18n.t('general.time.every', this.getFormattedTime(moodleCurrentFetchInterval))} (${moodleCurrentFetchInterval} ms)`;
+        const timeEvery = i18n.t('general.time.every', this.getFormattedTime(moodleCurrentFetchInterval));
+        moodleCurrentFetchIntervalString = `${timeEvery} (${moodleCurrentFetchInterval} ms)`;
       }
       if (moodleNextFetchTimestamp !== 'Error' && (moodleNextFetchTimestamp > Date.now() / 1000)) {
         // Calculate nextFetch
         const moodleNextFetchDate = new Date(moodleNextFetchTimestamp * 1000).toLocaleString();
-        moodleNextFetchString = i18n.t('general.time.in', this.getTimeObject(moodleNextFetchTimestamp * 1000, moodleNextFetchDate));
+        moodleNextFetchString = i18n.t(
+          'general.time.in', this.getTimeObject(moodleNextFetchTimestamp * 1000, moodleNextFetchDate),
+        );
       }
 
       // Generate discordLastReady string
       const discordLastReadyDate = new Date(discordLastReadyTimestamp).toLocaleString();
-      const discordLastReadyString = i18n.t('general.time.ago', this.getTimeObject(discordLastReadyTimestamp, discordLastReadyDate));
+      const discordLastReadyString = i18n.t(
+        'general.time.ago', this.getTimeObject(discordLastReadyTimestamp, discordLastReadyDate),
+      );
 
       // Generate discordCurrentChannel string
       let discordCurrentChannelString = `${i18n.t('general.unknown')} (${discordCurrentChannelId})`;

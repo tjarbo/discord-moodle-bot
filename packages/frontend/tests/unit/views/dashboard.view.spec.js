@@ -3,7 +3,6 @@ import { createLocalVue, shallowMount } from '@vue/test-utils';
 import Buefy from 'buefy';
 import Dashboard from '@/views/Dashboard.vue';
 
-import AddAdministrator from '@/components/administration/AddAdministrator.vue';
 import SetCourseNotifications from '@/components/moodle/SetCourseNotifications.vue';
 import ConnectorList from '@/components/connectors/ConnectorList.vue';
 import SetRefreshRate from '@/components/moodle/SetRefreshRate.vue';
@@ -33,10 +32,6 @@ describe('Dashboard.view', () => {
 
   it('should render SetCourseNotifications', () => {
     expect(wrapper.find(SetCourseNotifications).exists()).is.true;
-  });
-
-  it.skip('should render AddAdministrator', () => {
-    expect(wrapper.find(AddAdministrator).exists()).is.true;
   });
 
   it('should render column with css: is-10 is-offset-1', () => {

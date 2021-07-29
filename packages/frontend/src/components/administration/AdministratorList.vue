@@ -17,7 +17,8 @@
               {{ new Date(props.row.createdAt).toLocaleString() }}
             </b-table-column>
 
-            <b-table-column field="hasDevice" centered v-slot="props" :label="$t('components.administratorList.hasDeviceLabel')">
+            <b-table-column field="hasDevice" centered v-slot="props"
+              :label="$t('components.administratorList.hasDeviceLabel')">
               <span class="tag" :class="props.row.hasDevice ? 'is-success':'is-danger'">
                 {{ props.row.hasDevice ? $t('general.registered') : $t('general.notFound') }}
               </span>
