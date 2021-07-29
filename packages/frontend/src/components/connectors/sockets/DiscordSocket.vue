@@ -1,5 +1,10 @@
 <template>
   <div class="">
+    <p class="" v-if="description">
+      Bitte gib in die folgenden Felder die entsprechenden Werte ein. Solltest du nicht wissen,
+      was du tuen sollst oder nicht weiter kommen
+      - Alles nützliche findest du <a href="https://docs.tjarbo.me">hier</a>
+    </p>
     <a class="panel-block">
       <p class="control">
         <b-field :label="$t('components.discordSocket.channelLabel')">
@@ -12,7 +17,7 @@
         </b-field>
       </p>
     </a>
-    <a class="panel-block">
+    <a class="panel-block is-radiusless">
       <p class="control">
         <b-field :label="$t('components.discordSocket.tokenLabel')">
           <b-input
@@ -50,6 +55,10 @@ export default {
         type: String,
         default: '',
       },
+    },
+    description: {
+      type: Boolean,
+      default: false,
     },
   },
 };

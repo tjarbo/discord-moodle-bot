@@ -5,7 +5,9 @@
       <nav class="level">
         <div class="level-left"></div>
         <div class="level-right">
-          <p class="level-item"><a class="button is-success">{{ $t('general.create') }}</a></p>
+          <div class="level-item">
+            <connector-create />
+          </div>
         </div>
       </nav>
     </div>
@@ -23,18 +25,23 @@
 <script>
 import { mapGetters } from 'vuex';
 import ConnectorPanel from './ConnectorPanel.vue';
+import ConnectorCreate from './ConnectorCreate.vue';
 
 export default {
   name: 'ConnectorsList',
   components: {
     ConnectorPanel,
+    ConnectorCreate,
   },
   computed: {
     ...mapGetters(['connectorsListGetData', 'connectorsListGetStatus']),
   },
+  data: () => ({
+    showCreate: false,
+  }),
   methods: {
     onCreate() {
-      console.log('Not implemented yet');
+      this.showCreate = true;
     },
   },
   mounted() {
