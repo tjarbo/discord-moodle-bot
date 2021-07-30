@@ -11,12 +11,33 @@
       "panelHeading": "Administratoren",
       "usernameLabel": "Benutzername"
     },
+    "connectorList": {
+      "noConnectorFoundContent": "Kein Connector gefunden. Klicke auf \"Erstellen\" um einen neuen Connector anzulegen"
+    },
+    "connectorPanel": {
+      "connectorIsActivatedLabel": "Bestimmt, ob Nachrichten über diesen Connector versendet werden sollen",
+      "connectorIsDefaultLabel": "Wenn kein passender Connector gefunden wurde, wird dieser Connector benutzt",
+      "deleteConnectorDialogConfirmText": "Connector löschen",
+      "deleteConnectorDialogMessage": "Bist du dir sicher, dass du diesen Connector <b>löschen</b> möchtest? Das kann nicht rückgängig gemacht werden.<br><br><b>Hinweis:</b><br>Wenn kein Connector mehr vorhanden ist, aber in .env entsprechende Variablen hinterlegt sind, wird bei einem Neustart ein neuer \"default\" Connector angelegt",
+      "deleteConnectorDialogTitle": "Connector löschen",
+      "notifications": {
+        "deletedConnector": "Connector erfolgreich gelöscht!",
+        "updatedConnector": "Connector erfolgreich aktualisiert!"
+      },
+      "showLogsButton": "Logs anzeigen"
+    },
     "discordPanel": {
       "changeDiscordChannelLabel": "Discord Channel ändern",
       "newChannelIdPlaceholder": "Neue Channel-ID",
       "notifications": {
         "changedDiscordChannel": "Channel auf Discord wurde erfolgreich geändert!"
       }
+    },
+    "discordSocket": {
+      "channelLabel": "Discord Channel",
+      "channelPlaceholder": "Neue Channel-ID",
+      "tokenLabel": "Discord Token",
+      "tokenPlaceholder": "Neuer Token"
     },
     "registrationTokenModal": {
       "clipboardContent": "Klicke hier, um den Link in deine Zwischenablage zu speichern. Teile diesen mit der Person, welche du als weiteren Benutzer hinzufügen möchstest oder öffne ihn selbst in einem neuen Browsertab.",
@@ -65,6 +86,11 @@
     }
   },
   "general": {
+    "activated": "Aktiviert",
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "createdAt": "Erstellt am",
+    "default": "Standard",
     "delete": "Löschen",
     "error": "Fehler",
     "name": "Name",
@@ -74,6 +100,8 @@
       "accessExpired": "Zugang leider abgelaufen! Bitte melde dich erneut an!",
       "requestFailedLocally": "Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung."
     },
+    "on": "An",
+    "off": "Aus",
     "registered": "Registriert",
     "time": {
       "ago": "Vor {time} {unit} ({date})",

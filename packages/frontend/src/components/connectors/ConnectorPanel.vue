@@ -7,24 +7,24 @@
             <div class="level-right">
               <div class="level-item" v-show="connector.default">
                 <button class="button is-small is-primary">
-                  Default
+                  {{ $t('general.default') }}
                 </button>
               </div>
               <div class="level-item">
                 <button class="button is-small" :class="isOn">
-                  {{ connector.active ? 'ON' : 'OFF' }}
+                  {{ connector.active ? $t('general.on') : $t('general.off') }}
                 </button>
               </div>
             </div>
           </nav>
         </p>
         <a class="panel-block">
-            Erstellt am {{new Date(connector.createdAt).toLocaleString()}}
+            {{ $t('general.createdAt') }} {{new Date(connector.createdAt).toLocaleString()}}
         </a>
         <a class="panel-block">
           <div class="control">
             <b-tooltip
-              label="Bestimmt, ob Nachrichten über diesen Connector versendet werden sollen"
+              :label="$t('components.connectorPanel.connectorIsActivatedLabel')"
               position="is-right"
               :delay="500"
               :type="color">
@@ -32,14 +32,14 @@
                 v-model="connectorDataChanged.active"
                 @input="onInput"
                 :type="color"
-              >Aktiviert</b-switch>
+              >{{ $t('general.activated') }}</b-switch>
             </b-tooltip>
           </div>
         </a>
         <a class="panel-block">
           <div class="control">
             <b-tooltip
-              label="Wenn kein passender Connector gefunden wurde, wird dieser Connector benutzt"
+              :label="$t('components.connectorPanel.connectorIsDefaultLabel')"
               position="is-right"
               :delay="500"
               :type="color">
@@ -47,7 +47,7 @@
                 v-model="connectorDataChanged.default"
                 @input="onInput"
                 :type="color"
-              >Default</b-switch>
+              >{{ $t('general.default') }}</b-switch>
             </b-tooltip>
           </div>
         </a>
@@ -64,7 +64,7 @@
                 @click="onSave"
                 :outlined="!this.hasBeenModified"
                 :type="this.hasBeenModified ? 'is-danger' : this.color"
-              >Aktualisieren</b-button>
+              >{{ $t('general.update') }}</b-button>
             </div>
             <div class="column">
               <b-button
@@ -72,7 +72,7 @@
                 outlined
                 @click="onShowLogs"
                 :type="color"
-              >Logs anzeigen</b-button>
+              >{{ $t('components.connectorPanel.showLogsButton') }}</b-button>
             </div>
             <div class="column is-1">
               <b-button
@@ -80,7 +80,7 @@
                 outlined
                 type="is-danger"
                 @click="onDelete"
-              >Löschen</b-button>
+              >{{ $t('general.delete') }}</b-button>
             </div>
           </div>
         </div>
@@ -91,6 +91,7 @@
 <script>
 import DiscordSocket from './sockets/DiscordSocket.vue';
 import { notifySuccess, notifyFailure } from '../../notification';
+import i18n from '../../i18n';
 
 export default {
   name: 'ConnectorPanel',
@@ -139,14 +140,14 @@ export default {
 
       this.$store.dispatch('updateConnector', payload)
         .then(() => {
-          notifySuccess('Connector erfolgreich aktualisiert!');
+          notifySuccess(i18n.t('components.connectorPanel.notifications.updatedConnector'));
           this.hasBeenModified = false;
         })
         .catch((apiResponse) => {
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
           // Request failed locally - maybe no internet connection etc?
           return notifyFailure(
-            'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            i18n.t('general.notifications.requestFailedLocally'),
           );
         });
     },
@@ -158,18 +159,12 @@ export default {
     },
     onDelete() {
       this.$buefy.dialog.confirm({
-        title: 'Connector löschen',
-        message: `Bist du dir sicher, dass du diesen Connector <b>löschen</b> möchtest?
-          Das kann nicht rückgängig gemacht werden.<br>
-          <br>
-          <b>Hinweis:</b><br>
-          Wenn kein Connector mehr vorhanden ist, aber in .env entsprechende Variablen hinterlegt sind, wird
-          bei einem Neustart ein neuer "default" Connector angelegt. 
-          `,
-        confirmText: 'Connector löschen',
+        title:       i18n.t('components.connectorPanel.deleteConnectorDialogTitle'),
+        message:     i18n.t('components.connectorPanel.deleteConnectorDialogMessage'),
+        confirmText: i18n.t('components.connectorPanel.deleteConnectorDialogConfirmText'),
         type: 'is-danger',
         hasIcon: true,
-        cancelText: 'Abbrechen',
+        cancelText: i18n.t('general.cancel'),
         onConfirm: this.onDeleteConfirm,
       });
     },
@@ -177,13 +172,13 @@ export default {
     onDeleteConfirm() {
       this.$store.dispatch('deleteConnector', this.connector._id)
         .then(() => {
-          notifySuccess('Connector erfolgreich gelöscht!');
+          notifySuccess(i18n.t('components.connectorPanel.notifications.deletedConnector'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
           // Request failed locally - maybe no internet connection etc?
           return notifyFailure(
-            'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            i18n.t('general.notifications.requestFailedLocally'),
           );
         });
     },

@@ -5,13 +5,13 @@
       <nav class="level">
         <div class="level-left"></div>
         <div class="level-right">
-          <p class="level-item"><a class="button is-success">Erstellen</a></p>
+          <p class="level-item"><a class="button is-success">{{ $t('general.create') }}</a></p>
         </div>
       </nav>
     </div>
     <div class="list">
       <div class="item container has-text-centered" v-if="connectorsListGetData && connectorsListGetData.length === 0">
-        Kein Connector gefunden. Klicke auf "Erstellen" um einen neuen Connector anzulegen
+        {{ $t('components.connectorList.noConnectorFoundContent') }}
       </div>
       <div class="item" v-for="connector in connectorsListGetData" :key="connector._id">
         <ConnectorPanel :connector="connector"></ConnectorPanel>

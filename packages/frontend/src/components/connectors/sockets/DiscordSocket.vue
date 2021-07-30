@@ -2,10 +2,10 @@
   <div class="">
     <a class="panel-block">
       <p class="control">
-        <b-field label="Discord Channel:">
+        <b-field :label="$t('components.discordSocket.channelLabel')">
           <b-input
             id="channelinput"
-            placeholder="Neue Channel-ID"
+            :placeholder="$t('components.discordSocket.channelPlaceholder')"
             v-model="socket.channel"
             @input="onInput"
           ></b-input>
@@ -14,11 +14,11 @@
     </a>
     <a class="panel-block">
       <p class="control">
-        <b-field label="Discord-Token:">
+        <b-field :label="$t('components.discordSocket.tokenLabel')">
           <b-input
             id="tokeninput"
             type="password"
-            placeholder="Neuer Token"
+            :placeholder="$t('components.discordSocket.tokenPlaceholder')"
             v-model="socket.token"
             @input="onInput"
           ></b-input>
