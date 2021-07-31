@@ -5,6 +5,7 @@ import Buefy from 'buefy';
 import Vuelidate from 'vuelidate';
 import Login from '@/views/Login.vue';
 import AuthenticationLayout from '@/layouts/AuthenticationLayout.vue';
+import i18n from '../../../src/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -38,7 +39,7 @@ describe('Login.view', () => {
       actions,
     });
 
-    wrapper = shallowMount(Login, { store, localVue });
+    wrapper = shallowMount(Login, { i18n, store, localVue });
 
     usernameInput = wrapper.find('#username');
     submitButton = wrapper.find('#loginSubmitButton');
@@ -51,7 +52,7 @@ describe('Login.view', () => {
   it('should render username input correctly', () => {
     const testUserName = 'testusername';
 
-    expect(usernameInput.element.placeholder).to.be.equal('Dein Benutzername');
+    expect(usernameInput.element.placeholder).to.be.equal(i18n.t('views.login.usernamePlaceholder'));
     expect(usernameInput.element.type).to.be.equal('text');
 
     usernameInput.setValue(testUserName);

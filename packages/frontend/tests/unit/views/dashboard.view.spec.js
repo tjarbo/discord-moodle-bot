@@ -7,6 +7,7 @@ import SetCourseNotifications from '@/components/moodle/SetCourseNotifications.v
 import ConnectorList from '@/components/connectors/ConnectorList.vue';
 import SetRefreshRate from '@/components/moodle/SetRefreshRate.vue';
 import TheNavBar from '@/components/TheNavBar.vue';
+import i18n from '../../../src/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);
@@ -15,7 +16,7 @@ describe('Dashboard.view', () => {
   let wrapper = null;
 
   beforeEach(() => {
-    wrapper = shallowMount(Dashboard, { localVue });
+    wrapper = shallowMount(Dashboard, { i18n, localVue });
   });
 
   it('should render TheNavBar', () => {

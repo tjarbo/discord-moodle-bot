@@ -4,6 +4,7 @@ import Buefy from 'buefy';
 import Vuex from 'vuex';
 import Vuelidate from 'vuelidate';
 import SetRefreshRate from '@/components/moodle/SetRefreshRate.vue';
+import i18n from '../../../src/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -25,7 +26,7 @@ describe('SetRefreshRate.component', () => {
       getters,
     });
 
-    wrapper = mount(SetRefreshRate, { localVue, store });
+    wrapper = mount(SetRefreshRate, { i18n, localVue, store });
   });
 
   it('should render the component', () => {
@@ -34,7 +35,7 @@ describe('SetRefreshRate.component', () => {
 
   it('should render title', () => {
     const titleObject = wrapper.find('p.panel-heading');
-    expect(titleObject.text()).to.be.equal('Aktualisierungsintervall ändern:');
+    expect(titleObject.text()).to.be.equal(`${i18n.t('components.setRefreshRate.panelHeading')}:`);
   });
 
   it('should render refresh-rate-input', async () => {
@@ -54,7 +55,7 @@ describe('SetRefreshRate.component', () => {
   it('should render submit button', () => {
     const submitButton = wrapper.find('button.button.is-moodle.is-outlined.is-fullwidth');
 
-    expect(submitButton.text()).to.be.equal('Aktualisieren');
+    expect(submitButton.text()).to.be.equal(i18n.t('general.update'));
     expect(submitButton.exists()).to.be.true;
     expect(submitButton.element.disabled).to.be.true;
   });

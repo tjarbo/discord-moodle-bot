@@ -159,8 +159,8 @@ export default {
     },
     onDelete() {
       this.$buefy.dialog.confirm({
-        title:       i18n.t('components.connectorPanel.deleteConnectorDialogTitle'),
-        message:     i18n.t('components.connectorPanel.deleteConnectorDialogMessage'),
+        title: i18n.t('components.connectorPanel.deleteConnectorDialogTitle'),
+        message: i18n.t('components.connectorPanel.deleteConnectorDialogMessage'),
         confirmText: i18n.t('components.connectorPanel.deleteConnectorDialogConfirmText'),
         type: 'is-danger',
         hasIcon: true,

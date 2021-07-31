@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import Buefy from 'buefy';
 import Vuelidate from 'vuelidate';
 import AdministratorList from '@/components/administration/AdministratorList.vue';
+import i18n from '../../../src/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -41,7 +42,7 @@ describe('AdministratorList.component', () => {
       getters,
       actions,
     });
-    wrapper = mount(AdministratorList, { store, localVue });
+    wrapper = mount(AdministratorList, { i18n, store, localVue });
   });
 
   it('should render the component', () => {
@@ -50,13 +51,13 @@ describe('AdministratorList.component', () => {
 
   it('should render title', () => {
     const titleObject = wrapper.find('p.panel-heading');
-    expect(titleObject.text()).to.be.equal('Administratoren:');
+    expect(titleObject.text()).to.be.equal(`${i18n.t('components.administratorList.panelHeading')}:`);
   });
 
   it('should render submit button', () => {
     const submitButton = wrapper.find('button.button.is-primary.is-outlined.is-fullwidth');
 
-    expect(submitButton.text()).to.be.equal('Neuen Registrierungstoken erstellen');
+    expect(submitButton.text()).to.be.equal(i18n.t('components.administratorList.createNewRegistrationTokenButton'));
     expect(submitButton.exists()).to.be.true;
   });
 
