@@ -7,6 +7,9 @@
     </template>
     <template slot="end">
       <b-navbar-item tag="div">
+        <SwitchLanguage></SwitchLanguage>
+      </b-navbar-item>
+      <b-navbar-item tag="div">
         <div class="buttons">
           <a class="button is-primary" @click="onClick">
             <strong>{{ $t('components.theNavBar.logoutButton') }}</strong>
@@ -18,8 +21,11 @@
 </template>
 
 <script>
+import SwitchLanguage from './SwitchLanguage.vue';
+
 export default {
   name: 'TheNavBar',
+  components: { SwitchLanguage },
   methods: {
     onClick() {
       this.$store.dispatch('logout');

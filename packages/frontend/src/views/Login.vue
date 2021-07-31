@@ -1,5 +1,6 @@
 <template>
   <div id="loginview">
+    <SwitchLanguage></SwitchLanguage>
     <authentication-layout
       @submit="onSubmit"
       title="Fancy Moodle Discord Bot"
@@ -45,13 +46,14 @@ import {
 } from 'vuelidate/lib/validators';
 import { mapGetters } from 'vuex';
 import { startAssertion } from '@simplewebauthn/browser';
-import { notifyFailure, notifySuccess } from '../notification';
+import SwitchLanguage from '../components/SwitchLanguage.vue';
 import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
+import { notifyFailure, notifySuccess } from '../notification';
 import i18n from '../i18n';
 
 export default {
   name: 'LoginView',
-  components: { AuthenticationLayout },
+  components: { AuthenticationLayout, SwitchLanguage },
   data: () => ({
     form: {
       username: '',
@@ -137,5 +139,11 @@ export default {
 
 #loginview {
   text-align: center;
+}
+
+#switchlanguage {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
 }
 </style>

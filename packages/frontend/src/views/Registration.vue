@@ -1,5 +1,6 @@
 <template>
   <div id="registrationview">
+    <SwitchLanguage></SwitchLanguage>
     <authentication-layout
       @submit="onSubmit"
       title="Fancy Moodle Discord Bot"
@@ -58,11 +59,12 @@ import { mapGetters } from 'vuex';
 import { validate } from 'uuid';
 import { notifyFailure, notifySuccess } from '../notification';
 import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
+import SwitchLanguage from '../components/SwitchLanguage.vue';
 import i18n from '../i18n';
 
 export default {
   name: 'RegistrationView',
-  components: { AuthenticationLayout },
+  components: { AuthenticationLayout, SwitchLanguage },
   data: () => ({
     form: {
       username: '',
@@ -165,5 +167,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+#switchlanguage {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
 </style>

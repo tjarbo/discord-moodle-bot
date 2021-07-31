@@ -6,6 +6,7 @@
 
 <script>
 import { notifyFailure } from './notification';
+import i18n from './i18n';
 
 export default {
   name: 'App',
@@ -23,7 +24,7 @@ export default {
         this.$router.push({ name: 'Login' });
         if (this.$store.getters.isLoggedIn) {
           // print notification only if there was a token before
-          notifyFailure('Zugang leider abgelaufen! Bitte erneut anmelden!');
+          notifyFailure(i18n.t('general.notifications.accessExpired'));
         }
       }).catch((err) => console.log('err', err));
   },

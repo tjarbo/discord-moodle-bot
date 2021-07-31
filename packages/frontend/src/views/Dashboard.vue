@@ -1,6 +1,8 @@
 <template>
   <div id="dashboardview">
-    <TheNavBar></TheNavBar>
+    <TheNavBar>
+      <SwitchLanguage></SwitchLanguage>
+    </TheNavBar>
     <div class="columns">
       <div class="column is-10 is-offset-1">
         <b-tabs position="is-centered" class="block">
@@ -26,6 +28,7 @@ import AdministratorList from '../components/administration/AdministratorList.vu
 import SetCourseNotifications from '../components/moodle/SetCourseNotifications.vue';
 import ConnectorList from '../components/connectors/ConnectorList.vue';
 import SetRefreshRate from '../components/moodle/SetRefreshRate.vue';
+import SwitchLanguage from '../components/SwitchLanguage.vue';
 import TheNavBar from '../components/TheNavBar.vue';
 import Status from '../components/statusboard/Status.vue';
 
@@ -36,6 +39,7 @@ export default {
     SetCourseNotifications,
     ConnectorList,
     SetRefreshRate,
+    SwitchLanguage,
     TheNavBar,
     Status,
   },
