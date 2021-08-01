@@ -53,7 +53,6 @@
 import { mapGetters } from 'vuex';
 import { notifySuccess, notifyFailure } from '../../notification';
 import RegistrationTokenModal from './RegistrationTokenModal.vue';
-import i18n from '../../i18n';
 
 export default {
   name: 'AdministratorList',
@@ -72,12 +71,12 @@ export default {
     onDelete(username) {
       this.$store.dispatch('deleteAdministrator', username)
         .then(() => {
-          notifySuccess(i18n.t('components.administratorList.notifications.deletedAdministrator'));
+          notifySuccess(this.$t('components.administratorList.notifications.deletedAdministrator'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
           // Request failed locally - maybe no internet connection etc?
-          return notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
+          return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
         });
     },
 
@@ -89,7 +88,7 @@ export default {
         .catch((apiResponse) => {
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
           // Request failed locally - maybe no internet connection etc?
-          return notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
+          return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
         });
     },
   },
@@ -100,7 +99,7 @@ export default {
       .catch((apiResponse) => {
         if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
         // Request failed locally - maybe no internet connection etc?
-        return notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
+        return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
       });
   },
 };

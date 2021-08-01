@@ -7,7 +7,7 @@
     </template>
     <template slot="end">
       <b-navbar-item tag="div">
-        <SwitchLanguage></SwitchLanguage>
+        <TheLanguageSwitch></TheLanguageSwitch>
       </b-navbar-item>
       <b-navbar-item tag="div">
         <div class="buttons">
@@ -21,11 +21,11 @@
 </template>
 
 <script>
-import SwitchLanguage from './SwitchLanguage.vue';
+import TheLanguageSwitch from './TheLanguageSwitch.vue';
 
 export default {
   name: 'TheNavBar',
-  components: { SwitchLanguage },
+  components: { TheLanguageSwitch },
   methods: {
     onClick() {
       this.$store.dispatch('logout');

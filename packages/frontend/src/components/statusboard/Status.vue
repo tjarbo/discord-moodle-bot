@@ -55,7 +55,7 @@ export default {
         if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
 
         // Request failed locally - maybe no internet connection etc?
-        return notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
+        return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
       });
   },
   data: () => ({
@@ -87,20 +87,20 @@ export default {
       this.$store
         .dispatch('getStatus')
         .then(() => {
-          notifySuccess(i18n.t('components.status.notifications.updatedStatusData'));
+          notifySuccess(this.$t('components.status.notifications.updatedStatusData'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure(i18n.t('general.notifications.accessExpired'));
+              notifyFailure(this.$t('general.notifications.accessExpired'));
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?
-            notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
+            notifyFailure(this.$t('general.notifications.requestFailedLocally'));
           }
         });
     },
@@ -109,7 +109,7 @@ export default {
       this.$store
         .dispatch('triggerFetch')
         .then(() => {
-          notifySuccess(i18n.t('components.status.notifications.fetchedMoodleUpdates'));
+          notifySuccess(this.$t('components.status.notifications.fetchedMoodleUpdates'));
           this.$store.dispatch('getStatus');
         })
         .catch((apiResponse) => {
@@ -117,13 +117,13 @@ export default {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure(i18n.t('general.notifications.accessExpired'));
+              notifyFailure(this.$t('general.notifications.accessExpired'));
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?
-            notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
+            notifyFailure(this.$t('general.notifications.requestFailedLocally'));
           }
         });
     },
@@ -175,16 +175,16 @@ export default {
       const minutes = Math.round(ms / (1000 * 60));
       const hours = Math.round(ms / (1000 * 60 * 60));
       const days = Math.round(ms / (1000 * 60 * 60 * 24));
-      if (ms === 1) return { time: ms, unit: i18n.t('general.time.millisecond') };
-      if (ms < 1000) return { time: ms, unit: i18n.t('general.time.milliseconds') };
-      if (seconds === 1) return { time: seconds, unit: i18n.t('general.time.second') };
-      if (seconds < 60) return { time: seconds, unit: i18n.t('general.time.seconds') };
-      if (minutes === 1) return { time: minutes, unit: i18n.t('general.time.minute') };
-      if (minutes < 60) return { time: minutes, unit: i18n.t('general.time.minutes') };
-      if (hours === 1) return { time: hours, unit: i18n.t('general.time.hour') };
-      if (hours < 24) return { time: hours, unit: i18n.t('general.time.hours') };
-      if (days === 1) return { time: days, unit: i18n.t('general.time.day') };
-      return { time: days, unit: i18n.t('general.time.days') };
+      if (ms === 1) return { time: ms, unit: this.$t('general.time.millisecond') };
+      if (ms < 1000) return { time: ms, unit: this.$t('general.time.milliseconds') };
+      if (seconds === 1) return { time: seconds, unit: this.$t('general.time.second') };
+      if (seconds < 60) return { time: seconds, unit: this.$t('general.time.seconds') };
+      if (minutes === 1) return { time: minutes, unit: this.$t('general.time.minute') };
+      if (minutes < 60) return { time: minutes, unit: this.$t('general.time.minutes') };
+      if (hours === 1) return { time: hours, unit: this.$t('general.time.hour') };
+      if (hours < 24) return { time: hours, unit: this.$t('general.time.hours') };
+      if (days === 1) return { time: days, unit: this.$t('general.time.day') };
+      return { time: days, unit: this.$t('general.time.days') };
     },
 
     /**
@@ -230,38 +230,38 @@ export default {
       // Generate default (error) strings
       let moodleLastFetchString = 'N/A';
       let moodleNextFetchString = 'N/A';
-      let moodleCurrentFetchIntervalString = i18n.t('general.error');
+      let moodleCurrentFetchIntervalString = this.$t('general.error');
       if (moodleLastFetchTimestamp !== 'Error') {
         // Calculate lastFetch
-        if (moodleLastFetchTimestamp === 0) moodleLastFetchString = i18n.t('general.none');
+        if (moodleLastFetchTimestamp === 0) moodleLastFetchString = this.$t('general.none');
         else {
           const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
-          moodleLastFetchString = i18n.t(
+          moodleLastFetchString = this.$t(
             'general.time.ago', this.getTimeObject(moodleLastFetchTimestamp * 1000, moodleLastFetchDate),
           );
         }
       }
       if (moodleCurrentFetchInterval !== 'Error') {
         // Calculate currentFetchIntervall
-        const timeEvery = i18n.t('general.time.every', this.getFormattedTime(moodleCurrentFetchInterval));
+        const timeEvery = this.$t('general.time.every', this.getFormattedTime(moodleCurrentFetchInterval));
         moodleCurrentFetchIntervalString = `${timeEvery} (${moodleCurrentFetchInterval} ms)`;
       }
       if (moodleNextFetchTimestamp !== 'Error' && (moodleNextFetchTimestamp > Date.now() / 1000)) {
         // Calculate nextFetch
         const moodleNextFetchDate = new Date(moodleNextFetchTimestamp * 1000).toLocaleString();
-        moodleNextFetchString = i18n.t(
+        moodleNextFetchString = this.$t(
           'general.time.in', this.getTimeObject(moodleNextFetchTimestamp * 1000, moodleNextFetchDate),
         );
       }
 
       // Generate discordLastReady string
       const discordLastReadyDate = new Date(discordLastReadyTimestamp).toLocaleString();
-      const discordLastReadyString = i18n.t(
+      const discordLastReadyString = this.$t(
         'general.time.ago', this.getTimeObject(discordLastReadyTimestamp, discordLastReadyDate),
       );
 
       // Generate discordCurrentChannel string
-      let discordCurrentChannelString = `${i18n.t('general.unknown')} (${discordCurrentChannelId})`;
+      let discordCurrentChannelString = `${this.$t('general.unknown')} (${discordCurrentChannelId})`;
       if (discordCurrentChannelName !== 'Unknown') {
         discordCurrentChannelString = `${discordCurrentChannelName} (${discordCurrentChannelId})`;
       }

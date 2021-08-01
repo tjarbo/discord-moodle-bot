@@ -4,7 +4,7 @@ import Buefy from 'buefy';
 import Vuex from 'vuex';
 import Vuelidate from 'vuelidate';
 import SetRefreshRate from '@/components/moodle/SetRefreshRate.vue';
-import i18n from '../../../src/i18n';
+import i18n from '@/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);

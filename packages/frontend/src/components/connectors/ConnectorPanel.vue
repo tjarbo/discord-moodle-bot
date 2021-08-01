@@ -91,7 +91,6 @@
 <script>
 import DiscordSocket from './sockets/DiscordSocket.vue';
 import { notifySuccess, notifyFailure } from '../../notification';
-import i18n from '../../i18n';
 
 export default {
   name: 'ConnectorPanel',
@@ -140,14 +139,14 @@ export default {
 
       this.$store.dispatch('updateConnector', payload)
         .then(() => {
-          notifySuccess(i18n.t('components.connectorPanel.notifications.updatedConnector'));
+          notifySuccess(this.$t('components.connectorPanel.notifications.updatedConnector'));
           this.hasBeenModified = false;
         })
         .catch((apiResponse) => {
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
           // Request failed locally - maybe no internet connection etc?
           return notifyFailure(
-            i18n.t('general.notifications.requestFailedLocally'),
+            this.$t('general.notifications.requestFailedLocally'),
           );
         });
     },
@@ -159,12 +158,12 @@ export default {
     },
     onDelete() {
       this.$buefy.dialog.confirm({
-        title: i18n.t('components.connectorPanel.deleteConnectorDialogTitle'),
-        message: i18n.t('components.connectorPanel.deleteConnectorDialogMessage'),
-        confirmText: i18n.t('components.connectorPanel.deleteConnectorDialogConfirmText'),
+        title: this.$t('components.connectorPanel.deleteConnectorDialogTitle'),
+        message: this.$t('components.connectorPanel.deleteConnectorDialogMessage'),
+        confirmText: this.$t('components.connectorPanel.deleteConnectorDialogConfirmText'),
         type: 'is-danger',
         hasIcon: true,
-        cancelText: i18n.t('general.cancel'),
+        cancelText: this.$t('general.cancel'),
         onConfirm: this.onDeleteConfirm,
       });
     },
@@ -172,13 +171,13 @@ export default {
     onDeleteConfirm() {
       this.$store.dispatch('deleteConnector', this.connector._id)
         .then(() => {
-          notifySuccess(i18n.t('components.connectorPanel.notifications.deletedConnector'));
+          notifySuccess(this.$t('components.connectorPanel.notifications.deletedConnector'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
           // Request failed locally - maybe no internet connection etc?
           return notifyFailure(
-            i18n.t('general.notifications.requestFailedLocally'),
+            this.$t('general.notifications.requestFailedLocally'),
           );
         });
     },

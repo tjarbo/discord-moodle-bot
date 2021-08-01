@@ -5,7 +5,7 @@ import Vuex from 'vuex';
 import Buefy from 'buefy';
 import Vuelidate from 'vuelidate';
 import AdministratorList from '@/components/administration/AdministratorList.vue';
-import i18n from '../../../src/i18n';
+import i18n from '@/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);

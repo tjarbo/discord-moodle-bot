@@ -6,7 +6,7 @@ import Vuelidate from 'vuelidate';
 import Registration from '@/views/Registration.vue';
 import AuthenticationLayout from '@/layouts/AuthenticationLayout.vue';
 import { v4 } from 'uuid';
-import i18n from '../../../src/i18n';
+import i18n from '@/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);

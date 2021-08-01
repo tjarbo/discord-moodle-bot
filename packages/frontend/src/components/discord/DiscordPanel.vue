@@ -29,7 +29,6 @@
 import { required, numeric } from 'vuelidate/lib/validators';
 import { mapGetters } from 'vuex';
 import { notifySuccess, notifyFailure } from '../../notification';
-import i18n from '../../i18n';
 
 export default {
   name: 'DiscordPanel',
@@ -41,21 +40,21 @@ export default {
       const update = { channelId: this.channelId };
       this.$store.dispatch('setDiscordChannel', update)
         .then(() => {
-          notifySuccess(i18n.t('components.discordPanel.notifications.changedDiscordChannel'));
+          notifySuccess(this.$t('components.discordPanel.notifications.changedDiscordChannel'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure(i18n.t('general.notifications.accessExpired'));
+              notifyFailure(this.$t('general.notifications.accessExpired'));
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              i18n.t('general.notifications.requestFailedLocally'),
+              this.$t('general.notifications.requestFailedLocally'),
             );
           }
         });

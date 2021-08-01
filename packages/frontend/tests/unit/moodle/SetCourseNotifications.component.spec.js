@@ -3,7 +3,7 @@ import { createLocalVue, mount } from '@vue/test-utils';
 import Buefy from 'buefy';
 import Vuex from 'vuex';
 import SetCourseNotifications from '@/components/moodle/SetCourseNotifications.vue';
-import i18n from '../../../src/i18n';
+import i18n from '@/i18n';
 
 const localVue = createLocalVue();
 

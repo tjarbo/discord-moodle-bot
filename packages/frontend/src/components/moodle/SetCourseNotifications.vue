@@ -20,7 +20,6 @@
 <script>
 import { mapGetters } from 'vuex';
 import { notifyFailure, notifySuccess } from '../../notification';
-import i18n from '../../i18n';
 
 export default {
   name: 'SetCourseNotifications',
@@ -35,7 +34,7 @@ export default {
         } else {
           // request failed locally - maybe no internet connection etc?
           notifyFailure(
-            i18n.t('general.notifications.requestFailedLocally'),
+            this.$t('general.notifications.requestFailedLocally'),
           );
         }
       });
@@ -49,7 +48,7 @@ export default {
         .then(() => {
           console.log(event.target);
           notifySuccess(
-            i18n.t('components.setCourseNotifications.notifications.updatedNotifications', event.target.id),
+            this.$t('components.setCourseNotifications.notifications.updatedNotifications', [ event.target.id ]),
           );
         })
         .catch((apiResponse) => {
@@ -57,14 +56,14 @@ export default {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure(i18n.t('general.notifications.accessExpired'));
+              notifyFailure(this.$t('general.notifications.accessExpired'));
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              i18n.t('general.notifications.requestFailedLocally'),
+              this.$t('general.notifications.requestFailedLocally'),
             );
           }
         });

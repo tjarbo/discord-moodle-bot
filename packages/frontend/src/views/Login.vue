@@ -1,6 +1,5 @@
 <template>
   <div id="loginview">
-    <SwitchLanguage></SwitchLanguage>
     <authentication-layout
       @submit="onSubmit"
       title="Fancy Moodle Discord Bot"
@@ -46,14 +45,12 @@ import {
 } from 'vuelidate/lib/validators';
 import { mapGetters } from 'vuex';
 import { startAssertion } from '@simplewebauthn/browser';
-import SwitchLanguage from '../components/SwitchLanguage.vue';
 import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
 import { notifyFailure, notifySuccess } from '../notification';
-import i18n from '../i18n';
 
 export default {
   name: 'LoginView',
-  components: { AuthenticationLayout, SwitchLanguage },
+  components: { AuthenticationLayout },
   data: () => ({
     form: {
       username: '',
@@ -80,11 +77,11 @@ export default {
             switch (error.name) {
               case 'AbortError':
                 // Login process timed out or cancelled
-                notifyFailure(i18n.t('views.login.notifications.abortError'));
+                notifyFailure(this.$t('views.login.notifications.abortError'));
                 break;
 
               default:
-                notifyFailure(i18n.t('views.login.notifications.defaultError'));
+                notifyFailure(this.$t('views.login.notifications.defaultError'));
                 break;
             }
           }
@@ -93,7 +90,7 @@ export default {
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
 
           // Request failed locally - maybe no internet connection etc?
-          return notifyFailure(i18n.t('general.notifications.requestFailedLocally'));
+          return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
         });
     },
 
@@ -102,7 +99,7 @@ export default {
         .then(() => {
           // login was successful and jwt was received; redirect to dashboard
           this.$router.push('dashboard');
-          notifySuccess(i18n.t('views.login.notifications.loginSuccess'));
+          notifySuccess(this.$t('views.login.notifications.loginSuccess'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
@@ -110,7 +107,7 @@ export default {
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              i18n.t('general.notifications.requestFailedLocally'),
+              this.$t('general.notifications.requestFailedLocally'),
             );
           }
         });
@@ -139,11 +136,5 @@ export default {
 
 #loginview {
   text-align: center;
-}
-
-#switchlanguage {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
 }
 </style>

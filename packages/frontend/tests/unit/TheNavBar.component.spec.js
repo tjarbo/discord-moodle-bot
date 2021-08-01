@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Buefy from 'buefy';
 import NavBar from '@/components/TheNavBar.vue';
-import i18n from '../../src/i18n';
+import i18n from '@/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);

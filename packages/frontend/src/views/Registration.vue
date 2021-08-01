@@ -1,6 +1,5 @@
 <template>
   <div id="registrationview">
-    <SwitchLanguage></SwitchLanguage>
     <authentication-layout
       @submit="onSubmit"
       title="Fancy Moodle Discord Bot"
@@ -59,12 +58,10 @@ import { mapGetters } from 'vuex';
 import { validate } from 'uuid';
 import { notifyFailure, notifySuccess } from '../notification';
 import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
-import SwitchLanguage from '../components/SwitchLanguage.vue';
-import i18n from '../i18n';
 
 export default {
   name: 'RegistrationView',
-  components: { AuthenticationLayout, SwitchLanguage },
+  components: { AuthenticationLayout },
   data: () => ({
     form: {
       username: '',
@@ -100,16 +97,16 @@ export default {
             switch (error.name) {
               case 'AbortError':
                 // Registration process timed out or cancelled
-                notifyFailure(i18n.t('views.registration.notifications.abortError'));
+                notifyFailure(this.$t('views.registration.notifications.abortError'));
                 break;
 
               case 'InvalidStateError':
                 // Authenticator is maybe already used for this
-                notifyFailure(i18n.t('views.registration.notifications.invalidStateError'));
+                notifyFailure(this.$t('views.registration.notifications.invalidStateError'));
                 break;
 
               default:
-                notifyFailure(i18n.t('views.registration.notifications.defaultError'));
+                notifyFailure(this.$t('views.registration.notifications.defaultError'));
                 break;
             }
           }
@@ -120,7 +117,7 @@ export default {
           } else {
           // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              i18n.t('general.notifications.requestFailedLocally'),
+              this.$t('general.notifications.requestFailedLocally'),
             );
           }
         });
@@ -132,7 +129,7 @@ export default {
         .then(() => {
           // registration was successful and jwt was received; redirect to dashboard
           this.$router.push('dashboard');
-          notifySuccess(i18n.t('views.registration.notifications.registrationSuccess'));
+          notifySuccess(this.$t('views.registration.notifications.registrationSuccess'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
@@ -140,7 +137,7 @@ export default {
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              i18n.t('general.notifications.requestFailedLocally'),
+              this.$t('general.notifications.requestFailedLocally'),
             );
           }
         });
@@ -168,9 +165,4 @@ export default {
 </script>
 
 <style scoped>
-#switchlanguage {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-}
 </style>
