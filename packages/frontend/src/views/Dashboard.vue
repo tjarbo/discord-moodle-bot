@@ -4,7 +4,7 @@
     <div class="columns">
       <div class="column is-10 is-offset-1">
         <b-tabs position="is-centered" class="block">
-          <b-tab-item class="spacing" label="System">
+          <b-tab-item class="spacing" :label="$t('views.dashboard.systemLabel')">
             <Status></Status>
             <AdministratorList></AdministratorList>
           </b-tab-item>

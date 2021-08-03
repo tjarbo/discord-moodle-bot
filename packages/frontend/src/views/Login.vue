@@ -3,9 +3,9 @@
     <authentication-layout
       @submit="onSubmit"
       title="Fancy Moodle Discord Bot"
-      subtitle="Melde dich an, um fortzufahren!"
-      switchViewText="Du hast einen Token bekommen?"
       switchViewLink="/registration"
+      :subtitle="$t('views.login.subtitle')"
+      :switchViewText="$t('views.login.switchViewText')"
     >
       <b-loading
         :is-full-page="false"
@@ -17,9 +17,9 @@
             autofocus
             class="input is-large"
             id="username"
-            placeholder="Dein Benutzername"
             type="text"
             v-model="form.username"
+            :placeholder="$t('views.login.usernamePlaceholder')"
           />
         </div>
       </div>
@@ -31,7 +31,7 @@
             class="button is-block is-primary is-large is-fullwidth is-marginless"
             :disabled="$v.$invalid"
           >
-            Anmelden
+            {{ $t('views.login.loginSubmitButton') }}
           </button>
         </div>
       </div>
@@ -45,8 +45,8 @@ import {
 } from 'vuelidate/lib/validators';
 import { mapGetters } from 'vuex';
 import { startAssertion } from '@simplewebauthn/browser';
-import { notifyFailure, notifySuccess } from '../notification';
 import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
+import { notifyFailure, notifySuccess } from '../notification';
 
 export default {
   name: 'LoginView',
@@ -77,11 +77,11 @@ export default {
             switch (error.name) {
               case 'AbortError':
                 // Login process timed out or cancelled
-                notifyFailure('Anmeldung wurde abgebrochen!');
+                notifyFailure(this.$t('views.login.notifications.abortError'));
                 break;
 
               default:
-                notifyFailure('Fehler! Bitte versuche es erneut!');
+                notifyFailure(this.$t('views.login.notifications.defaultError'));
                 break;
             }
           }
@@ -90,7 +90,7 @@ export default {
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
 
           // Request failed locally - maybe no internet connection etc?
-          return notifyFailure('Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.');
+          return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
         });
     },
 
@@ -99,7 +99,7 @@ export default {
         .then(() => {
           // login was successful and jwt was received; redirect to dashboard
           this.$router.push('dashboard');
-          notifySuccess('Anmeldung war erfolgreich!');
+          notifySuccess(this.$t('views.login.notifications.loginSuccess'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
@@ -107,7 +107,7 @@ export default {
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+              this.$t('general.notifications.requestFailedLocally'),
             );
           }
         });

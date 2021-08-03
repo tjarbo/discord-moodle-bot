@@ -3,6 +3,7 @@ import { createLocalVue, mount } from '@vue/test-utils';
 import Buefy from 'buefy';
 import Vuex from 'vuex';
 import SetCourseNotifications from '@/components/moodle/SetCourseNotifications.vue';
+import i18n from '@/i18n';
 
 const localVue = createLocalVue();
 
@@ -33,7 +34,7 @@ describe('SetCourseNotifications.component', () => {
       fetchCourseList: () => new Promise(() => {}),
     };
     store = new Vuex.Store({ actions, getters });
-    wrapper = mount(SetCourseNotifications, { store, localVue });
+    wrapper = mount(SetCourseNotifications, { i18n, store, localVue });
   });
 
   it('should render the component', () => {
@@ -42,7 +43,7 @@ describe('SetCourseNotifications.component', () => {
 
   it('should render title', () => {
     const titleObject = wrapper.find('p.panel-heading');
-    expect(titleObject.text()).to.be.equal('Kurse mit aktivierten Benachrichtigungen:');
+    expect(titleObject.text()).to.be.equal(`${i18n.t('components.setCourseNotifications.panelHeading')}:`);
   });
 
   it('should render items', async () => {

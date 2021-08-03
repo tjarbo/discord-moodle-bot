@@ -2,7 +2,7 @@
   <div id="setcoursenotifications">
     <article class="panel is-moodle">
       <b-loading :is-full-page="false" :active="coursesGetStatus.pending"></b-loading>
-      <p class="panel-heading">Kurse mit aktivierten Benachrichtigungen:</p>
+      <p class="panel-heading">{{ $t('components.setCourseNotifications.panelHeading') }}:</p>
       <label class="panel-block" v-for="course in coursesGetData" :key="course.courseId">
         <input
           type="checkbox"
@@ -11,7 +11,7 @@
           v-bind:value="course.courseId"
           v-on:change="onChange(course.courseId, $event)"
         />
-        {{course.name}}
+        {{ course.name }}
       </label>
     </article>
   </div>
@@ -34,7 +34,7 @@ export default {
         } else {
           // request failed locally - maybe no internet connection etc?
           notifyFailure(
-            'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+            this.$t('general.notifications.requestFailedLocally'),
           );
         }
       });
@@ -48,7 +48,7 @@ export default {
         .then(() => {
           console.log(event.target);
           notifySuccess(
-            `Benachrichtigung für ${event.target.id} aktualisiert!`,
+            this.$t('components.setCourseNotifications.notifications.updatedNotifications', [ event.target.id ]),
           );
         })
         .catch((apiResponse) => {
@@ -56,14 +56,14 @@ export default {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure('Zugang leider abgelaufen! Bitte melde dich erneut an!');
+              notifyFailure(this.$t('general.notifications.accessExpired'));
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?
             notifyFailure(
-              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
+              this.$t('general.notifications.requestFailedLocally'),
             );
           }
         });

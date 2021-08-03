@@ -2,7 +2,7 @@
   <div id="statusboard">
     <article class="panel is-status">
       <b-loading :is-full-page="false" :active="statusBoardGetStatus.pending"></b-loading>
-      <p class="panel-heading">Status:</p>
+      <p class="panel-heading">{{ $t('components.status.panelHeading') }}:</p>
       <a class="panel-block">
         <p class="control">
           <b-table :data="rows" :hoverable="true">
@@ -24,7 +24,7 @@
           class="button is-outlined is-status"
           style="width: 50%; margin: 5px;"
         >
-          Status aktualisieren
+          {{ $t('components.status.updateStatusButton') }}
         </b-button>
         <b-button
           @click="fetchAndNotify"
@@ -32,7 +32,7 @@
           style="width: 50%; margin: 5px;"
           :loading="fetchGetStatus.pending"
         >
-          Jetzt auf Moodle Updates prüfen
+          {{ $t('components.status.checkForMoodleUpdatesButton') }}
         </b-button>
       </div>
     </article>
@@ -42,6 +42,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import { notifySuccess, notifyFailure } from '../../notification';
+import i18n from '../../i18n';
 
 export default {
   name: 'Status',
@@ -54,7 +55,7 @@ export default {
         if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
 
         // Request failed locally - maybe no internet connection etc?
-        return notifyFailure('Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.');
+        return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
       });
   },
   data: () => ({
@@ -62,21 +63,21 @@ export default {
     columns: [
       {
         field: 'key',
-        label: 'Name',
+        label: i18n.t('general.name'),
       },
       {
         field: 'value',
-        label: 'Wert',
+        label: i18n.t('general.value'),
       },
     ],
     // First-column values
     keys: {
-      moodleConnectionStatus: 'Status der Moodle Verbindung',
-      moodleLastFetch: 'Letzte erfolgreiche Moodle Aktualisierung',
-      moodleNextFetch: 'Nächste Moodle Aktualisierung',
-      moodleCurrentFetchInterval: 'Aktuelles Fetch-Intervall',
-      discordLastReady: 'Letzter erfolgreicher Discord Verbindungaufbau',
-      discordCurrentChannel: 'Aktueller Discord Channel',
+      moodleConnectionStatus: i18n.t('components.status.columnValues.moodleConnectionStatusKey'),
+      moodleLastFetch: i18n.t('components.status.columnValues.moodleLastFetchKey'),
+      moodleNextFetch: i18n.t('components.status.columnValues.moodleNextFetchKey'),
+      moodleCurrentFetchInterval: i18n.t('components.status.columnValues.moodleCurrentFetchIntervalKey'),
+      discordLastReady: i18n.t('components.status.columnValues.discordLastReadyKey'),
+      discordCurrentChannel: i18n.t('components.status.columnValues.discordCurrentChannelKey'),
     },
     fetchInProgress: false,
   }),
@@ -86,24 +87,20 @@ export default {
       this.$store
         .dispatch('getStatus')
         .then(() => {
-          notifySuccess('Statusdaten aktualisiert!');
+          notifySuccess(this.$t('components.status.notifications.updatedStatusData'));
         })
         .catch((apiResponse) => {
           if (apiResponse.code) {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure(
-                'Zugang leider abgelaufen! Bitte melde dich erneut an!',
-              );
+              notifyFailure(this.$t('general.notifications.accessExpired'));
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?
-            notifyFailure(
-              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
-            );
+            notifyFailure(this.$t('general.notifications.requestFailedLocally'));
           }
         });
     },
@@ -112,7 +109,7 @@ export default {
       this.$store
         .dispatch('triggerFetch')
         .then(() => {
-          notifySuccess('Moodle Updates erfolgreich abgerufen!');
+          notifySuccess(this.$t('components.status.notifications.fetchedMoodleUpdates'));
           this.$store.dispatch('getStatus');
         })
         .catch((apiResponse) => {
@@ -120,17 +117,13 @@ export default {
             notifyFailure(apiResponse.error[0].message);
 
             if (apiResponse.code === 401) {
-              notifyFailure(
-                'Zugang leider abgelaufen! Bitte melde dich erneut an!',
-              );
+              notifyFailure(this.$t('general.notifications.accessExpired'));
               this.$store.dispatch('logout');
               this.$router.push({ name: 'Login' });
             }
           } else {
             // request failed locally - maybe no internet connection etc?
-            notifyFailure(
-              'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
-            );
+            notifyFailure(this.$t('general.notifications.requestFailedLocally'));
           }
         });
     },
@@ -171,27 +164,27 @@ export default {
     },
 
     /**
-     * Returns german time string
-     * e.g: '6 Minuten'
+     * Returns multilingual time string
+     * e.g: '6 Minuten' or '6 minutes'
      *
      * @param ms Time in ms
-     * @returns {string} german time string
+     * @returns {{ time: number, unit: string }} time template
      */
     getFormattedTime(ms) {
       const seconds = Math.round(ms / 1000);
       const minutes = Math.round(ms / (1000 * 60));
       const hours = Math.round(ms / (1000 * 60 * 60));
       const days = Math.round(ms / (1000 * 60 * 60 * 24));
-      if (ms === 1) return `${ms} Millisekunde`;
-      if (ms < 1000) return `${ms} Millisekunden`;
-      if (seconds === 1) return `${seconds} Sekunde`;
-      if (seconds < 60) return `${seconds} Sekunden`;
-      if (minutes === 1) return `${minutes} Minute`;
-      if (minutes < 60) return `${minutes} Minuten`;
-      if (hours === 1) return `${hours} Stunde`;
-      if (hours < 24) return `${hours} Stunden`;
-      if (days === 1) return `${days} Tag`;
-      return `${days} Tage`;
+      if (ms === 1) return { time: ms, unit: this.$t('general.time.millisecond') };
+      if (ms < 1000) return { time: ms, unit: this.$t('general.time.milliseconds') };
+      if (seconds === 1) return { time: seconds, unit: this.$t('general.time.second') };
+      if (seconds < 60) return { time: seconds, unit: this.$t('general.time.seconds') };
+      if (minutes === 1) return { time: minutes, unit: this.$t('general.time.minute') };
+      if (minutes < 60) return { time: minutes, unit: this.$t('general.time.minutes') };
+      if (hours === 1) return { time: hours, unit: this.$t('general.time.hour') };
+      if (hours < 24) return { time: hours, unit: this.$t('general.time.hours') };
+      if (days === 1) return { time: days, unit: this.$t('general.time.day') };
+      return { time: days, unit: this.$t('general.time.days') };
     },
 
     /**
@@ -207,15 +200,15 @@ export default {
     },
 
     /**
-     * Returns the timestamp and date combined in a predefined string
-     * e.g. '6 Minuten (31.8.2020, 09:52:18)'
+     * Returns the timestamp difference and date combined in a custom object
+     * e.g. { time: 6, unit: 'Minuten', date: '31.8.2020, 09:52:18'}
      *
      * @param timestamp
      * @param date
-     * @returns {string}
+     * @returns {{ time: number, unit: string, date: string }}
      */
-    getTimeString(timestamp, date) {
-      return `${this.getFormattedTime(this.getCurrentTimeDifference(timestamp))} (${date})`;
+    getTimeObject(timestamp, date) {
+      return { ...this.getFormattedTime(this.getCurrentTimeDifference(timestamp)), date };
     },
   },
   computed: {
@@ -237,31 +230,38 @@ export default {
       // Generate default (error) strings
       let moodleLastFetchString = 'N/A';
       let moodleNextFetchString = 'N/A';
-      let moodleCurrentFetchIntervalString = 'Error';
+      let moodleCurrentFetchIntervalString = this.$t('general.error');
       if (moodleLastFetchTimestamp !== 'Error') {
         // Calculate lastFetch
-        if (moodleLastFetchTimestamp === 0) moodleLastFetchString = 'Keine';
+        if (moodleLastFetchTimestamp === 0) moodleLastFetchString = this.$t('general.none');
         else {
           const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
-          moodleLastFetchString = `Vor ${this.getTimeString(moodleLastFetchTimestamp * 1000, moodleLastFetchDate)}`;
+          moodleLastFetchString = this.$t(
+            'general.time.ago', this.getTimeObject(moodleLastFetchTimestamp * 1000, moodleLastFetchDate),
+          );
         }
       }
       if (moodleCurrentFetchInterval !== 'Error') {
         // Calculate currentFetchIntervall
-        moodleCurrentFetchIntervalString = `Alle ${this.getFormattedTime(moodleCurrentFetchInterval)} (${moodleCurrentFetchInterval} ms)`;
+        const timeEvery = this.$t('general.time.every', this.getFormattedTime(moodleCurrentFetchInterval));
+        moodleCurrentFetchIntervalString = `${timeEvery} (${moodleCurrentFetchInterval} ms)`;
       }
       if (moodleNextFetchTimestamp !== 'Error' && (moodleNextFetchTimestamp > Date.now() / 1000)) {
         // Calculate nextFetch
         const moodleNextFetchDate = new Date(moodleNextFetchTimestamp * 1000).toLocaleString();
-        moodleNextFetchString = `In ${this.getTimeString(moodleNextFetchTimestamp * 1000, moodleNextFetchDate)}`;
+        moodleNextFetchString = this.$t(
+          'general.time.in', this.getTimeObject(moodleNextFetchTimestamp * 1000, moodleNextFetchDate),
+        );
       }
 
       // Generate discordLastReady string
       const discordLastReadyDate = new Date(discordLastReadyTimestamp).toLocaleString();
-      const discordLastReadyString = `Vor ${this.getTimeString(discordLastReadyTimestamp, discordLastReadyDate)}`;
+      const discordLastReadyString = this.$t(
+        'general.time.ago', this.getTimeObject(discordLastReadyTimestamp, discordLastReadyDate),
+      );
 
       // Generate discordCurrentChannel string
-      let discordCurrentChannelString = `Unbekannt (${discordCurrentChannelId})`;
+      let discordCurrentChannelString = `${this.$t('general.unknown')} (${discordCurrentChannelId})`;
       if (discordCurrentChannelName !== 'Unknown') {
         discordCurrentChannelString = `${discordCurrentChannelName} (${discordCurrentChannelId})`;
       }

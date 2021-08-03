@@ -4,6 +4,7 @@ import Buefy from 'buefy';
 import Vuex from 'vuex';
 import Vuelidate from 'vuelidate';
 import DiscordPanel from '@/components/discord/DiscordPanel.vue';
+import i18n from '@/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -25,7 +26,7 @@ describe('DiscordPanel.component', () => {
       getters,
     });
 
-    wrapper = mount(DiscordPanel, { localVue, store });
+    wrapper = mount(DiscordPanel, { i18n, localVue, store });
   });
 
   it.skip('should render the component', () => {
@@ -42,7 +43,7 @@ describe('DiscordPanel.component', () => {
     const testChannel = '000000000000000001';
 
     // correct attributes
-    expect(channelInput.element.placeholder).to.be.equal('Neue Channel-ID');
+    expect(channelInput.element.placeholder).to.be.equal(i18n.t('components.discordPanel.newChannelIdPlaceholder'));
     expect(channelInput.element.type).to.be.equal('text');
 
     // changes are in sync with local store
@@ -54,7 +55,7 @@ describe('DiscordPanel.component', () => {
   it('should render submit button', () => {
     const submitButton = wrapper.find('button.button.is-discord.is-outlined.is-fullwidth');
 
-    expect(submitButton.text()).to.be.equal('Aktualisieren');
+    expect(submitButton.text()).to.be.equal(i18n.t('general.update'));
     expect(submitButton.exists()).to.be.true;
     expect(submitButton.element.disabled).to.be.true;
   });

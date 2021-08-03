@@ -7,6 +7,7 @@ import router from './router';
 import store from './store';
 
 import './fmdb.scss';
+import i18n from './i18n';
 
 Vue.use(Vuelidate);
 Vue.use(Buefy, { defaultIconPack: 'fas' });
@@ -18,5 +19,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
+  i18n,
   render: (h) => h(App),
 }).$mount('#app');

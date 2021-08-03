@@ -1,5 +1,4 @@
 import { Schema, model, Model, Document } from 'mongoose';
-import { IAssignment } from '../moodle/interfaces/assignment.interface';
 
 export interface ICourseListSchema extends Document {
     [_id: string]: any;

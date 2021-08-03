@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { mount, createLocalVue } from '@vue/test-utils';
 import Buefy from 'buefy';
 import NavBar from '@/components/TheNavBar.vue';
+import i18n from '@/i18n';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);
@@ -10,7 +11,7 @@ describe('TheNavBar.component', () => {
   let wrapper = null;
 
   beforeEach(() => {
-    wrapper = mount(NavBar, { localVue });
+    wrapper = mount(NavBar, { i18n, localVue });
   });
 
   it('should render a navbar', () => {

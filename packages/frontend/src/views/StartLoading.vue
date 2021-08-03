@@ -6,7 +6,7 @@
           <div class="column is-4 is-offset-4">
             <h3 class="title has-text-black">Fancy Moodle Discord Bot</h3>
             <hr class="login-hr" />
-            <p class="subtitle has-text-black">App wird geladen ...</p>
+            <p class="subtitle has-text-black">{{ $t('views.startLoading.subtitle') }}</p>
             <div class="box has-text-left">
               <figure class="image is-128x128">
                 <img class="is-rounded" src="../assets/FMDB_logo.png" />
@@ -21,7 +21,7 @@
               <a
                 class="has-text-link"
                 href="https://github.com/tjarbo/discord-moodle-bot/wiki"
-              >Brauchst du Hilfe?</a>
+              >{{ $t('views.startLoading.needHelpLink') }}</a>
             </p>
           </div>
         </div>

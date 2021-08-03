@@ -1,5 +1,6 @@
 <template>
   <section class="hero is-fullheight">
+  <TheLanguageSwitch></TheLanguageSwitch>
     <div class="hero-body">
       <div class="container has-text-centered">
         <div class="column is-4 is-offset-4">
@@ -27,7 +28,7 @@
             <a
               class="has-text-link"
               href="https://github.com/tjarbo/discord-moodle-bot/wiki"
-              >Brauchst du Hilfe?</a
+              >{{ $t('layouts.authenticationLayout.needHelpLink') }}</a
             >
           </p>
         </div>
@@ -37,8 +38,11 @@
 </template>
 
 <script>
+import TheLanguageSwitch from '@/components/TheLanguageSwitch.vue';
+
 export default {
   name: 'AuthenticationLayout',
+  components: { TheLanguageSwitch },
   methods: {
     onSubmit(event) {
       this.$emit('submit', event);
@@ -76,5 +80,11 @@ figure img {
 
 .box > p {
   margin-top: 1rem;
+}
+
+#thelanguageswitch {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
 }
 </style>
