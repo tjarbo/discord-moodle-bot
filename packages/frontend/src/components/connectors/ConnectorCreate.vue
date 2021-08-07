@@ -22,7 +22,7 @@
             </div>
             <div class="">
               <h2 class="subtitle mb-4">Bots</h2>
-              <a class="box" @click="onSelectType('discordbot')">
+              <a class="box" @click="onSelectType('discord')">
                 <article class="media">
                   <figure class="media-left">
                     <b-icon icon="discord" pack="fab" size="is-large"></b-icon>
@@ -161,6 +161,7 @@ const loadingTemplate = {
 
 const connectorBlueprint = {
   name: '',
+  type: '',
   socket: {},
 };
 
@@ -215,9 +216,10 @@ export default {
     onSelectType(type) {
       this.isDirty = false;
       switch (type) {
-        case 'discordbot':
+        case 'discord':
           console.log('Discord Bot');
           this.connectorSocket = DiscordSocket;
+          this.connectorDraft.type = 'discord';
           this.activeStep++;
           break;
         default:
