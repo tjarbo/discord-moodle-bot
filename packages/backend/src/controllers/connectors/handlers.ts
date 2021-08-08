@@ -14,7 +14,7 @@ const connectorsIdSchema = object({
 
 const connectorsPostRequestSchema = object({
   name: string().max(64).required(),
-  type: string().required().valid(ConnectorTypeValues),
+  type: string().required().valid(...ConnectorTypeValues),
   socket: object().unknown().required(),
 }).required();
 
