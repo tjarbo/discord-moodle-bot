@@ -2,10 +2,10 @@
   <div>
     <a class="button is-success" @click="showCreate = true">{{ $t('general.create') }}</a>
     <ConnectorModalLayout
-      title="Neuen Connector anlegen"
+      @close="onClose"
       :active.sync="showCreate"
       :canClose.sync="canClose"
-      @close="onClose"
+      :title="$t('components.connectorCreate.connectorModalTitle')"
     >
       <div class="m-4">
         <b-steps
@@ -13,15 +13,14 @@
           :has-navigation="false"
           :mobile-mode="null"
         >
-          <b-step-item step="1" label="Typ">
+          <b-step-item step="1" :label="$t('components.connectorCreate.selectTypeLabel')">
             <div class="content">
               <p>
-                Du möchtest einen neuen Connector erstellen? Sehr schön! Wähle
-                dazu zuerst einen passenden Typen aus der Liste aus:
+                {{ $t('components.connectorCreate.selectTypeContent') }}
               </p>
             </div>
-            <div class="">
-              <h2 class="subtitle mb-4">Bots</h2>
+            <div>
+              <h2 class="subtitle mb-4">{{ $t('components.connectorCreate.selectTypeBotsTitle') }}</h2>
               <a class="box" @click="onSelectType('discord')">
                 <article class="media">
                   <figure class="media-left">
@@ -30,10 +29,10 @@
                   <div class="media-content">
                     <div class="content">
                       <p>
-                        <strong>Discord Bot</strong>
+                        <strong>{{ $t('components.connectorCreate.selectTypeBotsDiscordTitle') }}</strong>
                         <br />
-                        Für diesen Connetor musst du einen neuen Bot im Discord
-                        Developer Portal anlegen. Mehr dazu findest du <a href="https://docs.tjarbo.me">hier</a>
+                        <!-- eslint-disable-next-line -->
+                        <span v-html="$t('components.connectorCreate.selectTypeBotsDiscordDescription', [ 'https://docs.tjarbo.me' ])" />
                       </p>
                     </div>
                   </div>
@@ -41,11 +40,11 @@
               </a>
             </div>
             <div class="my-4">
-              <h2 class="subtitle mb-4">Weitere</h2>
+              <h2 class="subtitle mb-4">{{ $t('components.connectorCreate.selectTypeMiscellaneousTitle') }}</h2>
               <a
                 class="box has-text-light"
-                @click="onSelectType('webhook')"
                 disabled
+                @click="onSelectType('webhook')"
               >
                 <article class="media">
                   <figure class="media-left">
@@ -58,9 +57,9 @@
                   <div class="media-content">
                     <div class="content">
                       <p>
-                        <strong>Webhook</strong>
+                        <strong>{{ $t('components.connectorCreate.selectTypeMiscellaneousWebhookTitle') }}</strong>
                         <br />
-                        Kleine Vorschau ;) Kommt bald ...
+                        {{ $t('components.connectorCreate.selectTypeMiscellaneousWebhookDescription') }}
                       </p>
                     </div>
                   </div>
@@ -69,28 +68,28 @@
             </div>
           </b-step-item>
 
-          <b-step-item step="2" label="Parameter">
+          <b-step-item step="2" :label="$t('components.connectorCreate.parametersLabel')">
             <component
               v-model="connectorDraft.socket"
               @input="isDirty = true"
-              :description="true"
-              :is="connectorSocket"
               :activeStep="activeStep"
+              :is="connectorSocket"
+              :showDescription="true"
             />
             <a class="panel-block">
               <p class="control">
-                <b-field label="Connector Name:">
+                <b-field :label="$t('components.connectorCreate.parametersConnectorName')">
                   <b-input
                     id="connectorname"
-                    placeholder="This is a fany connector"
                     v-model="connectorDraft.name"
+                    :placeholder="$t('components.connectorCreate.parametersConnectorNamePlaceholder')"
                   ></b-input>
                 </b-field>
               </p>
             </a>
           </b-step-item>
 
-          <b-step-item step="3" label="Fertig">
+          <b-step-item step="3" :label="$t('components.connectorCreate.doneLabel')">
             <div
               class="
                 step-3
@@ -102,8 +101,8 @@
             >
               <b-loading :active.sync="loading.active" :is-full-page="false" />
               <b-icon
-                v-show="!loading.active"
                 size="is-large"
+                v-show="!loading.active"
                 :icon="loading.icon"
                 :type="loading.color"
               />
@@ -123,7 +122,7 @@
                     :disabled="previous.disabled"
                     @click.prevent="previous.action"
                   >
-                    Zurück
+                    {{ $t('general.back') }}
                   </b-button>
                 </div>
               </div>
@@ -131,10 +130,10 @@
                 <div class="level-item">
                   <b-button
                     type="is-success"
-                    :disabled="!isDirty || connectorDraft.name == ''"
                     @click.prevent="onCreate"
+                    :disabled="!isDirty || connectorDraft.name == ''"
                   >
-                    Erstellen
+                    {{ $t('general.create') }}
                   </b-button>
                 </div>
               </div>
@@ -172,7 +171,7 @@ export default {
   },
   data: () => ({
     activeStep: 0,
-    canClose: false,
+    canClose: true,
     connectorSocket: undefined,
     connectorDraft: cloneDeep(connectorBlueprint),
     isDirty: false,
@@ -198,7 +197,7 @@ export default {
       this.$store.dispatch('createConnector', this.connectorDraft)
         .then(() => {
           this.setResult(true);
-          notifySuccess('Connector erfolgreich aktualisiert!');
+          notifySuccess(this.$t('components.connectorCreate.notifications.connectorCreated'));
           setTimeout(this.onClose, 2000);
         })
         .catch((apiResponse) => {
@@ -206,9 +205,7 @@ export default {
           setTimeout(() => { this.activeStep--; this.loading = loadingTemplate; }, 2000);
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
           // Request failed locally - maybe no internet connection etc?
-          return notifyFailure(
-            'Anfrage fehlgeschlagen! Bitte überprüfe deine Internetverbindung.',
-          );
+          return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
         }).finally(() => {
           this.canClose = true;
         });
@@ -229,12 +226,12 @@ export default {
     },
     setResult(success) {
       if (success) {
-        this.loading.text = 'Connector erstellt!';
+        this.loading.text = this.$t('components.connectorCreate.doneSuccessDescription');
         this.loading.active = false;
         this.loading.icon = 'check-circle';
         this.loading.color = 'is-success';
       } else {
-        this.loading.text = 'Connector erstellt!';
+        this.loading.text = this.$t('components.connectorCreate.doneFailedDescription');
         this.loading.active = false;
         this.loading.icon = 'times-circle';
         this.loading.color = 'is-danger';

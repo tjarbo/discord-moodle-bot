@@ -11,6 +11,26 @@
       "panelHeading": "Administrators",
       "usernameLabel": "Username"
     },
+    "connectorCreate": {
+      "connectorModalTitle": "Create new connector",
+      "doneLabel": "Done",
+      "doneSuccessDescription": "Connector created!",
+      "doneFailedDescription": "Connector creation failed!",
+      "notifications": {
+        "connectorCreated": "Connector created successfully!"
+      },
+      "parametersLabel": "Parameters",
+      "parametersConnectorName": "Connector Name:",
+      "parametersConnectorNamePlaceholder": "ComputerScience Channel",
+      "selectTypeLabel": "Type",
+      "selectTypeContent": "You want to create a new connector? Great! First, choose your wanted type from the list below:",
+      "selectTypeBotsTitle": "Bots",
+      "selectTypeBotsDiscordTitle": "Discord Bot",
+      "selectTypeBotsDiscordDescription": "You will need to create a bot at the Discord developer portal. More information <a href=\"{0}\">here</a>",
+      "selectTypeMiscellaneousTitle": "Miscellaneous",
+      "selectTypeMiscellaneousWebhookTitle": "Webhook",
+      "selectTypeMiscellaneousWebhookDescription": "Little preview ;) Coming soon ..."
+    },
     "connectorList": {
       "noConnectorFoundContent": "No connector found. Click on \"Create\" to create a new connector"
     },
@@ -35,9 +55,10 @@
     },
     "discordSocket": {
       "channelLabel": "Discord channel",
-      "channelPlaceholder": "New channel-ID",
+      "channelPlaceholder": "1234567890123456",
+      "description": "Please enter the required values into the form. If problem occurs or you do not know what to do - You can find a manual <a href=\"{0}\">here</a>",
       "tokenLabel": "Discord token",
-      "tokenPlaceholder": "New token"
+      "tokenPlaceholder": "yyyyyyyyy.xxxxxx.yyyyyyyy"
     },
     "registrationTokenModal": {
       "clipboardContent": "Click here to save the link to your clipboard. Share it with the person you want to add as another user or open it yourself in a new browser tab.",
@@ -87,6 +108,7 @@
   },
   "general": {
     "activated": "Activated",
+    "back": "Back",
     "cancel": "Cancel",
     "create": "Create",
     "createdAt": "Created at",

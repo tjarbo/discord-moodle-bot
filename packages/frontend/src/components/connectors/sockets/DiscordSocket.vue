@@ -1,11 +1,7 @@
 <template>
-  <div class="">
-    <p class="" v-if="description">
-      Bitte gib in die folgenden Felder die entsprechenden Werte ein. Solltest du nicht wissen,
-      was du tuen sollst oder nicht weiter kommen
-      - Alles nützliche findest du <a href="https://docs.tjarbo.me">hier</a>
-    </p>
-    <a class="panel-block">
+  <div>
+    <p class="my-4" v-if="showDescription" v-html="$t('components.discordSocket.description', ['https://docs.tjarbo.me'])"></p>
+    <a class="panel-block" :class="showDescription ? 'no-separator' : ''">
       <p class="control">
         <b-field :label="$t('components.discordSocket.channelLabel')">
           <b-input
@@ -56,7 +52,7 @@ export default {
         default: '',
       },
     },
-    description: {
+    showDescription: {
       type: Boolean,
       default: false,
     },
@@ -64,5 +60,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.no-separator {
+  border-bottom: 0px !important;
+}
 </style>
