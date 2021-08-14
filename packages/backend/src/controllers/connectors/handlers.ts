@@ -52,7 +52,7 @@ export function connectorsGetRequest(req: Request, res: Response, next: NextFunc
 /**
  * POST /api/connectors
  *
- * Adds a new connector to the database
+ * Adds a new connector with connectorService
  * @param req Request
  * @param res Response
  * @param next NextFunction
@@ -63,8 +63,11 @@ export function connectorsPostRequest(req: Request, res: Response, next: NextFun
     const connectorsPostRequestValidation = connectorsPostRequestSchema.validate(req.body);
     if (connectorsPostRequestValidation.error) throw new ApiError(400, connectorsPostRequestValidation.error.message);
 
-    // 2. Create Connector
-    const response = new ApiSuccess(200, connectorService.connectors);
+    // 2. Create connector
+    const { name, type, socket } = connectorsPostRequestValidation.value;
+    const connector = connectorService.create(name, type, socket);
+
+    const response = new ApiSuccess(200, connector);
     next(response);
 
   } catch (err) {
@@ -76,14 +79,14 @@ export function connectorsPostRequest(req: Request, res: Response, next: NextFun
 
 /**
  * PATCH /api/connectors/:id
- * Expects id of connector as path parameter
+ * * Id of connector as path parameter required!
  *
  * Updates whitelisted attributes of a given connector and its database document
  * @export
  * @param {Request} req Request
  * @param {Response} res Response
  * @param {NextFunction} next NextFunction
- * @return {*}  {Promise<void>}
+ * @return {Promise<void>} Promise
  */
 export async function connectorsIdPatchRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
