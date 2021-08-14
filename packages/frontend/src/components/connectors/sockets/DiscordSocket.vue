@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- eslint-disable-next-line -->
     <p class="my-4" v-if="showDescription" v-html="$t('components.discordSocket.description', ['https://docs.tjarbo.me'])"></p>
     <a class="panel-block" :class="showDescription ? 'no-separator' : ''">
       <p class="control">
