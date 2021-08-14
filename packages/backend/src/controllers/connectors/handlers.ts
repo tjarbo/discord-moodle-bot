@@ -57,7 +57,7 @@ export function connectorsGetRequest(req: Request, res: Response, next: NextFunc
  * @param res Response
  * @param next NextFunction
  */
-export function connectorsPostRequest(req: Request, res: Response, next: NextFunction): void {
+export async function connectorsPostRequest(req: Request, res: Response, next: NextFunction): void {
   try {
     // 1. Validate body - except req.body.socket!!
     const connectorsPostRequestValidation = connectorsPostRequestSchema.validate(req.body);
@@ -65,11 +65,11 @@ export function connectorsPostRequest(req: Request, res: Response, next: NextFun
 
     // 2. Create connector
     const { name, type, socket } = connectorsPostRequestValidation.value;
-    const connector = connectorService.create(name, type, socket);
+    const connector = await connectorService.create(name, type, socket);
 
+    // 3. Send response
     const response = new ApiSuccess(200, connector);
     next(response);
-
   } catch (err) {
     loggerFile.error(err.message);
     next(err);

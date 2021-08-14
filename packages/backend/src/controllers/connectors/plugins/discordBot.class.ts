@@ -9,7 +9,7 @@ import { LeanDocument } from 'mongoose';
 export class DiscordBotConnectorPlugin extends ConnectorPlugin {
   private readonly client: Discord.Client = new Discord.Client();
   private isReady: boolean = false;
-  
+
   private static readonly socketSchema: ObjectSchema = object({
       channel: string().alphanum().length(18).when(ref('$isRequired'), {
         is: boolean().invalid(false),
