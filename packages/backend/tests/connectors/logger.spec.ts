@@ -7,7 +7,7 @@ jest.mock('../../src/controllers/connectors/schemas/connectorLogItem.schema');
 
 describe('connectors/logger.ts info()', () => {
   let spyLogger: jest.SpyInstance;
-  const message = "Test";
+  const message = 'Test';
 
   beforeEach(() => {
     spyLogger = jest.spyOn(loggerFile, 'info');
@@ -18,13 +18,13 @@ describe('connectors/logger.ts info()', () => {
   });
 
   it('should save the message to logs', () => {
-    connectorLogger.info(message, "123");
+    connectorLogger.info(message, '123');
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).toHaveBeenCalled();
   });
 
   it('should skip saving the message to logs', () => {
-    connectorLogger.info(message, "123", true);
+    connectorLogger.info(message, '123', true);
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).not.toHaveBeenCalled();
   });
@@ -32,7 +32,7 @@ describe('connectors/logger.ts info()', () => {
 
 describe('connectors/logger.ts warn()', () => {
   let spyLogger: jest.SpyInstance;
-  const message = "Test";
+  const message = 'Test';
 
   beforeEach(() => {
     spyLogger = jest.spyOn(loggerFile,'warn');
@@ -43,13 +43,13 @@ describe('connectors/logger.ts warn()', () => {
   });
 
   it('should save the message to logs', () => {
-    connectorLogger.warn(message, "123");
+    connectorLogger.warn(message, '123');
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).toHaveBeenCalled();
   });
 
   it('should skip saving the message to logs', () => {
-    connectorLogger.warn(message, "123", true);
+    connectorLogger.warn(message, '123', true);
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).not.toHaveBeenCalled();
   });
@@ -57,7 +57,7 @@ describe('connectors/logger.ts warn()', () => {
 
 describe('connectors/logger.ts error()', () => {
   let spyLogger: jest.SpyInstance;
-  const message = "Test";
+  const message = 'Test';
 
   beforeEach(() => {
     spyLogger = jest.spyOn(loggerFile,'error');
@@ -68,13 +68,13 @@ describe('connectors/logger.ts error()', () => {
   });
 
   it('should save the message to logs', () => {
-    connectorLogger.error(message, "123");
+    connectorLogger.error(message, '123');
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).toHaveBeenCalled();
   });
 
   it('should skip saving the message to logs', () => {
-    connectorLogger.error(message, "123", true);
+    connectorLogger.error(message, '123', true);
     expect(spyLogger).toHaveBeenCalledWith(message);
     expect(ConnectorLogItem).not.toHaveBeenCalled();
   });
