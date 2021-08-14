@@ -2,19 +2,24 @@ import Discord, { TextChannel } from 'discord.js';
 import { IConnectorDocument } from '../schemas/connector.schema';
 import { connectorLogger } from '../logger';
 import { ConnectorPlugin } from './connectorPlugin.class';
-import { object, ObjectSchema, string } from '@hapi/joi';
+import { object, ObjectSchema, string, ref, boolean, required } from '@hapi/joi';
 import { ApiError } from '../../../utils/api';
 import { LeanDocument } from 'mongoose';
 
 export class DiscordBotConnectorPlugin extends ConnectorPlugin {
   private readonly client: Discord.Client = new Discord.Client();
-  private readonly updateRequestSchema: ObjectSchema = object({
-    socket: object({
-      channel: string().alphanum().length(18),
-      token: string(),
-    }),
-  }).unknown().required();
   private isReady: boolean = false;
+  
+  private static readonly socketSchema: ObjectSchema = object({
+      channel: string().alphanum().length(18).when(ref('$isRequired'), {
+        is: boolean().invalid(false),
+        then: required()
+      }),
+      token: string().when(ref('$isRequired'), {
+        is: boolean().invalid(false),
+        then: required()
+      }),
+  }).required();
 
   /**
    * Creates an instance of DiscordBotConnectorPlugin.
@@ -70,6 +75,24 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
   }
 
   /**
+   * Validates a given object if it is a valid socket for discord bot.
+   * * Throws Error if validation failed
+   *
+   * @static
+   * @throws Error
+   * @param {unknown} unknownSocket untrusted socket object
+   * @param {boolean} isRequired set attributes of socket as required
+   * @return {*} Validated socket object with optional missing parameters
+   * @memberof DiscordBotConnectorPlugin
+   */
+  public static validateSocket(unknownSocket: unknown, isRequired: boolean): any {
+    const validation = this.socketSchema.validate(unknownSocket, { context: { isRequired }});
+    if (validation.error) throw new Error(validation.error.message);
+
+    return validation.value;
+  }
+
+  /**
    * Sends the given message to the discord channel
    *
    * @param {string} message to send
@@ -98,16 +121,21 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
    * @memberof DiscordBotConnectorPlugin
    */
   public async update(patch: { [key: string]: any }): Promise<Readonly<LeanDocument<IConnectorDocument>>> {
-    // Validate user input
-    const updateRequest = this.updateRequestSchema.validate(patch);
-    if (updateRequest.error) throw new ApiError(400, updateRequest.error.message);
+    try {
+      // Validate missing part of user input validation
+      const socket = DiscordBotConnectorPlugin.validateSocket(patch.socket, false);
 
-    // Do not delete attributes of socket caused by REST PUT method
-    Object.assign(this.document.socket, updateRequest.value.socket);
-    delete updateRequest.value.socket;
+      // Do not delete attributes of socket caused by REST PUT method
+      Object.assign(this.document.socket, socket);
+      delete patch.socket;
+
+    } catch (error) {
+      // Validation failed -> throw ApiError
+      throw new ApiError(400, error);
+    }
 
     // Apply changes
-    this.document.set(updateRequest.value);
+    this.document.set(patch);
     this.document.save();
 
     // Log update process
