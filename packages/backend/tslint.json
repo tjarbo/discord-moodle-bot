@@ -24,7 +24,7 @@
   "rulesDirectory": [],
   "linterOptions": {
     "exclude": [
-        "tests/*"
+        "**/tests/*"
     ]
   }
 }
