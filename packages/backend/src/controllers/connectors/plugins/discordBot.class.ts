@@ -136,11 +136,11 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
 
     // Apply changes
     this.document.set(patch);
-    
+
     // Mark socket as modified, even not, because nested changes will not recognized
     this.document.markModified('socket');
-    
-    // Save changes    
+
+    // Save changes
     await this.document.save();
 
     // Log update process

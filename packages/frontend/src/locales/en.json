@@ -125,6 +125,7 @@
     "on": "On",
     "off": "Off",
     "registered": "Registered",
+    "save": "Save",
     "time": {
       "ago": "{time} {unit} ago ({date})",
       "day": "day",

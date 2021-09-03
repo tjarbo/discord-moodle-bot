@@ -125,6 +125,7 @@
     "on": "An",
     "off": "Aus",
     "registered": "Registriert",
+    "save": "Speichern",
     "time": {
       "ago": "Vor {time} {unit} ({date})",
       "day": "Tag",
