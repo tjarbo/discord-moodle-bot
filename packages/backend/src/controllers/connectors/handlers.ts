@@ -57,7 +57,7 @@ export function connectorsGetRequest(req: Request, res: Response, next: NextFunc
  * @param res Response
  * @param next NextFunction
  */
-export async function connectorsPostRequest(req: Request, res: Response, next: NextFunction): void {
+export async function connectorsPostRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     // 1. Validate body - except req.body.socket!!
     const connectorsPostRequestValidation = connectorsPostRequestSchema.validate(req.body);

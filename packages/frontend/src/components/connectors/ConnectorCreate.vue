@@ -194,6 +194,7 @@ export default {
       this.activeStep++;
 
       this.canClose = false;
+      this.loading.active = true;
       this.$store.dispatch('createConnector', this.connectorDraft)
         .then(() => {
           this.setResult(true);
