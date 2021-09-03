@@ -42,8 +42,7 @@
             <div class="my-4">
               <h2 class="subtitle mb-4">{{ $t('components.connectorCreate.selectTypeMiscellaneousTitle') }}</h2>
               <a
-                class="box has-text-light"
-                disabled
+                class="box has-text-light disabled-item"
                 @click="onSelectType('webhook')"
               >
                 <article class="media">
@@ -242,8 +241,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .step-3 {
   height: 9rem;
 }
+
+.disabled-item {
+  pointer-events: none;
+}
+
 </style>
