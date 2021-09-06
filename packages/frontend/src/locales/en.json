@@ -23,7 +23,7 @@
       "parametersConnectorName": "Connector Name:",
       "parametersConnectorNamePlaceholder": "ComputerScience Channel",
       "selectTypeLabel": "Type",
-      "selectTypeContent": "You want to create a new connector? Great! First, choose your wanted type from the list below:",
+      "selectTypeContent": "You want to create a new connector? Great! First, choose your desired type from the list below:",
       "selectTypeBotsTitle": "Bots",
       "selectTypeBotsDiscordTitle": "Discord Bot",
       "selectTypeBotsDiscordDescription": "You will need to create a bot at the Discord developer portal. More information <a href=\"{0}\">here</a>",
