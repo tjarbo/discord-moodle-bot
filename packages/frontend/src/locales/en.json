@@ -56,7 +56,7 @@
     "discordSocket": {
       "channelLabel": "Discord channel",
       "channelPlaceholder": "1234567890123456",
-      "description": "Please enter the required values into the form. If problem occurs or you do not know what to do - You can find a manual <a href=\"{0}\">here</a>",
+      "description": "Please enter the required values into the form. If a problem occurs or you do not know what to do - You can find a manual <a href=\"{0}\">here</a>",
       "tokenLabel": "Discord token",
       "tokenPlaceholder": "yyyyyyyyy.xxxxxx.yyyyyyyy"
     },
