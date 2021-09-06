@@ -26,7 +26,7 @@
       "selectTypeContent": "Du möchtest einen neuen Connector erstellen? Sehr schön! Wähle dazu zuerst einen passenden Typen aus der Liste aus:",
       "selectTypeBotsTitle": "Bots",
       "selectTypeBotsDiscordTitle": "Discord Bot",
-      "selectTypeBotsDiscordDescription": "Für diesen Connetor musst du einen neuen Bot im Discord Developer Portal anlegen. Mehr dazu findest du <a href=\"{0}\">hier</a>",
+      "selectTypeBotsDiscordDescription": "Für diesen Connector musst du einen neuen Bot im Discord Developer Portal anlegen. Mehr dazu findest du <a href=\"{0}\">hier</a>",
       "selectTypeMiscellaneousTitle": "Weitere",
       "selectTypeMiscellaneousWebhookTitle": "Webhook",
       "selectTypeMiscellaneousWebhookDescription": "Kleine Vorschau ;) Kommt bald ..."
