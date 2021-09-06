@@ -53,9 +53,9 @@ export function connectorsGetRequest(req: Request, res: Response, next: NextFunc
  * POST /api/connectors
  *
  * Adds a new connector with connectorService
- * @param req Request
- * @param res Response
- * @param next NextFunction
+ * @param {Request} req Request
+ * @param {Response} res Response
+ * @param {NextFunction} next NextFunction
  */
 export async function connectorsPostRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
