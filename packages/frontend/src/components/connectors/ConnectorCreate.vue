@@ -230,15 +230,14 @@ export default {
     setResult(success) {
       if (success) {
         this.loading.text = this.$t('components.connectorCreate.doneSuccessDescription');
-        this.loading.active = false;
         this.loading.icon = 'check-circle';
         this.loading.color = 'is-success';
       } else {
         this.loading.text = this.$t('components.connectorCreate.doneFailedDescription');
-        this.loading.active = false;
         this.loading.icon = 'times-circle';
         this.loading.color = 'is-danger';
       }
+      this.loading.active = false;
     },
   },
 };
