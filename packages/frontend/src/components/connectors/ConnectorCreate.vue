@@ -32,7 +32,7 @@
                         <strong>{{ $t('components.connectorCreate.selectTypeBotsDiscordTitle') }}</strong>
                         <br />
                         <!-- eslint-disable-next-line -->
-                        <span v-html="$t('components.connectorCreate.selectTypeBotsDiscordDescription', [ 'https://docs.tjarbo.me' ])" />
+                        <span v-html="$t('components.connectorCreate.selectTypeBotsDiscordDescription', [ docs.discordBot ])" />
                       </p>
                     </div>
                   </div>
@@ -176,6 +176,9 @@ export default {
     isDirty: false,
     loading: { ...loadingTemplate },
     showCreate: false,
+    docs: {
+      discordBot: `${process.env.VUE_APP_DOCS_BASE_URL}/`,
+    },
   }),
   methods: {
     onClose() {

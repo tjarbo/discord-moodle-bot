@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- eslint-disable-next-line -->
-    <p class="my-4" v-if="showDescription" v-html="$t('components.discordSocket.description', ['https://docs.tjarbo.me'])"></p>
+    <p class="my-4" v-if="showDescription" v-html="$t('components.discordSocket.description', [ docLink ])"></p>
     <a class="panel-block" :class="showDescription ? 'no-separator' : ''">
       <p class="control">
         <b-field :label="$t('components.discordSocket.channelLabel')">
@@ -33,6 +33,9 @@
 <script>
 export default {
   name: 'DiscordConnector',
+  data: () => ({
+    docLink: `${process.env.VUE_APP_DOCS_BASE_URL}`,
+  }),
   model: {
     prop: 'socket',
     event: 'change',
