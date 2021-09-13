@@ -251,5 +251,4 @@ export default {
 .disabled-item {
   pointer-events: none;
 }
-
 </style>
