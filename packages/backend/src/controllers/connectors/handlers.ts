@@ -2,6 +2,7 @@ import { any, array, boolean, number, object, string } from '@hapi/joi';
 import { NextFunction, Request, Response } from 'express';
 import { loggerFile } from '../../configuration/logger';
 import { ApiError, ApiSuccess } from '../../utils/api';
+import { ConnectorTypeValues } from './plugins';
 import { connectorService } from './service';
 
 /****************************************
@@ -11,6 +12,12 @@ const connectorsIdSchema = object({
   id: string().hex().length(24).required(),
 });
 
+const connectorsPostRequestSchema = object({
+  name: string().max(64).required(),
+  type: string().required().valid(...ConnectorTypeValues),
+  socket: object().unknown().required(),
+}).required();
+
 const connectorsIdPatchRequestSchema = object({
   active: boolean(),
   courses: array().items(number()),
@@ -18,7 +25,6 @@ const connectorsIdPatchRequestSchema = object({
   name: string().max(64),
   socket: object().unknown(),
 }).required();
-
 
 /****************************************
  *          Endpoint Handlers           *
@@ -43,17 +49,44 @@ export function connectorsGetRequest(req: Request, res: Response, next: NextFunc
   }
 }
 
+/**
+ * POST /api/connectors
+ *
+ * Adds a new connector with connectorService
+ * @param {Request} req Request
+ * @param {Response} res Response
+ * @param {NextFunction} next NextFunction
+ */
+export async function connectorsPostRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    // 1. Validate body - except req.body.socket!!
+    const connectorsPostRequestValidation = connectorsPostRequestSchema.validate(req.body);
+    if (connectorsPostRequestValidation.error) throw new ApiError(400, connectorsPostRequestValidation.error.message);
+
+    // 2. Create connector
+    const { name, type, socket } = connectorsPostRequestValidation.value;
+    const connector = await connectorService.create(name, type, socket);
+
+    // 3. Send response
+    const response = new ApiSuccess(200, connector);
+    next(response);
+  } catch (err) {
+    loggerFile.error(err.message);
+    next(err);
+  }
+}
+
 
 /**
  * PATCH /api/connectors/:id
- * Expects id of connector as path parameter
+ * * Id of connector as path parameter required!
  *
  * Updates whitelisted attributes of a given connector and its database document
  * @export
  * @param {Request} req Request
  * @param {Response} res Response
  * @param {NextFunction} next NextFunction
- * @return {*}  {Promise<void>}
+ * @return {Promise<void>} Promise
  */
 export async function connectorsIdPatchRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {

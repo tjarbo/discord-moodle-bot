@@ -38,6 +38,29 @@ export default {
       });
     },
 
+    createConnector({ commit, dispatch }, payload) {
+      // Do not lock state here, otherwise the screen will be blocked by fullscreen loader
+      // gui is locked by modal instead
+      // commit('LOCK_CONNECTORS');
+      return new Promise((resolve, reject) => {
+        ApiUtil.post('/connectors/', payload)
+          .then(({ data: apiResponse }) => {
+            if (apiResponse.status === 'success') {
+              resolve();
+              dispatch('loadConnectors');
+            } else {
+              reject(apiResponse);
+              commit('UNLOCK_CONNECTORS');
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            commit('UNLOCK_CONNECTORS');
+            reject();
+          });
+      });
+    },
+
     updateConnector({ commit, dispatch }, payload) {
       commit('LOCK_CONNECTORS');
       return new Promise((resolve, reject) => {

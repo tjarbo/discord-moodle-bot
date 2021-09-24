@@ -52,19 +52,20 @@ class ConnectorService {
 
     // Create optional discord Bot
     if (!!config.discordChannel && !!config.discordToken) {
-      const options: IConnectorDocument = {
-        name: 'Discord Bot (Environment)',
-        type: ConnectorType.Discord,
-        default: true,
-        socket: {
+
+      try {
+        const socket = {
           channel: config.discordChannel,
           token: config.discordToken,
-        },
-      } as IConnectorDocument;
+        };
 
-      const connector = await new Connector(options).save();
-      this.#connectors.push(new DiscordBotConnectorPlugin(connector));
-      loggerFile.debug(`Connector of type Discord (${connector._id}) has been created`);
+        this.create('Discord Bot (Environment)', ConnectorType.Discord, socket);
+      } catch (error) {
+        let { message } = error;
+        if (error instanceof ApiError) message = error.error;
+
+        loggerFile.error(`Failed to create Discord bot from .env! Reason(s): ${ message }`);
+      }
     }
   }
 
@@ -123,11 +124,66 @@ class ConnectorService {
   }
 
   /**
+   * Creates a new connector and saves it to database.
+   * Use only with validated user input (except socket)!
+   *
+   * @param {string} name Name of the new connector
+   * @param {ConnectorType} type Type of the new connector
+   * @param {*} untrustedSocket Socket of the new connector
+   * @return {Promise<Readonly<LeanDocument<IConnectorDocument>>>} Created connector
+   * @memberof ConnectorService
+   */
+  public async create(name: string, type: ConnectorType, untrustedSocket: any) : Promise<Readonly<LeanDocument<IConnectorDocument>>> {
+
+    // 1. Prepare document
+    let options: IConnectorDocument = {
+      name,
+      type,
+      default: true,
+    } as IConnectorDocument;
+
+    let plugin: ConnectorPlugin;
+
+    switch (type) {
+      case ConnectorType.Discord:
+        try {
+          // 2. Validate socket
+          const socket = DiscordBotConnectorPlugin.validateSocket(untrustedSocket, true);
+
+          // 3. Extend document
+          options = {
+            ...options,
+            socket,
+          } as IConnectorDocument;
+
+        } catch (error) {
+          // Validation failed -> throw ApiError
+          throw new ApiError(400, error.message);
+        }
+
+        // 4. Add connector to database
+        const connector = await new Connector(options).save();
+        plugin = new DiscordBotConnectorPlugin(connector);
+
+        // 5. Add connector to service
+        this.#connectors.push(plugin);
+        loggerFile.debug(`Connector of type Discord (${connector._id}) has been created`);
+        break;
+
+      default:
+        throw new ApiError(404, 'Unknown connector type!');
+        break;
+    }
+
+    return plugin.Document;
+  }
+
+  /**
    * Updates a selected connector
    *
    * @throws ApiError
    * @param {string} id objectId of the connector
-   * @param {[key: string]: any} body body of http request
+   * @param {[key: string]: any} body body of http request - socket not validated!
    * @returns {Promise<IConnectorDocument>} Updated document
    * @memberof ConnectorService
    */

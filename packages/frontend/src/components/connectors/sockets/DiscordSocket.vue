@@ -1,6 +1,8 @@
 <template>
-  <div class="">
-    <a class="panel-block">
+  <div>
+    <!-- eslint-disable-next-line -->
+    <p class="my-4" v-if="showDescription" v-html="$t('components.discordSocket.description', [ docLink ])"></p>
+    <a class="panel-block" :class="showDescription ? 'no-separator' : ''">
       <p class="control">
         <b-field :label="$t('components.discordSocket.channelLabel')">
           <b-input
@@ -12,7 +14,7 @@
         </b-field>
       </p>
     </a>
-    <a class="panel-block">
+    <a class="panel-block is-radiusless">
       <p class="control">
         <b-field :label="$t('components.discordSocket.tokenLabel')">
           <b-input
@@ -31,6 +33,9 @@
 <script>
 export default {
   name: 'DiscordConnector',
+  data: () => ({
+    docLink: `${process.env.VUE_APP_DOCS_BASE_URL}`,
+  }),
   model: {
     prop: 'socket',
     event: 'change',
@@ -51,9 +56,16 @@ export default {
         default: '',
       },
     },
+    showDescription: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
 
-<style>
+<style scoped>
+.no-separator {
+  border-bottom: 0px !important;
+}
 </style>

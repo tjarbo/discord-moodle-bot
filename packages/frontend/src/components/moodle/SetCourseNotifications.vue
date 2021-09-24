@@ -48,7 +48,7 @@ export default {
         .then(() => {
           console.log(event.target);
           notifySuccess(
-            this.$t('components.setCourseNotifications.notifications.updatedNotifications', [ event.target.id ]),
+            this.$t('components.setCourseNotifications.notifications.updatedNotifications', [event.target.id]),
           );
         })
         .catch((apiResponse) => {

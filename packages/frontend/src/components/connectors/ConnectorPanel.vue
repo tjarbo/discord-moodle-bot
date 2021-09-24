@@ -62,9 +62,10 @@
               <b-button
                 expanded
                 @click="onSave"
+                :disabled="!this.hasBeenModified"
                 :outlined="!this.hasBeenModified"
                 :type="this.hasBeenModified ? 'is-danger' : this.color"
-              >{{ $t('general.update') }}</b-button>
+              >{{ $t('general.save') }}</b-button>
             </div>
             <div class="column">
               <b-button

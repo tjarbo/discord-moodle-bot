@@ -10,6 +10,26 @@
       },
       "panelHeading": "Administratoren",
       "usernameLabel": "Benutzername"
+    }, 
+    "connectorCreate": {
+      "connectorModalTitle": "Neuen Connector anlegen",
+      "doneLabel": "Fertig",
+      "doneSuccessDescription": "Connector erstellt!",
+      "doneFailedDescription": "Connector Erstellung fehlgeschlagen!",
+      "notifications": {
+        "connectorCreated": "Connector erfolgreich erstellt!"
+      },
+      "parametersLabel": "Parameter",
+      "parametersConnectorName": "Connector Name:",
+      "parametersConnectorNamePlaceholder": "Informatik Kanal",
+      "selectTypeLabel": "Type",
+      "selectTypeContent": "Du möchtest einen neuen Connector erstellen? Sehr schön! Wähle dazu zuerst einen passenden Typen aus der Liste aus:",
+      "selectTypeBotsTitle": "Bots",
+      "selectTypeBotsDiscordTitle": "Discord Bot",
+      "selectTypeBotsDiscordDescription": "Für diesen Connector musst du einen neuen Bot im Discord Developer Portal anlegen. Mehr dazu findest du <a href=\"{0}\">hier</a>",
+      "selectTypeMiscellaneousTitle": "Weitere",
+      "selectTypeMiscellaneousWebhookTitle": "Webhook",
+      "selectTypeMiscellaneousWebhookDescription": "Kleine Vorschau ;) Kommt bald ..."
     },
     "connectorList": {
       "noConnectorFoundContent": "Kein Connector gefunden. Klicke auf \"Erstellen\" um einen neuen Connector anzulegen"
@@ -35,9 +55,10 @@
     },
     "discordSocket": {
       "channelLabel": "Discord Channel",
-      "channelPlaceholder": "Neue Channel-ID",
+      "channelPlaceholder": "1234567890123456",
+      "description": "Bitte gib in die folgenden Felder die entsprechenden Werte ein. Solltest du Probleme haben oder nicht weiter wissen - Eine Anleitung findest du <a href=\"{0}\">hier</a>",
       "tokenLabel": "Discord Token",
-      "tokenPlaceholder": "Neuer Token"
+      "tokenPlaceholder": "yyyyyyyyy.xxxxxx.yyyyyyyy"
     },
     "registrationTokenModal": {
       "clipboardContent": "Klicke hier, um den Link in deine Zwischenablage zu speichern. Teile diesen mit der Person, welche du als weiteren Benutzer hinzufügen möchstest oder öffne ihn selbst in einem neuen Browsertab.",
@@ -87,6 +108,7 @@
   },
   "general": {
     "activated": "Aktiviert",
+    "back": "Zurück",
     "cancel": "Abbrechen",
     "create": "Erstellen",
     "createdAt": "Erstellt am",
@@ -103,6 +125,7 @@
     "on": "An",
     "off": "Aus",
     "registered": "Registriert",
+    "save": "Speichern",
     "time": {
       "ago": "Vor {time} {unit} ({date})",
       "day": "Tag",
