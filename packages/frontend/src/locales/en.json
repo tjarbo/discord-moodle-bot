@@ -104,6 +104,12 @@
     },
     "theNavBar": {
       "logoutButton": "Logout"
+    },
+    "usernameInputField": {
+      "placeholder": "Your username",
+      "validationErrors": {
+        "alphaNumOrDiscord": "Only alphanumeric or discord usernames are allowed"
+      }
     }
   },
   "general": {
@@ -143,6 +149,11 @@
     },
     "update": "Update",
     "unknown": "Unknown",
+    "validationErrors": {
+      "required": "This field is required",
+      "minLength": "Please enter at least {0} characters",
+      "maxLength": "The maximum are {0} characters"
+    },
     "value": "Value"
   },
   "layouts": {
@@ -162,8 +173,7 @@
         "loginSuccess": "Login successful!"
       },
       "subtitle": "Log in to continue!",
-      "switchViewText": "You have received a token?",
-      "usernamePlaceholder": "Your username"
+      "switchViewText": "You have received a token?"
     },
     "registration": {
       "notifications": {

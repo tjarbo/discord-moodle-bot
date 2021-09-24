@@ -104,6 +104,12 @@
     },
     "theNavBar": {
       "logoutButton": "Logout"
+    },
+    "usernameInputField": {
+      "placeholder": "Dein Benutzername",
+      "validationErrors": {
+        "alphaNumOrDiscord": "Nur alphanumerische oder Discord Benutzernamen sind erlaubt"
+      }
     }
   },
   "general": {
@@ -143,6 +149,11 @@
     },
     "update": "Aktualisieren",
     "unknown": "Unbekannt",
+    "validationErrors": {
+      "required": "Bitte fülle dieses Feld aus",
+      "minLength": "Mindestens {0} Zeichen sind erforderlich",
+      "maxLength": "Es dürfen höhstens {0} Zeichen sein"
+    },
     "value": "Wert"
   },
   "layouts": {
@@ -162,8 +173,7 @@
         "loginSuccess": "Anmeldung war erfolgreich!"
       },
       "subtitle": "Melde dich an, um fortzufahren!",
-      "switchViewText": "Du hast einen Token bekommen?",
-      "usernamePlaceholder": "Dein Benutzername"
+      "switchViewText": "Du hast einen Token bekommen?"
     },
     "registration": {
       "notifications": {
