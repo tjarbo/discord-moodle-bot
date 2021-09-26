@@ -20,7 +20,7 @@ import {
   required, alphaNum, minLength, maxLength, or, helpers,
 } from 'vuelidate/lib/validators';
 
-const discordUsername = helpers.regex('discordusername', /^.{3,32}#[0-9]{4}$/);
+const discordUsername = helpers.regex('discordusername', /^[\w\s]{3,32}#[0-9]{4}$/);
 
 export default {
   name: 'UsernameInputField',
