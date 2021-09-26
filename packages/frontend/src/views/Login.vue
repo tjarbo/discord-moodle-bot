@@ -19,7 +19,7 @@
           <button
             id="loginSubmitButton"
             class="button is-block is-primary is-large is-fullwidth is-marginless"
-            :disabled="this.form.invalid"
+            :disabled="this.form.isInvalid"
           >
             {{ $t('views.login.loginSubmitButton') }}
           </button>

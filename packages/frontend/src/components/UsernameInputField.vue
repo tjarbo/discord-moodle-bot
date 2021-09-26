@@ -4,6 +4,7 @@
       :type="errorDescription !== '' ? 'is-danger' : ''"
       :message="errorDescription">
       <b-input
+        id="username"
         type="text"
         size="is-large"
         v-model="$v.username.$model"

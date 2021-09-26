@@ -28,7 +28,7 @@
           <button
             id="registrationSubmitButton"
             class="button is-block is-primary is-large is-fullwidth is-marginless"
-            :disabled="$v.$invalid"
+            :disabled="this.$v.$invalid || this.isInvalid"
           >
             {{ $t('views.registration.registrationSubmitButton') }}
           </button>
@@ -57,6 +57,7 @@ export default {
       username: '',
       token: '',
     },
+    isInvalid: false,
   }),
   mounted() {
     // Check if token parameter is available

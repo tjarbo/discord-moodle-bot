@@ -18,7 +18,6 @@ describe('Login.view', () => {
   let actions;
   let store;
 
-  let usernameInput;
   let submitButton;
 
   beforeEach(() => {
@@ -40,8 +39,6 @@ describe('Login.view', () => {
     });
 
     wrapper = shallowMount(Login, { i18n, store, localVue });
-
-    usernameInput = wrapper.find('#username');
     submitButton = wrapper.find('#loginSubmitButton');
   });
 
@@ -49,59 +46,9 @@ describe('Login.view', () => {
     expect(wrapper.find(AuthenticationLayout).exists()).is.true;
   });
 
-  it('should render username input correctly', () => {
-    const testUserName = 'testusername';
-
-    expect(usernameInput.element.placeholder).to.be.equal(i18n.t('views.login.usernamePlaceholder'));
-    expect(usernameInput.element.type).to.be.equal('text');
-
-    usernameInput.setValue(testUserName);
-    expect(wrapper.vm.$data.form.username).to.be.equal(testUserName);
-  });
-
-  it('should change disabled submit button based on username input', async () => {
-    const tests = [
-      {
-        // required
-        prepare: () => { },
-        expect: true,
-      },
-      {
-        // minLength
-        prepare: () => {
-          usernameInput.setValue('a'.repeat(7));
-        },
-        expect: true,
-      },
-      {
-        // maxLength
-        prepare: () => {
-          usernameInput.setValue('a'.repeat(65));
-        },
-        expect: true,
-      },
-      {
-        // alphanum
-        prepare: () => {
-          usernameInput.setValue('test#123');
-        },
-        expect: true,
-      },
-      {
-        prepare: () => {
-          usernameInput.setValue('testuser123');
-        },
-        expect: false,
-      },
-    ];
-
-    for (let i = 0; i < tests.length; i++) {
-      const test = tests[i];
-
-      test.prepare();
-
-      await wrapper.vm.$nextTick();
-      expect(submitButton.element.disabled).to.equal(test.expect);
-    }
+  it('should disable submit button', async () => {
+    wrapper.vm.$data.form.isInvalid = true;
+    await wrapper.vm.$nextTick();
+    expect(submitButton.element.disabled).to.equal(true);
   });
 });
