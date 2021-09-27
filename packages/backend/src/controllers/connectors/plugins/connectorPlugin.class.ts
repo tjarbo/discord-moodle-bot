@@ -48,6 +48,17 @@ export abstract class ConnectorPlugin {
   }
 
   /**
+   * Returns true, if this plugin is active.
+   *
+   * @readonly
+   * @type {boolean}
+   * @memberof ConnectorPlugin
+   */
+  public get isActive(): boolean {
+    return this.document.active;
+  }
+
+  /**
    * Returns true, if this plugin is an default handler for not
    * assigned courses.
    *
