@@ -5,16 +5,14 @@
       <p class="panel-heading">{{ $t('components.status.panelHeading') }}:</p>
       <a class="panel-block">
         <p class="control">
-          <b-table :data="rows" :hoverable="true">
-            <template v-slot="{row}">
-              <b-table-column
-                v-for="(column, index) in columns"
-                :class="classObject(row, column.field)"
-                :key="index"
-                :label="column.label"
-                :width="'50%'"
-              >{{ row[column.field] }}</b-table-column>
-            </template>
+          <b-table :data="rows" hoverable>
+            <b-table-column
+              v-for="(column, index) in columns"
+              v-slot="props"
+              :key="index"
+              :label="column.label"
+              :width="'50%'"
+            ><span :class="classObject(props.row, column.field)"></span>{{ props.row[column.field] }}</b-table-column>
           </b-table>
         </p>
       </a>
@@ -41,11 +39,93 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { notifySuccess, notifyFailure } from '../../notification';
-import i18n from '../../i18n';
+import { notifySuccess, notifyFailure } from '../notification';
 
 export default {
-  name: 'Status',
+  name: 'TheStatusBoard',
+  computed: {
+    rows() {
+      // Avoid console errors at early loading time
+      if (!this.statusBoardGetData) return [];
+
+      // Get data
+      const {
+        moodleConnectionStatus,
+        moodleLastFetchTimestamp,
+        moodleNextFetchTimestamp,
+        moodleCurrentFetchInterval,
+        connectorsLength,
+        connectorsActiveLength,
+        connectorsDefaultLength,
+      } = this.statusBoardGetData[0];
+
+      // Generate default (error) strings
+      let moodleLastFetchString = 'N/A';
+      let moodleNextFetchString = 'N/A';
+      let moodleCurrentFetchIntervalString = this.$t('general.error');
+      if (moodleLastFetchTimestamp !== 'Error') {
+        // Calculate lastFetch
+        if (moodleLastFetchTimestamp === 0) moodleLastFetchString = this.$t('general.none');
+        else {
+          const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
+          moodleLastFetchString = this.$t(
+            'general.time.ago', this.getTimeObject(moodleLastFetchTimestamp * 1000, moodleLastFetchDate),
+          );
+        }
+      }
+
+      if (moodleCurrentFetchInterval !== 'Error') {
+        // Calculate currentFetchIntervall
+        const timeEvery = this.$t('general.time.every', this.getFormattedTime(moodleCurrentFetchInterval));
+        moodleCurrentFetchIntervalString = `${timeEvery} (${moodleCurrentFetchInterval} ms)`;
+      }
+
+      if (moodleNextFetchTimestamp !== 'Error' && (moodleNextFetchTimestamp > Date.now() / 1000)) {
+        // Calculate nextFetch
+        const moodleNextFetchDate = new Date(moodleNextFetchTimestamp * 1000).toLocaleString();
+        moodleNextFetchString = this.$t(
+          'general.time.in', this.getTimeObject(moodleNextFetchTimestamp * 1000, moodleNextFetchDate),
+        );
+      }
+
+      // Return data array
+      return [
+        { key: this.keys.moodleConnectionStatus, value: moodleConnectionStatus },
+        { key: this.keys.moodleLastFetch, value: moodleLastFetchString },
+        { key: this.keys.moodleNextFetch, value: moodleNextFetchString },
+        { key: this.keys.moodleCurrentFetchInterval, value: moodleCurrentFetchIntervalString },
+        { key: this.keys.connectorsLength, value: connectorsLength },
+        { key: this.keys.connectorsActiveLength, value: connectorsActiveLength },
+        { key: this.keys.connectorsDefaultLength, value: connectorsDefaultLength },
+      ];
+    },
+    ...mapGetters(['statusBoardGetStatus', 'statusBoardGetData', 'fetchGetStatus']),
+  },
+  data() {
+    return {
+    // Column titles
+      columns: [
+        {
+          field: 'key',
+          label: this.$t('general.name'),
+        },
+        {
+          field: 'value',
+          label: this.$t('general.value'),
+        },
+      ],
+      // First-column values
+      keys: {
+        moodleConnectionStatus: this.$t('components.status.columnValues.moodleConnectionStatusKey'),
+        moodleLastFetch: this.$t('components.status.columnValues.moodleLastFetchKey'),
+        moodleNextFetch: this.$t('components.status.columnValues.moodleNextFetchKey'),
+        moodleCurrentFetchInterval: this.$t('components.status.columnValues.moodleCurrentFetchIntervalKey'),
+        connectorsLength: this.$t('components.status.columnValues.connectorsLength'),
+        connectorsActiveLength: this.$t('components.status.columnValues.connectorsActiveLength'),
+        connectorsDefaultLength: this.$t('components.status.columnValues.connectorsDefaultLength'),
+      },
+    };
+  },
   mounted() {
     // Import status data at loading time
     this.$store
@@ -58,29 +138,6 @@ export default {
         return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
       });
   },
-  data: () => ({
-    // Column titles
-    columns: [
-      {
-        field: 'key',
-        label: i18n.t('general.name'),
-      },
-      {
-        field: 'value',
-        label: i18n.t('general.value'),
-      },
-    ],
-    // First-column values
-    keys: {
-      moodleConnectionStatus: i18n.t('components.status.columnValues.moodleConnectionStatusKey'),
-      moodleLastFetch: i18n.t('components.status.columnValues.moodleLastFetchKey'),
-      moodleNextFetch: i18n.t('components.status.columnValues.moodleNextFetchKey'),
-      moodleCurrentFetchInterval: i18n.t('components.status.columnValues.moodleCurrentFetchIntervalKey'),
-      discordLastReady: i18n.t('components.status.columnValues.discordLastReadyKey'),
-      discordCurrentChannel: i18n.t('components.status.columnValues.discordCurrentChannelKey'),
-    },
-    fetchInProgress: false,
-  }),
   methods: {
     onSubmit() {
       // Update data
@@ -149,11 +206,7 @@ export default {
       if (row.key === this.keys.moodleCurrentFetchInterval) {
         return { error: row[property] === 'Error' };
       }
-      if (row.key === this.keys.discordCurrentChannel
-          && row[property] !== this.keys.discordCurrentChannel) {
-        return { error: this.statusBoardGetData[0].discordCurrentChannelName === 'Unknown' };
-      }
-      // Check if time to last fetch is greater than fetch intervall
+      // Check if time to last fetch is greater than fetch interval
       if (row.key === this.keys.moodleLastFetch
           && row[property] !== this.keys.moodleLastFetch) {
         const { moodleLastFetchTimestamp, moodleCurrentFetchInterval } = this.statusBoardGetData[0];
@@ -210,73 +263,6 @@ export default {
     getTimeObject(timestamp, date) {
       return { ...this.getFormattedTime(this.getCurrentTimeDifference(timestamp)), date };
     },
-  },
-  computed: {
-    rows() {
-      // Avoid console errors at early loading time
-      if (!this.statusBoardGetData) return [];
-
-      // Get data
-      const {
-        moodleConnectionStatus,
-        moodleLastFetchTimestamp,
-        moodleNextFetchTimestamp,
-        moodleCurrentFetchInterval,
-        discordLastReadyTimestamp,
-        discordCurrentChannelId,
-        discordCurrentChannelName,
-      } = this.statusBoardGetData[0];
-
-      // Generate default (error) strings
-      let moodleLastFetchString = 'N/A';
-      let moodleNextFetchString = 'N/A';
-      let moodleCurrentFetchIntervalString = this.$t('general.error');
-      if (moodleLastFetchTimestamp !== 'Error') {
-        // Calculate lastFetch
-        if (moodleLastFetchTimestamp === 0) moodleLastFetchString = this.$t('general.none');
-        else {
-          const moodleLastFetchDate = new Date(moodleLastFetchTimestamp * 1000).toLocaleString();
-          moodleLastFetchString = this.$t(
-            'general.time.ago', this.getTimeObject(moodleLastFetchTimestamp * 1000, moodleLastFetchDate),
-          );
-        }
-      }
-      if (moodleCurrentFetchInterval !== 'Error') {
-        // Calculate currentFetchIntervall
-        const timeEvery = this.$t('general.time.every', this.getFormattedTime(moodleCurrentFetchInterval));
-        moodleCurrentFetchIntervalString = `${timeEvery} (${moodleCurrentFetchInterval} ms)`;
-      }
-      if (moodleNextFetchTimestamp !== 'Error' && (moodleNextFetchTimestamp > Date.now() / 1000)) {
-        // Calculate nextFetch
-        const moodleNextFetchDate = new Date(moodleNextFetchTimestamp * 1000).toLocaleString();
-        moodleNextFetchString = this.$t(
-          'general.time.in', this.getTimeObject(moodleNextFetchTimestamp * 1000, moodleNextFetchDate),
-        );
-      }
-
-      // Generate discordLastReady string
-      const discordLastReadyDate = new Date(discordLastReadyTimestamp).toLocaleString();
-      const discordLastReadyString = this.$t(
-        'general.time.ago', this.getTimeObject(discordLastReadyTimestamp, discordLastReadyDate),
-      );
-
-      // Generate discordCurrentChannel string
-      let discordCurrentChannelString = `${this.$t('general.unknown')} (${discordCurrentChannelId})`;
-      if (discordCurrentChannelName !== 'Unknown') {
-        discordCurrentChannelString = `${discordCurrentChannelName} (${discordCurrentChannelId})`;
-      }
-
-      // Return data array
-      return [
-        { key: this.keys.moodleConnectionStatus, value: moodleConnectionStatus },
-        { key: this.keys.moodleLastFetch, value: moodleLastFetchString },
-        { key: this.keys.moodleNextFetch, value: moodleNextFetchString },
-        { key: this.keys.moodleCurrentFetchInterval, value: moodleCurrentFetchIntervalString },
-        { key: this.keys.discordLastReady, value: discordLastReadyString },
-        { key: this.keys.discordCurrentChannel, value: discordCurrentChannelString },
-      ];
-    },
-    ...mapGetters(['statusBoardGetStatus', 'statusBoardGetData', 'fetchGetStatus']),
   },
 };
 </script>

@@ -14,7 +14,7 @@ export default {
     getStatus({ commit }) {
       commit('SET_STATUSBOARD');
       return new Promise((resolve, reject) => {
-        ApiUtil.get('/settings/status')
+        ApiUtil.get('/status')
           .then(({ data: apiResponse }) => {
             if (apiResponse.status === 'success') {
               commit('SET_STATUSBOARD', apiResponse.data);

@@ -5,7 +5,7 @@
       <div class="column is-10 is-offset-1">
         <b-tabs position="is-centered" class="block">
           <b-tab-item class="spacing" :label="$t('views.dashboard.systemLabel')">
-            <Status></Status>
+            <TheStatusBoard></TheStatusBoard>
             <AdministratorList></AdministratorList>
           </b-tab-item>
           <b-tab-item class="spacing is-moodle" label="Moodle">
@@ -27,7 +27,7 @@ import SetCourseNotifications from '../components/moodle/SetCourseNotifications.
 import ConnectorList from '../components/connectors/ConnectorList.vue';
 import SetRefreshRate from '../components/moodle/SetRefreshRate.vue';
 import TheNavBar from '../components/TheNavBar.vue';
-import Status from '../components/statusboard/Status.vue';
+import TheStatusBoard from '../components/TheStatusBoard.vue';
 
 export default {
   name: 'DashboardView',
@@ -37,7 +37,7 @@ export default {
     ConnectorList,
     SetRefreshRate,
     TheNavBar,
-    Status,
+    TheStatusBoard,
   },
 };
 </script>
