@@ -21,6 +21,7 @@
     "build": "lerna run build",
     "build:prod": "lerna run build:prod",
     "lint": "lerna run lint",
+    "lint:fix": "lerna run lint:fix",
     "postinstall": "lerna bootstrap",
     "start": "lerna run start --parallel",
     "test": "lerna run test --parallel"

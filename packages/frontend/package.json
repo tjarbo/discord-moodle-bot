@@ -17,7 +17,7 @@
   "dependencies": {
     "@simplewebauthn/browser": "^2.2.1",
     "axios": "^0.21.1",
-    "buefy": "^0.9.7",
+    "buefy": "^0.9.10",
     "core-js": "^3.6.4",
     "lodash": "^4.17.21",
     "qrcode": "^1.4.4",
