@@ -5,6 +5,7 @@ import { connectorsRoutes } from './connectors.routes';
 import { settingsRoutes } from './settings.routes';
 import { isAuth } from '../controllers/authentication';
 import { manualFetchRequest } from '../controllers/moodle';
+import { statusGetRequest } from '../controllers/status/status';
 export const router = Router();
 
 // register routes
@@ -13,3 +14,4 @@ router.use(authRoutes);
 router.use(connectorsRoutes);
 router.use('/settings', isAuth, settingsRoutes);
 router.get('/fetch', isAuth, manualFetchRequest);
+router.get('/status', isAuth, statusGetRequest);
