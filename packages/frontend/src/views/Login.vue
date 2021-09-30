@@ -1,9 +1,9 @@
 <template>
   <div id="loginview">
     <authentication-layout
-      @submit="onSubmit"
       title="Fancy Moodle Discord Bot"
       switchViewLink="/registration"
+      @submit="onSubmit"
       :subtitle="$t('views.login.subtitle')"
       :switchViewText="$t('views.login.switchViewText')"
     >
@@ -11,25 +11,15 @@
         :is-full-page="false"
         :active="authGetStatus.pending"
       ></b-loading>
-      <div class="field">
-        <div class="control">
-          <input
-            autofocus
-            class="input is-large"
-            id="username"
-            type="text"
-            v-model="form.username"
-            :placeholder="$t('views.login.usernamePlaceholder')"
-          />
-        </div>
-      </div>
+
+      <username-input-field class="mb-3" @input="onInput"/>
 
       <div class="field">
         <div class="control">
           <button
             id="loginSubmitButton"
             class="button is-block is-primary is-large is-fullwidth is-marginless"
-            :disabled="$v.$invalid"
+            :disabled="this.form.isInvalid"
           >
             {{ $t('views.login.loginSubmitButton') }}
           </button>
@@ -40,24 +30,31 @@
 </template>
 
 <script>
-import {
-  required, alphaNum, minLength, maxLength,
-} from 'vuelidate/lib/validators';
+
 import { mapGetters } from 'vuex';
 import { startAssertion } from '@simplewebauthn/browser';
-import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
 import { notifyFailure, notifySuccess } from '../notification';
+import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
+import UsernameInputField from '../components/UsernameInputField.vue';
 
 export default {
   name: 'LoginView',
-  components: { AuthenticationLayout },
+  components: { AuthenticationLayout, UsernameInputField },
+  computed: {
+    ...mapGetters(['authGetStatus']),
+  },
   data: () => ({
     form: {
       username: '',
+      isInvalid: true,
     },
     loading: true,
   }),
   methods: {
+    onInput(username, isInvalid) {
+      this.form.username = username;
+      this.form.isInvalid = isInvalid;
+    },
     onSubmit(event) {
       event.preventDefault();
 
@@ -111,19 +108,6 @@ export default {
             );
           }
         });
-    },
-  },
-  computed: {
-    ...mapGetters(['authGetStatus']),
-  },
-  validations: {
-    form: {
-      username: {
-        required,
-        alphaNum,
-        minLength: minLength(8),
-        maxLength: maxLength(64),
-      },
     },
   },
 };

@@ -154,8 +154,8 @@ describe('administrator/index.ts adminAdministratorDeleteRequest', () => {
       },
       {
         // username not alphanumeric
-        prepare: () => { mockRequest.params.username = "test#1234"; },
-        expect: new ApiError(400, '"username" must only contain alpha-numeric characters')
+        prepare: () => { mockRequest.params.username = "test@1234"; },
+        expect: new ApiError(400, '"username" does not match any of the allowed types')
     }];
 
     for (let index = 0; index < tests.length; index++) {

@@ -1,7 +1,7 @@
 /* tslint:disable:ban-types */
 import { Schema, model, Model, Document } from 'mongoose';
 import { IAuthenticatorDocument, authenticatorSchema } from './authenticator.schema';
-import { string } from '@hapi/joi';
+import { string, alternatives } from '@hapi/joi';
 
 export interface IAdministratorDocument extends Document {
   [_id: string]: any;
@@ -22,4 +22,7 @@ const administratorSchema = new Schema({
 
 export const Administrator: Model<IAdministratorDocument> = model<IAdministratorDocument>('Administrator', administratorSchema);
 
-export const administratorUsernameValidationSchema = string().alphanum().required().min(8).max(64).description('Username of administrator');
+export const administratorUsernameValidationSchema = alternatives().try(
+  string().required().min(8).max(64).alphanum(),
+  string().required().min(8).max(36).pattern(/^[\w\s]{3,32}#[0-9]{4}$/)
+).required().description('Username of administrator');

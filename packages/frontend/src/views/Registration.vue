@@ -9,18 +9,7 @@
     >
       <b-loading :is-full-page="false" :active="authGetStatus.pending"></b-loading>
 
-      <div class="field">
-        <div class="control">
-          <input
-            autofocus
-            id="username"
-            class="input is-large"
-            type="text"
-            v-model="form.username"
-            :placeholder="$t('views.registration.usernamePlaceholder')"
-          />
-        </div>
-      </div>
+      <username-input-field class="mb-3"></username-input-field>
 
       <div class="field">
         <div class="control">
@@ -39,7 +28,7 @@
           <button
             id="registrationSubmitButton"
             class="button is-block is-primary is-large is-fullwidth is-marginless"
-            :disabled="$v.$invalid"
+            :disabled="this.$v.$invalid || this.isInvalid"
           >
             {{ $t('views.registration.registrationSubmitButton') }}
           </button>
@@ -51,22 +40,24 @@
 
 <script>
 import {
-  required, minLength, maxLength, alphaNum,
+  required, minLength, maxLength,
 } from 'vuelidate/lib/validators';
 import { startAttestation } from '@simplewebauthn/browser';
 import { mapGetters } from 'vuex';
 import { validate } from 'uuid';
 import { notifyFailure, notifySuccess } from '../notification';
 import AuthenticationLayout from '../layouts/AuthenticationLayout.vue';
+import UsernameInputField from '../components/UsernameInputField.vue';
 
 export default {
   name: 'RegistrationView',
-  components: { AuthenticationLayout },
+  components: { AuthenticationLayout, UsernameInputField },
   data: () => ({
     form: {
       username: '',
       token: '',
     },
+    isInvalid: false,
   }),
   mounted() {
     // Check if token parameter is available
@@ -79,6 +70,12 @@ export default {
     this.form.token = token;
   },
   methods: {
+
+    onUsernameInput(username, isInvalid) {
+      this.form.username = username;
+      this.isInvalid = isInvalid;
+    },
+
     onSubmit(event) {
       event.preventDefault();
 
@@ -148,12 +145,6 @@ export default {
   },
   validations: {
     form: {
-      username: {
-        required,
-        alphaNum,
-        minLength: minLength(8),
-        maxLength: maxLength(64),
-      },
       token: {
         required,
         minLength: minLength(36),

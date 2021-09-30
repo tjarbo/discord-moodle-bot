@@ -75,9 +75,9 @@ describe('auth/index.ts authAttestationGetRequest', () => {
         expect: new ApiError(400, '"username" is required')
       },
       {
-        // username not alphanumeric
-        prepare: () => { mockRequest.query.username = "test#1234"; },
-        expect: new ApiError(400, '"username" must only contain alpha-numeric characters')
+        // username not alphanumeric or discord username
+        prepare: () => { mockRequest.query.username = "test@1234"; },
+        expect: new ApiError(400, '"username" does not match any of the allowed types')
       },
       {
         // token not provided
@@ -201,9 +201,9 @@ describe('auth/index.ts authAttestationPostRequest', () => {
         expect: new ApiError(400, '"username" is required')
       },
       {
-        // username not alphanumeric
-        prepare: () => { mockRequest.body.username = "test#1234"; },
-        expect: new ApiError(400, '"username" must only contain alpha-numeric characters')
+        // username not alphanumeric or discord username
+        prepare: () => { mockRequest.body.username = "test@1234"; },
+        expect: new ApiError(400, '"username" does not match any of the allowed types')
       },
       {
         // token not provided
@@ -364,9 +364,9 @@ describe('auth/index.ts authAssertionGetRequest', () => {
         expect: new ApiError(400, '"username" is required')
       },
       {
-        // username not alphanumeric
-        prepare: () => { mockRequest.query.username = "test#1234"; },
-        expect: new ApiError(400, '"username" must only contain alpha-numeric characters')
+        // username not alphanumeric or discord username
+        prepare: () => { mockRequest.query.username = "test@1234"; },
+        expect: new ApiError(400, '"username" does not match any of the allowed types')
       },
     ]
     
@@ -485,9 +485,9 @@ describe('auth/index.ts authAssertionPostRequest', () => {
         expect: new ApiError(400, '"username" is required')
       },
       {
-        // username not alphanumeric
-        prepare: () => { mockRequest.body.username = "test#1234"; },
-        expect: new ApiError(400, '"username" must only contain alpha-numeric characters')
+        // username not alphanumeric or Discord
+        prepare: () => { mockRequest.body.username = "test@1234"; },
+        expect: new ApiError(400, '"username" does not match any of the allowed types')
       },
       {
         // assertionResponse must be provided

@@ -19,7 +19,6 @@ describe('Registration.view', () => {
   let actions;
   let store;
 
-  let usernameInput;
   let tokenInput;
   let submitButton;
 
@@ -56,7 +55,6 @@ describe('Registration.view', () => {
       i18n, store, localVue, mocks,
     });
 
-    usernameInput = wrapper.find('#username');
     tokenInput = wrapper.find('#token');
     submitButton = wrapper.find('#registrationSubmitButton');
   });
@@ -65,67 +63,15 @@ describe('Registration.view', () => {
     expect(wrapper.find(AuthenticationLayout).exists()).is.true;
   });
 
-  it('should render username input correctly', () => {
-    const testUserName = 'testusername';
-
-    expect(usernameInput.element.placeholder).to.be.equal(i18n.t('views.registration.usernamePlaceholder'));
-    expect(usernameInput.element.type).to.be.equal('text');
-
-    usernameInput.setValue(testUserName);
-    expect(wrapper.vm.$data.form.username).to.be.equal(testUserName);
-  });
-
   it('should render token input correctly', () => {
     expect(tokenInput.element.placeholder).not.to.be.equal('');
     expect(tokenInput.element.type).to.be.equal('text');
   });
 
-  it('should change disabled submit button based on username input', async () => {
-    const tests = [
-      {
-        // required
-        prepare: () => { },
-        expect: true,
-      },
-      {
-        // minLength
-        prepare: () => {
-          usernameInput.setValue('a'.repeat(7));
-        },
-        expect: true,
-      },
-      {
-        // maxLength
-        prepare: () => {
-          usernameInput.setValue('a'.repeat(65));
-        },
-        expect: true,
-      },
-      {
-        // alphanum
-        prepare: () => {
-          usernameInput.setValue('test#123');
-        },
-        expect: true,
-      },
-      {
-        prepare: () => {
-          usernameInput.setValue('testuser123');
-        },
-        expect: false,
-      },
-    ];
-
-    tokenInput.setValue('109156be-c4fb-41ea-b1b4-efe1671c5836');
-
-    for (let i = 0; i < tests.length; i++) {
-      const test = tests[i];
-
-      test.prepare();
-
-      await wrapper.vm.$nextTick();
-      expect(submitButton.element.disabled).to.be.equal(test.expect);
-    }
+  it('should disable submit button', async () => {
+    wrapper.vm.$data.isInvalid = true;
+    await wrapper.vm.$nextTick();
+    expect(submitButton.element.disabled).to.equal(true);
   });
 
   it('should change disabled submit button based on token input', async () => {
@@ -157,8 +103,8 @@ describe('Registration.view', () => {
       },
     ];
 
+    wrapper.vm.$data.isInvalid = false;
     tokenInput.setValue('');
-    usernameInput.setValue('12345testuser');
 
     for (let i = 0; i < tests.length; i++) {
       const test = tests[i];
