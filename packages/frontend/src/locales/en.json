@@ -76,8 +76,9 @@
       "panelHeading": "Status",
       "checkForMoodleUpdatesButton": "Check for moodle updates now",
       "columnValues": {
-        "discordCurrentChannelKey": "Current Discord channel",
-        "discordLastReadyKey": "Last successful Discord connection",
+        "connectorsActiveLength": "Number of active Connectors",
+        "connectorsDefaultLength": "Number of default Connectors",
+        "connectorsLength": "Number of Connectors",
         "moodleConnectionStatusKey": "Moodle connection state",
         "moodleCurrentFetchIntervalKey": "Current fetch-interval",
         "moodleLastFetchKey": "Last successful Moodle update",

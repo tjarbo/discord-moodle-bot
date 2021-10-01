@@ -4,16 +4,17 @@ import { ApiSuccess } from '../../utils/api';
 import { fetchEnrolledCourses } from '../moodle/fetch';
 import { getBaseUrl } from '../moodle/index';
 import { MoodleSettings } from '../moodle/schemas/moodle.schema';
+import { connectorService } from '../connectors/service';
 
 /**
- * Handles GET /api/settings/status requests and responds
- * with a JSON object containing all currently available status info.
+ * GET /api/status
+ * Responds with a JSON object containing all currently available status info.
  *
  * @param req Request
  * @param res Response
  * @param next NextFunction
  */
-export async function getStatusRequest(req: Request, res: Response, next: NextFunction) {
+export async function statusGetRequest(req: Request, res: Response, next: NextFunction) {
     try {
 
         // TODO: Better handling in #19
@@ -31,11 +32,20 @@ export async function getStatusRequest(req: Request, res: Response, next: NextFu
         const moodleLastFetchTimestamp = await MoodleSettings.getLastFetch();
         const moodleNextFetchTimestamp = await MoodleSettings.getNextFetch();
 
+        const [
+            connectorsLength,
+            connectorsActiveLength,
+            connectorsDefaultLength
+        ] = connectorService.status;
+
         const responseObject = {
             moodleConnectionStatus,
             moodleLastFetchTimestamp,
             moodleNextFetchTimestamp,
             moodleCurrentFetchInterval,
+            connectorsLength,
+            connectorsActiveLength,
+            connectorsDefaultLength,
         };
 
         const response = new ApiSuccess(200, responseObject);

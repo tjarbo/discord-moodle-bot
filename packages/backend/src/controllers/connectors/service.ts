@@ -103,8 +103,8 @@ class ConnectorService {
     loggerFile.info('Got new message publish order');
 
     this.#connectors.forEach(connector => {
-      // See if course is assigned to this connector - skip if not
-      if (connector.courses.indexOf(courseId) === -1) return;
+      // Check if connector is active and course is assigned to this connector - skip if not
+      if (!connector.isActive || connector.courses.indexOf(courseId) === -1) return;
 
       messageWasSent = true;
 
@@ -119,7 +119,7 @@ class ConnectorService {
 
     // If not, send the message to all default connectors
     this.#connectors.forEach(connector => {
-      if (connector.isDefault) connector.send(message);
+      if (connector.isDefault && connector.isActive) connector.send(message);
     });
   }
 
@@ -222,6 +222,27 @@ class ConnectorService {
     this.#connectors.splice(this.#connectors.indexOf(connector), 1);
 
     return connector.Document;
+  }
+
+  /**
+   * Returns an status array that contains
+   * 1. the amount of connectors
+   * 2. the amount of active connectors
+   * 3. the amount of default connectors
+   *
+   * @type {Readonly<[number, number, number]>} status array
+   * @memberof ConnectorService
+   */
+  get status(): [number, number, number] {
+    const connectorsLength = this.#connectors.length;
+    const connectorsActiveLength = this.#connectors.filter(con => con.isActive).length;
+    const connectorsDefaultLength = this.#connectors.filter(con => con.isDefault).length;
+
+    return [
+      connectorsLength,
+      connectorsActiveLength,
+      connectorsDefaultLength
+    ];
   }
 
   /**

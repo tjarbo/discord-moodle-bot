@@ -75,8 +75,9 @@
     "status": {
       "checkForMoodleUpdatesButton": "Jetzt auf Moodle Updates prüfen",
       "columnValues": {
-        "discordCurrentChannelKey": "Aktueller Discord Channel",
-        "discordLastReadyKey": "Letzter erfolgreicher Discord Verbindungaufbau",
+        "connectorsActiveLength": "Anzahl an aktiven Connectors",
+        "connectorsDefaultLength": "Anzahl an default Connectors",
+        "connectorsLength": "Anzahl an Connectors",
         "moodleConnectionStatusKey": "Status der Moodle Verbindung",
         "moodleCurrentFetchIntervalKey": "Aktuelles Fetch-Intervall",
         "moodleLastFetchKey": "Letzte erfolgreiche Moodle Aktualisierung",
