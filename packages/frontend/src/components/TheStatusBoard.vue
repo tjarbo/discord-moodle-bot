@@ -103,7 +103,7 @@ export default {
   },
   data() {
     return {
-    // Column titles
+      // Column titles
       columns: [
         {
           field: 'key',
