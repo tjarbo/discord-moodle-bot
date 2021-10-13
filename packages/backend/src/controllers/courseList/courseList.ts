@@ -14,7 +14,7 @@ import { ApiSuccess, ApiError } from '../../utils/api';
  */
 export async function getCourseBlacklist():Promise<number[]>{
     let dbCourses = await CourseList.find();
-    if (!dbCourses) dbCourses = await getCourseList(); // Create database entrys if there is nothing yet
+    if (!dbCourses) dbCourses = await getCourseList() as (ICourseListSchema & { _id: any; })[]; // Create database entrys if there is nothing yet
     const result:number[] = [];
     dbCourses.forEach(element => {
         if (!element.isActive) result.push(element.courseId);
@@ -99,7 +99,7 @@ export async function setCourseRequest(req: Request, res: Response, next: NextFu
 
         // Get all course ids
         let dbCourses = await CourseList.find();
-        if (!dbCourses) dbCourses = await getCourseList(); // Create database entrys if there is nothing yet
+        if (!dbCourses) dbCourses = await getCourseList() as (ICourseListSchema & { _id: any; })[]; // Create database entrys if there is nothing yet
         const courseIds:number[] = [];
         dbCourses.forEach(element => {
             courseIds.push(element.courseId);

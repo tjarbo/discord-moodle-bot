@@ -8,7 +8,7 @@ import { Administrator } from './src/controllers/administrator/administrator.sch
 import { continuousFetchAndNotify } from './src/controllers/moodle';
 import { MoodleSettings } from './src/controllers/moodle/schemas/moodle.schema';
 
-connect(config.mongo.host, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }).then(async() => {
+connect(config.mongo.host).then(async() => {
   loggerFile.debug('Mongoose connected');
 
   Administrator.findOne({ $and: [{ 'device': { $ne: undefined }}, { 'device': { $ne: null }}] }).then(user => {

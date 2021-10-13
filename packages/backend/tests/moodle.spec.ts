@@ -12,7 +12,7 @@ import { ICourseDetails } from '../src/controllers/moodle/interfaces/coursedetai
 jest.mock('../src/configuration/environment.ts');
 jest.mock('../src/controllers/moodle/fetch.ts');
 
-jest.useFakeTimers();
+jest.useFakeTimers('legacy');
 
 describe('getBaseUrl', () => {
     it('should build a valid moodle url', () => {
@@ -94,7 +94,7 @@ describe('continuousFetchAndNotify', () => {
         mockingoose(MoodleSettings).toReturn(MoodleSettingsReturn, 'findOne');
 
         await moodle.continuousFetchAndNotify();
-        expect(setTimeout).toHaveBeenCalledTimes(1)
-        expect(setTimeout).toHaveBeenCalledWith(moodle.continuousFetchAndNotify, MoodleSettingsReturn.refreshRate)
+        expect(((setTimeout as unknown) as jest.SpyInstance)).toHaveBeenCalledTimes(1)
+        expect(((setTimeout as unknown) as jest.SpyInstance)).toHaveBeenCalledWith(moodle.continuousFetchAndNotify, MoodleSettingsReturn.refreshRate)
     });
 });

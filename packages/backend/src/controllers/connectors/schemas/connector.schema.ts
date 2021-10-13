@@ -20,7 +20,7 @@ const connectorSchema = new Schema({
   default: { type: Boolean, default: false },
   name: { type: String, required: true },
   socket: { type: Object },
-  type: { type: ConnectorType },
+  type: { type: String },
 });
 
 export const Connector: Model<IConnectorDocument> = model<IConnectorDocument>('Connector', connectorSchema);

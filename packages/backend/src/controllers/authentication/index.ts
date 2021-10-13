@@ -203,7 +203,10 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
       // 6. Save whether user is deletable or not
       userDoc.deletable = registrationTokenDoc.userIsDeletable;
 
-      // 7. Send jwt to user
+      // 7. Delete registration token
+      registrationTokenDoc.delete();
+
+      // 8. Send jwt to user
       const response = new ApiSuccess(200, { 'accesstoken': generateJWToken(userDoc) });
       next(response);
 
