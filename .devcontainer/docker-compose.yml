@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
       args:
         # Update VARIANT to pick a node version: 14, 12, 10
-        VARIANT: 12
+        VARIANT: 14
         # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
         USER_UID: 1000
         USER_GID: 1000
