@@ -1,7 +1,9 @@
 <div align="center">
-    <a href="#"><img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/master/logo.png" alt="FMDB" width="200"></a>
+    <a href="#"><img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/master/logo.svg" alt="Mailbox Icon by Bootstrap" width="200"></a>
     <br>
-    <h1>Fancy-Moodle-Discord-Bot </h1>
+    <h1>Moodle Notification Service</h1>
+    <small>⚠️ Branch under active development. More <a href="#-news-from-core-team-for-version-2">here</a></small> 
+    <br>
     <small>Built with ❤︎ by
     <a href="https://github.com/tjarbo">Tjark</a>,
     <a href="https://github.com/antonplagemann">Anton</a>,
@@ -12,24 +14,27 @@
 </div>
 
 ---
-![Build for Discord](https://img.shields.io/badge/build%20for-discord-blueviolet)
 ![AGPL-3.0](https://img.shields.io/github/license/tjarbo/discord-moodle-bot)
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/tjarbo/fmdb?color=0db7ed)
 ![Docker Pulls](https://img.shields.io/docker/pulls/tjarbo/fmdb?color=0db7ed)
 
-The FMDB notifies you on a discord server about new activities on the Moodle platform. The current implementation includes:
+The Moodle Notification Service is a web application, that notifies you about various activities on your Moodle Server. Notifications can be send to **all your favorite messaging channels ❤️ like Matrix, Slack, MS Teams, etc.¹**. The current implementation includes:
 
-- Notification of new or changed files
-- Notification of new assignments
-- Notification of assignments due soon
+- Notifications of new files
+- Notifications of new assignments
+- Notifications of assignments due soon
+
+¹ Currently only Discord is supported, more are coming soon. If we are to slow for you, make a PR 😉
 
 ---
-## 📮 News from core team!
-Hey 👋 Almost a year ago, we made the first commit to this repo 🤯. While back then, the focus was mainly on getting any notification on Discord. Since then we have added many improvements and new features. But over time, our tools have changed as well. That's why we are in the process of becoming more independent from Discord with the upcoming versions, so you can be notified on **all your favorite channels ❤️ like Matrix, Slack, MS Teams, etc.**, even if you do not have a Discord Account! 
+## 📬 News from core team for version 2!
+Hey 👋
 
-With the next two (maybe three) versions, **we will make fundamental changes**, so the code will not be backward compatible. Do not forget to read the changelog if you start an upgrade 🧐. More information [here](https://github.com/tjarbo/discord-moodle-bot/discussions/89)!
+Version 2 of the Moodle Notification Service (formerly "Fancy Moodle Discord Bot") is still under active development and testing. If you want to setup our own service, please checkout the version-1 branch and follow the instructions in [this wiki](https://docs.tjarbo.me/moodle-notification-service/1.0.0/home). Overall the entire project is still under active development. That means it is very likely that **new major versions will break the backwards compatibility.** So make sure to read the change log before you start an upgrade. 
 
-To stay up to date and get notified as soon as a new release is available, click on *watch* in the upper right corner, then *custom* and activate *Releases* and *Discussions* ✅ (so that your inbox is not spammed 😉)! And if you like the fmdb, give it a 🌟 - thank you 🤩!
+But what is new in version 2? After a long time we have successfully re-implemented the connector service to make it as easy as possible to add new services like Matrix, MS Teams or Webhooks. Our goal was to remove Discord as a dependency for authentication and instead use the lasted state-of-the-art technologies. Now the Moodle Notification Service uses [WebAuthn](https://docs.tjarbo.me/moodle-notification-service/2.0.0/advanced-guides/what-is-passwordless). But before we can publish a new release, it's time to test, measuring performance and to update [the wiki](https://docs.tjarbo.me/moodle-notification-service/2.0.0/home)
+
+To stay up to date and get notified as soon as a new release is available, click on *watch* in the upper right corner, then *custom* and activate *Releases* and *Discussions* ✅ (so that your inbox does not get spammed 😉)! And if you like the Moodle Notification Service, give it a 🌟 - thank you 🤩!
 
 Cheers 🍻!
 
@@ -41,7 +46,7 @@ Cheers 🍻!
 [![CD - Release](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.release.yml/badge.svg)](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.release.yml)
 [![CD - Main](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.main.yml/badge.svg)](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.main.yml)
 
-The set-up is a somewhat more complex process. Therefore we have created a separate Wiki article for this purpose. You can find it [here](https://github.com/tjarbo/discord-moodle-bot/wiki/).
+To run your own Service you can choose from various manuals we wrote in our wiki. Click [here](https://docs.tjarbo.me) to get started.
 
 ## ⚒️ Development
 [![CI](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/ci.yml)
@@ -95,6 +100,9 @@ Do you have a great new feature idea or just want to be part of the project ? Aw
 This project is licensed under the AGPL-3.0 License - see the [LICENSE.md](LICENSE.md) file for details
 
 ---
+<div align="left">
+    Icon by <a href="https://github.com/twbs/icons">Bootstrap</a> published under <a href="https://github.com/twbs/icons/blob/main/LICENSE.md">MIT licence</a>.
+</div>
 
 <div align="right">
     <a href="https://github.com/tjarbo/tjarbo/blob/main/EASTEREGG.md"><img src="https://raw.githubusercontent.com/tjarbo/tjarbo/main/assets/logo.gif" alt="Animated Gif" height="45"></a>
