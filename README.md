@@ -1,5 +1,5 @@
 <div align="center">
-    <a href="#"><img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/master/logo.svg" alt="Mailbox Icon by Bootstrap" width="200"></a>
+    <img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/version-2/logo.svg" alt="Mailbox Icon by Bootstrap" width="200">
     <br>
     <h1>Moodle Notification Service</h1>
     <small>⚠️ Branch under active development. More <a href="#-news-from-core-team-for-version-2">here</a></small> 

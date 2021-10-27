@@ -1,0 +1,7 @@
+contact_links:
+  - name: 📫 Feature Request 
+    url: https://github.com/tjarbo/discord-moodle-bot/discussions/categories/ideas
+    about: You have an amazing idea? Tell us about in our Discussions Channel 
+  - name: ❓ Question
+    url: https://github.com/tjarbo/discord-moodle-bot/discussions/categories/q-a
+    about: Ask your question in our Discussions Channel
