@@ -4,7 +4,7 @@ on:
   workflow_run:
     workflows:
       - "CI"
-    branches: [main]
+    branches: [ version-2 ]
     types:
       - completed
 
