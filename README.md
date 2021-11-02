@@ -3,7 +3,7 @@
     <br>
     <h2>Notification Service</h2>
     <h3>for Moodle™</h3>
-    <small>⚠️ Branch under active development. Read <a href="#-news-from-core-team-for-version-2">here</a></small> 
+    <small>⚠️ Branch under active development. Read <a href="#hey-">here</a></small> 
     <br>
     <small>Built with ❤︎ by
     <a href="https://github.com/tjarbo">Tjark</a>,
