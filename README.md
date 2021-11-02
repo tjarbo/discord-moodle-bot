@@ -1,8 +1,9 @@
 <div align="center">
     <img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/version-2/logo.svg" alt="Mailbox Icon by Bootstrap" width="200">
     <br>
-    <h1>Moodle Notification Service</h1>
-    <small>⚠️ Branch under active development. More <a href="#-news-from-core-team-for-version-2">here</a></small> 
+    <h2>Notification Service</h2>
+    <h3>for Moodle™</h3>
+    <small>⚠️ Branch under active development. Read <a href="#-news-from-core-team-for-version-2">here</a></small> 
     <br>
     <small>Built with ❤︎ by
     <a href="https://github.com/tjarbo">Tjark</a>,
@@ -18,19 +19,15 @@
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/tjarbo/fmdb?color=0db7ed)
 ![Docker Pulls](https://img.shields.io/docker/pulls/tjarbo/fmdb?color=0db7ed)
 
-The Moodle Notification Service is a web application, that notifies you about various activities on your Moodle Server. Notifications can be send to **all your favorite messaging channels ❤️ like Matrix, Slack, MS Teams, etc.¹**. The current implementation includes:
+### Hey 👋
 
-- Notifications of new files
-- Notifications of new assignments
-- Notifications of assignments due soon
+The Notification Service is a web application, that notifies you about various activities on your Moodle Server. Notifications can be send to **all your favorite messaging channels ❤️ like Matrix, Slack, MS Teams, etc.¹**. The current implementation includes: 
 
-¹ Currently only Discord is supported, more are coming soon. If we are to slow for you, make a PR 😉
+- Notifications about new files
+- Notifications about new assignments
+- Notifications about assignments due soon
 
----
-## 📬 News from core team for version 2!
-Hey 👋
-
-Version 2 of the Moodle Notification Service (formerly "Fancy Moodle Discord Bot") is still under active development and testing. If you want to setup our own service, please checkout the version-1 branch and follow the instructions in [this wiki](https://docs.tjarbo.me/moodle-notification-service/1.0.0/home). Overall the entire project is still under active development. That means it is very likely that **new major versions will break the backwards compatibility.** So make sure to read the change log before you start an upgrade. 
+Version 2 of the Notification Service (formerly "Fancy Moodle Discord Bot") is still under active development and testing. If you want to setup our own service, please checkout the `main` branch and follow the instructions in [this wiki](https://docs.tjarbo.me/moodle-notification-service/1.0.0/home). Overall the entire project is still under active development. That means it is very likely that **new major versions will break the backwards compatibility.** So make sure to read the change log before you start an upgrade. 
 
 But what is new in version 2? After a long time we have successfully re-implemented the connector service to make it as easy as possible to add new services like Matrix, MS Teams or Webhooks. Our goal was to remove Discord as a dependency for authentication and instead use the lasted state-of-the-art technologies. Now the Moodle Notification Service uses [WebAuthn](https://docs.tjarbo.me/moodle-notification-service/2.0.0/advanced-guides/what-is-passwordless). But before we can publish a new release, it's time to test, measuring performance and to update [the wiki](https://docs.tjarbo.me/moodle-notification-service/2.0.0/home)
 
@@ -38,15 +35,15 @@ To stay up to date and get notified as soon as a new release is available, click
 
 Cheers 🍻!
 
----
+¹ Currently only Discord is supported, more are coming soon. If we are to slow for you, make a PR 😉
 
 ## 🚀 Setup your own bot
-[![Deploy with Docker](https://img.shields.io/badge/deploy%20with-docker-0db7ed)](https://github.com/tjarbo/discord-moodle-bot/wiki/Setup-with-docker)
-[![Deploy to Heroku](https://img.shields.io/badge/deploy%20to-herkou-79589F)](https://github.com/tjarbo/discord-moodle-bot/wiki/Setup-with-heroku-and-mongodb-atlas)
+[![Deploy with Docker](https://img.shields.io/badge/deploy%20with-docker-0db7ed)](#)
+[![Deploy to Heroku](https://img.shields.io/badge/deploy%20to-herkou-79589F)](#)
 [![CD - Release](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.release.yml/badge.svg)](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.release.yml)
 [![CD - Main](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.main.yml/badge.svg)](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/cd.main.yml)
 
-To run your own Service you can choose from various manuals we wrote in our wiki. Click [here](https://docs.tjarbo.me) to get started.
+To run your own Service you can choose from various manuals we wrote in our wiki. Click [here](https://docs.tjarbo.me/moodle-notification-service/1.0.0/home) to get started wit version 1.
 
 ## ⚒️ Development
 [![CI](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/tjarbo/discord-moodle-bot/actions/workflows/ci.yml)

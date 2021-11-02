@@ -1,12 +1,11 @@
 {
-  "name": "Fancy-Moodle-Discord-Bot",
-  "description": "The FMDB notifies you on a discord server about new activities on the Moodle platform.",
+  "name": "Notification Service for Moodle",
+  "description": "The Notification Service notifies you on various channels about new activities on the Moodle platform.",
   "keywords": [
     "moodle",
-    "moodle-platform",
-    "vuejs",
-    "discord",
-    "discord-bot"
+    "notifications",
+    "bot",
+    "discord"
   ],
   "website": "https://github.com/tjarbo/discord-moodle-bot",
   "repository": "https://github.com/tjarbo/discord-moodle-bot",
