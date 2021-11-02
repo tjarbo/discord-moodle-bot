@@ -9,25 +9,25 @@ const envVarsSchema = object({
   CONNECTOR_LOG_LIFETIME: string()
     .default('31d')
     .description('Defines how long log entries/items will be stored'),
-  DISCORD_TOKEN: string()
-    .description('Discord Token for bot'),
   DISCORD_CHANNEL: string()
     .description('Channel ID to receive notifications'),
+  DISCORD_TOKEN: string()
+    .description('Discord Token for bot'),
   JWT_SECRET: string()
     .required()
     .description('Used to validate a jwt. Use a strong secret!'),
   JWT_EXPIRESIN: string()
     .default('10m')
     .description('Defines how long a user will be logged in'),
+  MONGO_HOST: string()
+    .required()
+    .description('Path to your mongodb instance.'),
   MONGOOSE_DEBUG: boolean()
     .when('NODE_ENV', {
       is: string().equal('development'),
       then: boolean().default(true),
       otherwise: boolean().default(false)
     }),
-  MONGO_HOST: string()
-    .required()
-    .description('Path to your mongodb instance.'),
   MOODLE_BASE_URL: string()
     .required()
     .uri()
@@ -59,7 +59,7 @@ const envVarsSchema = object({
     .default('15m')
     .description('Defines how long a registration token can be used until it expires'),
   RP_NAME: string()
-    .default('Fancy Moodle Discord Bot')
+    .default('Notification Service')
     .description('Human-readable title of the website for webauthn'),
   RP_ID: string()
     .when('NODE_ENV', {
