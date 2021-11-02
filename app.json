@@ -45,7 +45,7 @@
     },
     "RP_ORIGIN": {
       "description": "Must be the FQDN of your app. As long you do not use a custom domain, replace the placeholder with selected the app name ",
-      "value": "[name of app].herokuapp.com"
+      "value": "https://[name of app].herokuapp.com"
     },
     "NPM_CONFIG_PRODUCTION": {
       "description": "Leave it as it is!",
