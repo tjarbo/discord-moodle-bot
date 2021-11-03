@@ -9,7 +9,7 @@ COPY ./packages/frontend/package*.json ./packages/frontend/
 
 COPY ./packages/backend/dist ./packages/backend/dist
 COPY ./packages/backend/package*.json ./packages/backend/
-COPY ./packages/backend/src/docs/rest-api.yml ./packages/backend/src/docs/rest-api.yml
+COPY ./packages/backend/src/docs/rest-api.json ./packages/backend/src/docs/rest-api.json
 
 #RUN npm ci --only=production
 RUN cd packages/frontend/ && npm ci --only=production --silent
