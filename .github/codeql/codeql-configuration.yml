@@ -1,4 +1,4 @@
 name : CodeQL Configuration
 paths:
-  - './packages/backend' 
-  - './packages/frontend' 
+  - './packages/backend'
+  - './packages/frontend'
