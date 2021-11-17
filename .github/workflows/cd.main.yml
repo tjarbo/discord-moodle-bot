@@ -41,4 +41,4 @@ jobs:
         context: .
         no-cache: true
         push: true
-        tags: tjarbo/fmdb:next
+        tags: tjarbo/notification-service:next
