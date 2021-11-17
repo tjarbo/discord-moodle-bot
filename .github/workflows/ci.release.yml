@@ -1,0 +1,41 @@
+name: CI - Release
+
+on:
+  pull_request:
+    branches: [ release ]
+  workflow_dispatch:
+
+jobs:
+  dependency-check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: ['./packages/backend', './packages/frontend']
+    steps:
+    - name: "Checkout repository"
+      uses: actions/checkout@v2
+
+    - name: "Set up Node.js 12.x"
+      uses: actions/setup-node@v2.4.1
+      with:
+        node-version: 12.x
+
+    - name: "Run audit"
+      continue-on-error: true
+      working-directory: ${{ matrix.directory }}
+      run: npm audit
+
+  SAST:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout repository"
+        uses: actions/checkout@v2
+      
+      - name: "Initialize CodeQL"
+        uses: github/codeql-action/init@v1
+        with:
+          config-file: ./.github/codeql/codeql-configuration.yml
+          languages: javascript
+     
+      - name: "Perform CodeQL Analysis"
+        uses: github/codeql-action/analyze@v1
