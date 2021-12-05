@@ -9,7 +9,7 @@
     >
       <b-loading :is-full-page="false" :active="authGetStatus.pending"></b-loading>
 
-      <username-input-field class="mb-3"></username-input-field>
+      <username-input-field class="mb-3"  @input="onUsernameInput"></username-input-field>
 
       <div class="field">
         <div class="control">
