@@ -48,6 +48,7 @@ export default {
           break;
 
         default:
+          result = '';
           break;
       }
 
