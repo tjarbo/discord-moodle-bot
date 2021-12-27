@@ -1,15 +1,73 @@
-import { FMDBMessageTemplate } from './message.interface';
+import { compile } from 'handlebars';
+import { config } from '../../configuration/environment';
 
-export class MessageTemplate implements FMDBMessageTemplate {
+/**
+ * Interface for internationalized templates
+ * 
+ * ! If you add a new language here, do not forget to update
+ * ! the available languages in environment.ts
+ *
+ * @export
+ * @interface Template
+ */
+export interface Template {
+  EN: string
+  DE: string
+};
 
-  readonly template: string;
+/**
+ * Abstract class for notification messages
+ *
+ * @export
+ * @abstract
+ * @class Message
+ */
+export abstract class Message {
 
-  apply(options: any): string {
-    const keys = Object.keys(options);
-    let message = this.template;
-    keys.forEach(key => {
-      message = message.replace('{' + key + '}', options[key]);
-    });
-    return message;
+  /**
+   * Set of handlebar.js templates for Markdown messages 
+   *
+   * @protected
+   * @abstract
+   * @type {Template}
+   * @memberof Message
+   */
+  protected abstract readonly markdownTemplate: Template;
+  
+  /**
+   * Content for 
+   * 
+   * ! Content depends on the used template class
+   *
+   * @protected
+   * @abstract
+   * @type {*}
+   * @memberof Message
+   */
+  protected abstract context: any;
+
+  /**
+   * Target language in which the messages will be translated
+   *
+   * @protected
+   * @type {keyof Template}
+   * @memberof Message
+   */
+  protected language: keyof Template;
+
+  constructor() {
+    this.language = config.moodle.messageLanguage;
+  }
+
+  /**
+   * Return the message as Markdown
+   *
+   * @readonly
+   * @type {string}
+   * @memberof Message
+   */
+  public get Markdown() : string {
+    const template = compile(this.markdownTemplate[this.language] ?? this.markdownTemplate.en);
+    return template(this.context);
   }
 }
