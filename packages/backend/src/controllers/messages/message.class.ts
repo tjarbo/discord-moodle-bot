@@ -1,19 +1,4 @@
 import { compile } from 'handlebars';
-import { config } from '../../configuration/environment';
-
-/**
- * Interface for internationalized templates
- *
- * ! If you add a new language here, do not forget to update
- * ! the available languages in environment.ts
- *
- * @export
- * @interface Template
- */
-export interface Template {
-  EN: string;
-  DE: string;
-}
 
 /**
  * Abstract class for notification messages
@@ -32,7 +17,7 @@ export abstract class Message {
    * @type {Template}
    * @memberof Message
    */
-  protected abstract readonly markdownTemplate: Template;
+  protected abstract readonly markdownTemplate: string;
 
   /**
    * Content for
@@ -47,19 +32,6 @@ export abstract class Message {
   protected abstract context: any;
 
   /**
-   * Target language in which the messages will be translated
-   *
-   * @protected
-   * @type {keyof Template}
-   * @memberof Message
-   */
-  protected language: keyof Template;
-
-  constructor(lang: keyof Template = config.moodle.messageLanguage) {
-    this.language = lang;
-  }
-
-  /**
    * Return the message as Markdown
    *
    * @readonly
@@ -67,7 +39,6 @@ export abstract class Message {
    * @memberof Message
    */
   public get Markdown() : string {
-    const template = compile(this.markdownTemplate[this.language] ?? this.markdownTemplate.EN);
-    return template(this.context);
+    return compile(this.markdownTemplate)(this.context);
   }
 }

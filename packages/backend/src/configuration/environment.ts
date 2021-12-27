@@ -19,6 +19,11 @@ const envVarsSchema = object({
   JWT_EXPIRESIN: string()
     .default('10m')
     .description('Defines how long a user will be logged in.'),
+  LANGUAGE: string()
+    .allow('en')
+    .allow('de')
+    .default('en')
+    .description('Defines the language the notification messages will be displayed.'), 
   LOG_TO_FILE: boolean()
     .default(false)
     .description('Defines whether logs are written to filesystem or not'),
@@ -38,11 +43,6 @@ const envVarsSchema = object({
   MOODLE_FETCH_INTERVAL: number()
     .default(900000)
     .description('Interval to look for updates on moodle (in ms).'),
-  MOODLE_MESSAGE_LANGUAGE: string()
-    .allow('EN')
-    .allow('DE')
-    .default('EN')
-    .description('Defines the language the notification messages will be displayed.'),
   MOODLE_REMINDER_TIME_LEFT: number()
     .default(86400)
     .description('Send notification if deadline is within given time (in seconds).'),
@@ -97,6 +97,7 @@ export const config = {
     secret: envVars.JWT_SECRET,
     expiresIn: envVars.JWT_EXPIRESIN,
   },
+  language: envVars.LANGUAGE,
   logToFile: envVars.LOG_TO_FILE,
   mongo: {
     host: envVars.MONGO_HOST,
@@ -105,7 +106,6 @@ export const config = {
   moodle: {
     baseURL: envVars.MOODLE_BASE_URL,
     fetchInterval: envVars.MOODLE_FETCH_INTERVAL,
-    messageLanguage: envVars.MOODLE_MESSAGE_LANGUAGE,
     reminderTimeLeft: envVars.MOODLE_REMINDER_TIME_LEFT,
     token:   envVars.MOODLE_TOKEN,
     useCourseShortname: envVars.MOODLE_USE_COURSE_SHORTNAME,

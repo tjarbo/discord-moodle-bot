@@ -1,16 +1,11 @@
 import { Message } from '../message.class';
-
+import { t } from '../../../configuration/i18n';
 export class ResourceMessage extends Message {
 
-  protected markdownTemplate = {
-    'EN': `**{{course}} - New File**:
-    :file_folder: {{title}}
-    :link: {{link}}`,
-
-    'DE': `**{{course}} - Neue Datei**:
-    :file_folder: {{title}}
-    :link: {{link}}`
-  };
+  protected markdownTemplate =
+   `**{{course}} - ${t('messages.resourceMessage.title')}**:
+    📁 {{title}}
+    🔗 {{link}}`;
 
   protected context: any;
 

@@ -1,0 +1,20 @@
+{
+  "messages": {
+    "general": {
+      "until": "bis"
+    },
+    "assignment": {
+      "title": "Neue Abgabe hinzugefügt",
+      "description": "ist abzugeben"
+    },
+    "assignmentReminder": {
+      "title": "Erinnerung",
+      "markdown": {
+        "description": "Abgabe von %s **heute** fällig"
+      }
+    },
+    "resourceMessage": {
+      "title": "Neue Datei"
+    }
+  }
+}
