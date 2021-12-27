@@ -1,4 +1,5 @@
 import { LeanDocument } from 'mongoose';
+import { Message } from '../../../controllers/messages/message.class';
 import { IConnectorDocument } from '../schemas/connector.schema';
 import { ConnectorLogItem, IConnectorLogItemDocument } from '../schemas/connectorLogItem.schema';
 
@@ -6,7 +7,7 @@ export abstract class ConnectorPlugin {
 
   protected abstract document: IConnectorDocument;
 
-  public abstract send(message: string): void;
+  public abstract send(message: Message): void;
   public abstract destroy(): Promise<Readonly<LeanDocument<IConnectorDocument>>>;
   public abstract update(body: { [key: string]: any }): Promise<Readonly<LeanDocument<IConnectorDocument>>>;
   public abstract get Document(): Readonly<LeanDocument<IConnectorDocument>>

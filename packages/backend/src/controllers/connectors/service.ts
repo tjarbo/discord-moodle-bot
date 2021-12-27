@@ -93,11 +93,9 @@ class ConnectorService {
    *
    * @param {number} courseId id of the moodle course
    * @param {MessageTemplate} template message template that will be used
-   * @param {*} options content that will be applied on template
    * @memberof ConnectorService
    */
-  public publish(courseId: number, template: Message, options: any): void {
-    const message = template.apply(options);
+  public publish(courseId: number, message: Message): void {
     let messageWasSent: boolean = false;
 
     loggerFile.info('Got new message publish order');
