@@ -3,14 +3,14 @@ import { Message } from '../message.class';
 export class ResourceMessage extends Message {
 
   protected markdownTemplate = {
-    "EN": `**{{course}} - New File**:
+    'EN': `**{{course}} - New File**:
     :file_folder: {{title}}
     :link: {{link}}`,
 
-    "DE": `**{{course}} - Neue Datei**:
+    'DE': `**{{course}} - Neue Datei**:
     :file_folder: {{title}}
     :link: {{link}}`
-  }
+  };
 
   protected context: any;
 

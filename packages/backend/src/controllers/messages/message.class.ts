@@ -3,7 +3,7 @@ import { config } from '../../configuration/environment';
 
 /**
  * Interface for internationalized templates
- * 
+ *
  * ! If you add a new language here, do not forget to update
  * ! the available languages in environment.ts
  *
@@ -11,9 +11,9 @@ import { config } from '../../configuration/environment';
  * @interface Template
  */
 export interface Template {
-  EN: string
-  DE: string
-};
+  EN: string;
+  DE: string;
+}
 
 /**
  * Abstract class for notification messages
@@ -25,7 +25,7 @@ export interface Template {
 export abstract class Message {
 
   /**
-   * Set of handlebar.js templates for Markdown messages 
+   * Set of handlebar.js templates for Markdown messages
    *
    * @protected
    * @abstract
@@ -33,10 +33,10 @@ export abstract class Message {
    * @memberof Message
    */
   protected abstract readonly markdownTemplate: Template;
-  
+
   /**
-   * Content for 
-   * 
+   * Content for
+   *
    * ! Content depends on the used template class
    *
    * @protected
@@ -55,8 +55,8 @@ export abstract class Message {
    */
   protected language: keyof Template;
 
-  constructor() {
-    this.language = config.moodle.messageLanguage;
+  constructor(lang: keyof Template = config.moodle.messageLanguage) {
+    this.language = lang;
   }
 
   /**
@@ -67,7 +67,7 @@ export abstract class Message {
    * @memberof Message
    */
   public get Markdown() : string {
-    const template = compile(this.markdownTemplate[this.language] ?? this.markdownTemplate.en);
+    const template = compile(this.markdownTemplate[this.language] ?? this.markdownTemplate.EN);
     return template(this.context);
   }
 }
