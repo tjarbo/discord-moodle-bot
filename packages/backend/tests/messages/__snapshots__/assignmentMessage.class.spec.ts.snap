@@ -2,6 +2,6 @@
 
 exports[`assignmentMessage.class.ts should match Markdown 1`] = `
 "**TEST_COURSE - New submission added!**
-    :information_source: \\"Title\\" is to be submitted
-    :alarm_clock: until \`Mon Dec 27 2021\`"
+    ℹ️ \\"Title\\" is to be submitted
+    ⏰ until \`Mon Dec 27 2021\`"
 `;

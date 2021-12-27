@@ -1,16 +1,10 @@
 import { Message } from '../message.class';
-
+import { t } from '../../../configuration/i18n';
 export class AssignmentMessage extends Message {
 
-  protected markdownTemplate = {
-    'EN': `**{{course}} - New submission added!**
-    :information_source: "{{title}}" is to be submitted
-    :alarm_clock: until \`{{dueDate}}\``,
-
-    'DE': `**{{course}} - Neue Abgabe hinzugefügt!**
-    :information_source: "{{title}}" ist abzugeben
-    :alarm_clock: bis \`{{dueDate}}\``
-  };
+  protected markdownTemplate = `**{{course}} - ${t('messages.assignment.title')}!**
+    ℹ️ "{{title}}" ${t('messages.assignment.description')}
+    ⏰ ${t('messages.general.until')} \`{{dueDate}}\``;
 
   protected context: any;
 

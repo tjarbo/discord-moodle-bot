@@ -1,14 +1,10 @@
 import { Message } from '../message.class';
+import { t } from '../../../configuration/i18n';
 
 export class AssignmentReminderMessage extends Message {
 
-  protected markdownTemplate = {
-    'EN': `**{{course}} - Reminder**:
-    :warning: Submission of "{{title}}" **due today**!`,
-
-    'DE': `**{{course}} - Erinnerung**:
-    :warning: Abgabe von "{{title}}" **heute** fällig!`
-  };
+  protected markdownTemplate = `**{{course}} - ${t('messages.assignmentReminder.title')}**:
+    ⚠️ ${t('messages.assignmentReminder.markdown.description', '"{{title}}"')}!`;
 
   protected context: any;
 

@@ -1,0 +1,20 @@
+{
+  "messages": {
+    "general": {
+      "until": "until"
+    },
+    "assignment": {
+      "title": "New submission added",
+      "description": "is to be submitted"
+    },
+    "assignmentReminder": {
+      "title": "Reminder",
+      "markdown": {
+        "description": "Submission of %s **due today**"
+      }
+    },
+    "resourceMessage": {
+      "title": "New File"
+    }
+  }
+}
