@@ -72,6 +72,7 @@ export default {
       this.$store.dispatch('deleteAdministrator', username)
         .then(() => {
           notifySuccess(this.$t('components.administratorList.notifications.deletedAdministrator'));
+          this.loadAdministrators();
         })
         .catch((apiResponse) => {
           if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
@@ -91,16 +92,20 @@ export default {
           return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
         });
     },
+
+    loadAdministrators() {
+      this.$store.dispatch('getAdministrators')
+        .then(() => {})
+        .catch((apiResponse) => {
+          if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
+          // Request failed locally - maybe no internet connection etc?
+          return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
+        });
+    },
   },
   mounted() {
     // Import list data at loading time
-    this.$store.dispatch('getAdministrators')
-      .then(() => {})
-      .catch((apiResponse) => {
-        if (apiResponse.code) return notifyFailure(apiResponse.error[0].message);
-        // Request failed locally - maybe no internet connection etc?
-        return notifyFailure(this.$t('general.notifications.requestFailedLocally'));
-      });
+    this.loadAdministrators();
   },
 };
 </script>
