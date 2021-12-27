@@ -10,7 +10,7 @@ import { compile } from 'handlebars';
 export abstract class Message {
 
   /**
-   * Set of handlebar.js templates for Markdown messages
+   * handlebar.js template for Markdown messages
    *
    * @protected
    * @abstract
@@ -20,7 +20,7 @@ export abstract class Message {
   protected abstract readonly markdownTemplate: string;
 
   /**
-   * Content for
+   * Content for the templates
    *
    * ! Content depends on the used template class
    *
@@ -29,7 +29,7 @@ export abstract class Message {
    * @type {*}
    * @memberof Message
    */
-  protected abstract context: any;
+  protected context: any;
 
   /**
    * Return the message as Markdown

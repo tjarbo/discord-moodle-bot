@@ -2,5 +2,5 @@
 
 exports[`assignmentReminderMessage.class.ts should match Markdown 1`] = `
 "**TEST_COURSE - Reminder**:
-    ⚠️ Submission of \\"Title\\" **due today**!"
+⚠️ Assignment \\"Title\\" is **due today**!"
 `;
