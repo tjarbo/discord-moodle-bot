@@ -32,7 +32,7 @@ export async function adminAdministratorPostRequest(req: Request, res: Response,
 
         // 1. Create a new registration token
         const registrationToken = await new RegistrationToken({ userIsDeletable: true }).save();
-        if (registrationToken === null && registrationToken === undefined) throw new ApiError(500, 'Unable to create registration token');
+        if (registrationToken === null || registrationToken === undefined) throw new ApiError(500, 'Unable to create registration token');
 
         const responseBody = {
             token: registrationToken.key,
