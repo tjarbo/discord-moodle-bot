@@ -1,6 +1,6 @@
 {
   "name": "Notification Service for Moodle",
-  "description": "The Notification Service notifies you on various channels about new activities on the Moodle platform. ",
+  "description": "The Notification Service notifies you on various channels about new activities on the Moodle platform.",
   "keywords": [
     "moodle",
     "notifications",
@@ -40,11 +40,11 @@
       "value": "production"
     },
     "RP_ID": {
-      "description": "Defines the environment, where the bot will be started.",
-      "value": "NotificationServiceID"
+      "description": "Must be the FQDN of your app. As long you do not use a custom domain, replace the placeholder with selected the app name.",
+      "value": "[name of app].herokuapp.com"
     },
     "RP_ORIGIN": {
-      "description": "Must be the FQDN of your app. As long you do not use a custom domain, replace the placeholder with selected the app name ",
+      "description": "Like the RP_ID, but this time with the protocol schema",
       "value": "https://[name of app].herokuapp.com"
     },
     "NPM_CONFIG_PRODUCTION": {
