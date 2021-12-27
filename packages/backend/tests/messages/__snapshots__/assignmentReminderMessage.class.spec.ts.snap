@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`assignmentReminderMessage.class.ts should match Markdown 1`] = `
+"**TEST_COURSE - Reminder**:
+    :warning: Submission of \\"Title\\" **due today**!"
+`;
