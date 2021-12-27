@@ -2,7 +2,7 @@ import { config } from '../../configuration/environment';
 import { ICourse } from './interfaces/course.interface';
 import { IResource } from './interfaces/resource.interface';
 import { connectorService } from '../connectors/service';
-import { AssignmentMessage, AssignmentMessageOptions, AssignmentReminderMessage, AssignmentReminderMessageOptions, ResourceMessage, ResourceMessageOptions  } from '../messages/templates';
+import { AssignmentMessage, AssignmentReminderMessage, ResourceMessage } from '../messages/templates';
 import { Reminder } from './schemas/reminder.schema';
 import { IContentfile } from './interfaces/contentfile.interface';
 
@@ -42,13 +42,8 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
 
             // check if assignment was newly created or has been modified
             if (assignment.timemodified > lastFetch) {
-                const options: AssignmentMessageOptions = {
-                    course: coursename,
-                    title: assignment.name,
-                    dueDate: formatMoodleDate(assignment.duedate)
-                };
-
-                connectorService.publish(course.id, new AssignmentMessage(), options);
+                const message = new AssignmentMessage(coursename, assignment.name, formatMoodleDate(assignment.duedate));
+                connectorService.publish(course.id, message);
             }
 
             // check if new deadline is incoming that hasn`t been notified about
@@ -57,12 +52,9 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
             const reminderExists = await Reminder.findOne({assignment_id: assignment.id});
 
             if (isWithinDeadline && !reminderExists) {
-                const options: AssignmentReminderMessageOptions = {
-                    course: coursename,
-                    title: assignment.name
-                };
                 await new Reminder({assignment_id: assignment.id}).save();
-                connectorService.publish(course.id, new AssignmentReminderMessage(), options);
+                const message = new AssignmentReminderMessage(coursename, assignment.name);
+                connectorService.publish(course.id, message);
             }
         }
     }
@@ -111,12 +103,8 @@ export async function handleContents(contents: any, courseName: string, lastFetc
     for (const file of fileArray) {
         if (file.timemodified <= lastFetch) continue;
 
-        const options: ResourceMessageOptions = {
-            course: courseName,
-            title: file.filename,
-            link: file.fileurl.replace('/webservice', '')
-        };
-        connectorService.publish(undefined, new ResourceMessage(), options);
+        const message = new ResourceMessage(courseName, file.filename, file.fileurl.replace('/webservice', ''));
+        connectorService.publish(undefined, message);
     }
 }
 
@@ -135,12 +123,8 @@ export async function handleResources(resources: IResource[], courseMap: Map<num
         for (const file of resource.contentfiles) {
             if (file.timemodified <= lastFetch) continue;
 
-            const options: ResourceMessageOptions = {
-                course: courseMap.get(resource.course),
-                title: file.filename,
-                link: file.fileurl.replace('/webservice', '')
-            };
-            connectorService.publish(undefined, new ResourceMessage(), options);
+            const message = new ResourceMessage(courseMap.get(resource.course), file.filename, file.fileurl.replace('/webservice', ''));
+            connectorService.publish(undefined, message);
         }
     }
 }

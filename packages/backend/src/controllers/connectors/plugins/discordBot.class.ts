@@ -5,6 +5,7 @@ import { ConnectorPlugin } from './connectorPlugin.class';
 import { object, ObjectSchema, string, ref, boolean, required } from '@hapi/joi';
 import { ApiError } from '../../../utils/api';
 import { LeanDocument } from 'mongoose';
+import { Message } from '../../../controllers/messages/message.class';
 
 export class DiscordBotConnectorPlugin extends ConnectorPlugin {
   private readonly client: Discord.Client = new Discord.Client();
@@ -97,14 +98,14 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
    *
    * @param {string} message to send
    */
-  public send(message: string): void {
+  public send(message: Message): void {
 
     if (!this.isReady) return connectorLogger.error(`Discord Bot not ready! Unable to send message.`, this.objectId);
 
     const discordChannel = this.client.channels.cache.get(this.document.socket.channel);
     if (!discordChannel) return connectorLogger.error(`Channel not in discord cache. Send a small 'test' message to the channel and try again.`, this.objectId);
 
-    (discordChannel as TextChannel).send(message)
+    (discordChannel as TextChannel).send(message.Markdown)
       .then(() => {
         connectorLogger.info('Successfully sent message via Discord bot!', this.objectId);
       })
