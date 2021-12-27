@@ -1,6 +1,8 @@
 import { boolean, number, object, string } from '@hapi/joi';
 import { config as dotenvConfig } from 'dotenv';
 
+export const allowedLocales = ['en', 'de'];
+
 // require and configure dotenv, will load vars in .env in PROCESS.ENV
 dotenvConfig();
 
@@ -20,8 +22,7 @@ const envVarsSchema = object({
     .default('10m')
     .description('Defines how long a user will be logged in.'),
   LANGUAGE: string()
-    .allow('en')
-    .allow('de')
+    .allow(...allowedLocales)
     .default('en')
     .description('Defines the language the notification messages will be displayed.'), 
   LOG_TO_FILE: boolean()
