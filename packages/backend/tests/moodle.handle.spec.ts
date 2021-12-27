@@ -32,12 +32,7 @@ describe('moodle/handle.ts handleAssignments', () => {
         // expected are the Courses with course.assignments[0].timemodified > 1000
         const expectedParameters = [
             undefined,
-            new AssignmentMessage(),
-            {
-                "course": "C2",
-                "dueDate": new Date(1).toLocaleString('de-DE', dateOptions),
-                "title": "As2",
-            }
+            new AssignmentMessage("C2", "As2", new Date(1).toLocaleString('de-DE', dateOptions)),
         ]
 
         await handleAssignments(mockCourses, 1000);
@@ -83,12 +78,7 @@ describe('moodle/handle.ts handleResources', () => {
     it('should only print resources newer than the last fetch timestamp', async () => {
         const expectedParameters = [
             undefined,
-            new ResourceMessage(),
-            {
-                course: 'Course02',
-                title: 'testname',
-                link: 'test'
-            }
+            new ResourceMessage("Course02", "testname", "test"),
         ]
 
         await handleResources(mockResources, courseMap, 1000);

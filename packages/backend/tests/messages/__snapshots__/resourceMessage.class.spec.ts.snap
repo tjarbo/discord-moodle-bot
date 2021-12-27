@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`resourceMessage.class.ts should match Markdown 1`] = `
+"**TEST_COURSE - New File**:
+    :file_folder: Title
+    :link: https://test.link"
+`;
