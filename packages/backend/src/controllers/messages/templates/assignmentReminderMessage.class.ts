@@ -3,10 +3,10 @@ import { t } from '../../../configuration/i18n';
 
 export class AssignmentReminderMessage extends Message {
 
-  protected markdownTemplate = `**{{course}} - ${t('messages.assignmentReminder.title')}**:
-    ⚠️ ${t('messages.assignmentReminder.markdown.description', '"{{title}}"')}!`;
-
-  protected context: any;
+  protected readonly markdownTemplate = [
+    `**{{course}} - ${t('messages.assignmentReminder.title')}**:`,
+    `⚠️ ${t('messages.assignmentReminder.markdown.description', '"{{title}}"')}!`
+  ].join('\n');
 
   constructor(course: string, title: string) {
     super();

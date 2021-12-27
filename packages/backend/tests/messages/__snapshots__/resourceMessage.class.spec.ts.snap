@@ -2,6 +2,6 @@
 
 exports[`resourceMessage.class.ts should match Markdown 1`] = `
 "**TEST_COURSE - New File**:
-    📁 Title
-    🔗 https://test.link"
+📁 Title
+🔗 https://test.link"
 `;
