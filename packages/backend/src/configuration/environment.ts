@@ -10,15 +10,15 @@ const envVarsSchema = object({
     .default('31d')
     .description('Defines how long log entries/items will be stored'),
   DISCORD_CHANNEL: string()
-    .description('Channel ID to receive notifications'),
+    .description('Channel ID to receive notifications.'),
   DISCORD_TOKEN: string()
-    .description('Discord Token for bot'),
+    .description('Discord Token for bot.'),
   JWT_SECRET: string()
     .required()
     .description('Used to validate a jwt. Use a strong secret!'),
   JWT_EXPIRESIN: string()
     .default('10m')
-    .description('Defines how long a user will be logged in'),
+    .description('Defines how long a user will be logged in.'),
   LOG_TO_FILE: boolean()
     .default(false)
     .description('Defines whether logs are written to filesystem or not'),
@@ -34,22 +34,27 @@ const envVarsSchema = object({
   MOODLE_BASE_URL: string()
     .required()
     .uri()
-    .description('URL of your Moodle instance, eg. https://moodle.domain.me'),
+    .description('URL of your Moodle instance, eg. https://moodle.domain.me .'),
   MOODLE_FETCH_INTERVAL: number()
     .default(900000)
-    .description('Interval to look for updates on moodle (in ms)'),
+    .description('Interval to look for updates on moodle (in ms).'),
+  MOODLE_MESSAGE_LANGUAGE: string()
+    .allow("EN")
+    .allow("DE")
+    .default("EN")
+    .description('Defines the language the notification messages will be displayed.'),
   MOODLE_REMINDER_TIME_LEFT: number()
     .default(86400)
-    .description('Send notification if deadline is within given time (in seconds)'),
+    .description('Send notification if deadline is within given time (in seconds).'),
   MOODLE_TOKEN: string()
     .required()
-    .description('Token to communicate with Moodle-Webservice API'),
+    .description('Token to communicate with Moodle-Webservice API.'),
   MOODLE_USE_COURSE_SHORTNAME: boolean()
     .default(true)
-    .description('Whether to use short- or fullname of the courses in the discord message'),
+    .description('Whether to use short- or fullname of the courses in the discord message.'),
   MOODLE_USERID: number()
     .required()
-    .description('Moodle user Id required to fetch course details'),
+    .description('Moodle user Id required to fetch course details.'),
   NODE_ENV: string()
     .allow('development')
     .allow('production')
@@ -57,24 +62,25 @@ const envVarsSchema = object({
     .allow('provision')
     .default('production'),
   PORT: number()
-    .default(4040),
+    .default(4040)
+    .description('Defines the port the webserver will listen on.'),
   REGISTRATION_TOKEN_LIFETIME: string()
     .default('15m')
-    .description('Defines how long a registration token can be used until it expires'),
+    .description('Defines how long a registration token can be used until it expires.'),
   RP_NAME: string()
     .default('Notification Service')
-    .description('Human-readable title of the website for webauthn'),
+    .description('Human-readable title of the website for webauthn.'),
   RP_ID: string()
     .when('NODE_ENV', {
       is: string().equal('development'),
       then: string().default('localhost'),
       otherwise: string().min(8).required()
     })
-    .description('Unique identifier of the website for webauthn'),
+    .description('Unique identifier of the website for webauthn.'),
   RP_ORIGIN: string()
     .uri()
     .required()
-    .description('Unique identifier of the website for webauthn'),
+    .description('URL your service will be available from. Compare with CORS.'),
   }).unknown()
   .required();
 
@@ -99,6 +105,7 @@ export const config = {
   moodle: {
     baseURL: envVars.MOODLE_BASE_URL,
     fetchInterval: envVars.MOODLE_FETCH_INTERVAL,
+    messageLanguage: envVars.MOODLE_MESSAGE_LANGUAGE,
     reminderTimeLeft: envVars.MOODLE_REMINDER_TIME_LEFT,
     token:   envVars.MOODLE_TOKEN,
     useCourseShortname: envVars.MOODLE_USE_COURSE_SHORTNAME,
