@@ -4,13 +4,13 @@
       "until": "until"
     },
     "assignment": {
-      "title": "New submission added",
-      "description": "is to be submitted"
+      "title": "New assignment added",
+      "description": "is assigned"
     },
     "assignmentReminder": {
       "title": "Reminder",
       "markdown": {
-        "description": "Submission of %s **due today**"
+        "description": "Assignment %s is **due today**"
       }
     },
     "resourceMessage": {
