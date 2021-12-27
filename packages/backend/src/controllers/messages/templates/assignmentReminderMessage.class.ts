@@ -1,11 +1,19 @@
-import { MessageTemplate } from '../message.class';
+import { Message } from '../message.class';
 
-export interface AssignmentReminderMessageOptions {
-  course: string;
-  title: string;
-}
+export class AssignmentReminderMessage extends Message {
 
-export class AssignmentReminderMessage extends MessageTemplate {
-  readonly template = `**{course} - Erinnerung**:
-  :warning: Abgabe von "{title}" **heute** fällig!`;
+  protected markdownTemplate = {
+    "EN": `**{{course}} - Reminder**:
+    :warning: Submission of "{{title}}" **due today**!`,
+
+    "DE": `**{{course}} - Erinnerung**:
+    :warning: Abgabe von "{{title}}" **heute** fällig!`
+  }
+
+  protected context: any;
+
+  constructor(course: string, title: string) {
+    super();
+    this.context = { course, title };
+  }
 }
