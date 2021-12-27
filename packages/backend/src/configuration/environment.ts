@@ -39,9 +39,9 @@ const envVarsSchema = object({
     .default(900000)
     .description('Interval to look for updates on moodle (in ms).'),
   MOODLE_MESSAGE_LANGUAGE: string()
-    .allow("EN")
-    .allow("DE")
-    .default("EN")
+    .allow('EN')
+    .allow('DE')
+    .default('EN')
     .description('Defines the language the notification messages will be displayed.'),
   MOODLE_REMINDER_TIME_LEFT: number()
     .default(86400)
