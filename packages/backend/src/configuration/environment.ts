@@ -19,6 +19,9 @@ const envVarsSchema = object({
   JWT_EXPIRESIN: string()
     .default('10m')
     .description('Defines how long a user will be logged in'),
+  LOGS_TO_FILE: boolean()
+    .default(false)
+    .description('Defines whether logs are written to filesystem or not'),
   MONGO_HOST: string()
     .required()
     .description('Path to your mongodb instance.'),
@@ -88,6 +91,7 @@ export const config = {
     secret: envVars.JWT_SECRET,
     expiresIn: envVars.JWT_EXPIRESIN,
   },
+  logsToFile: envVars.LOGS_TO_FILE,
   mongo: {
     host: envVars.MONGO_HOST,
   },
