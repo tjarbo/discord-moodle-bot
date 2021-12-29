@@ -12,6 +12,6 @@ export const router = Router();
 router.use(docRoutes);
 router.use(authRoutes);
 router.use(connectorsRoutes);
-router.use('/settings', isAuth, settingsRoutes);
+router.use('/settings', settingsRoutes);
 router.get('/fetch', isAuth, manualFetchRequest);
 router.get('/status', isAuth, statusGetRequest);
