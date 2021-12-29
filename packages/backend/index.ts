@@ -9,7 +9,7 @@ import { continuousFetchAndNotify } from './src/controllers/moodle';
 import { MoodleSettings } from './src/controllers/moodle/schemas/moodle.schema';
 
 connect(config.mongo.host).then(async() => {
-  loggerFile.debug('Mongoose connected');
+  loggerFile.info('Database connected.');
 
   Administrator.findOne({ $and: [{ 'device': { $ne: undefined }}, { 'device': { $ne: null }}] }).then(user => {
       if (user !== null) return; // An admin already exists!
@@ -17,8 +17,8 @@ connect(config.mongo.host).then(async() => {
       // No admin has been found -> Create a registration token and print it into the logs
       new RegistrationToken({ userIsDeletable: false }).save().then(token => {
         loggerFile.info('No administrator found!');
-        loggerFile.info(`Visit ${config.rp.origin}/#/registration?token=${token.key} to register your user`);
-        loggerFile.info(`This token is valid for 15 minutes.`);
+        loggerFile.info(`###### Visit ${config.rp.origin}/#/registration?token=${token.key} to register your user`);
+        loggerFile.info(`###### This token is valid for ${config.registrationTokenLifetime}`);
       });
   });
 
@@ -53,5 +53,5 @@ if (config.mongooseDebug) {
 }
 
 const server = app.listen(config.port, () => {
-  loggerFile.debug(`server started on http://localhost:${config.port} (${config.env})`);
+  loggerFile.info(`Server started on port ${config.port} (${config.env})! Access web interface here: ${config.rp.origin}`);
 });

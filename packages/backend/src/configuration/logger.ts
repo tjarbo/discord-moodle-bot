@@ -7,7 +7,7 @@ const configLogger = {
         type: 'stdout',
         layout: {
           type: 'pattern',
-          pattern: '%m',
+          pattern: '[%p] %m',
       }},
       file: {
         type: 'file',
@@ -15,7 +15,7 @@ const configLogger = {
         maxLogSize: 10485760,
         layout: {
           type: 'pattern',
-          pattern: '[%d{ISO8601}] %m',
+          pattern: '[%d{ISO8601}] [%p] %m',
       }
     }},
     categories: {

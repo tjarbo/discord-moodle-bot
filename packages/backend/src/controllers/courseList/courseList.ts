@@ -6,6 +6,7 @@ import { getBaseUrl } from '../moodle/index';
 import { Request, Response, NextFunction } from 'express';
 import { object, number, boolean } from '@hapi/joi';
 import { ApiSuccess, ApiError } from '../../utils/api';
+import { JWT } from '../authentication';
 
 
 /**
@@ -86,7 +87,7 @@ const courseRequestSchema = object({
  * @param res Response
  * @param next NextFunction
  */
-export async function setCourseRequest(req: Request, res: Response, next: NextFunction) {
+export async function setCourseRequest(req: Request & JWT, res: Response, next: NextFunction) {
 
     try {
         // Input validation
@@ -115,6 +116,7 @@ export async function setCourseRequest(req: Request, res: Response, next: NextFu
         const courses = await getCourseList();
         if (courses.length === 0) throw new ApiError(404, 'No courses found');
 
+        loggerFile.info(`Course list updated by "${req.token.data.username}"`);
         const response = new ApiSuccess(200, courses);
         next(response);
 

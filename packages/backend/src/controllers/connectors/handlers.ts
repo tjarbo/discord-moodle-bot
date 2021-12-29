@@ -1,7 +1,8 @@
-import { any, array, boolean, number, object, string } from '@hapi/joi';
+import { array, boolean, number, object, string } from '@hapi/joi';
 import { NextFunction, Request, Response } from 'express';
 import { loggerFile } from '../../configuration/logger';
 import { ApiError, ApiSuccess } from '../../utils/api';
+import { JWT } from '../authentication';
 import { ConnectorTypeValues } from './plugins';
 import { connectorService } from './service';
 
@@ -57,7 +58,7 @@ export function connectorsGetRequest(req: Request, res: Response, next: NextFunc
  * @param {Response} res Response
  * @param {NextFunction} next NextFunction
  */
-export async function connectorsPostRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function connectorsPostRequest(req: Request & JWT, res: Response, next: NextFunction): Promise<void> {
   try {
     // 1. Validate body - except req.body.socket!!
     const connectorsPostRequestValidation = connectorsPostRequestSchema.validate(req.body);
@@ -68,6 +69,7 @@ export async function connectorsPostRequest(req: Request, res: Response, next: N
     const connector = await connectorService.create(name, type, socket);
 
     // 3. Send response
+    loggerFile.info(`New connector "${connector.name}" (${connector._id}) created by "${req.token.data.username}"`);
     const response = new ApiSuccess(200, connector);
     next(response);
   } catch (err) {
@@ -88,7 +90,7 @@ export async function connectorsPostRequest(req: Request, res: Response, next: N
  * @param {NextFunction} next NextFunction
  * @return {Promise<void>} Promise
  */
-export async function connectorsIdPatchRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function connectorsIdPatchRequest(req: Request & JWT, res: Response, next: NextFunction): Promise<void> {
   try {
     // 1. Validate given id
     const connectorsIdValidation = connectorsIdSchema.validate(req.params);
@@ -102,6 +104,7 @@ export async function connectorsIdPatchRequest(req: Request, res: Response, next
     const updatedConnector = await connectorService.update(connectorsIdValidation.value.id, connectorsIdPatchRequestValidation.value);
 
     // 4. Send response
+    loggerFile.info(`Connector "${updatedConnector.name}" (${updatedConnector._id}) updated by "${req.token.data.username}"`);
     const response = new ApiSuccess(200, updatedConnector);
     next(response);
   } catch (error) {
@@ -120,7 +123,7 @@ export async function connectorsIdPatchRequest(req: Request, res: Response, next
  * @param {NextFunction} next NextFunction
  * @return {*}  {Promise<void>}
  */
-export async function connectorsIdDeleteRequest(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function connectorsIdDeleteRequest(req: Request & JWT, res: Response, next: NextFunction): Promise<void> {
   try {
     // 1. Validate given id
     const connectorsIdValidation = connectorsIdSchema.validate(req.params);
@@ -130,6 +133,7 @@ export async function connectorsIdDeleteRequest(req: Request, res: Response, nex
     await connectorService.delete(connectorsIdValidation.value.id);
 
     // 3. Send response
+    loggerFile.warn(`Connector ${connectorsIdValidation.value.id} deleted by "${req.token.data.username}"`);
     const response = new ApiSuccess(200);
     next(response);
   } catch (error) {
