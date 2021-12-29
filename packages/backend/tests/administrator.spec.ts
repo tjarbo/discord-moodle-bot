@@ -5,12 +5,13 @@ import { Request, Response } from "express";
 import { RegistrationToken } from "../src/controllers/authentication/registrationToken.schema";
 import { Administrator } from '../src/controllers/administrator/administrator.schema';
 import { ApiError, ApiSuccess } from "../src/utils/api";
+import { JWT } from "../src/controllers/authentication";
 
 jest.mock('../src/configuration/environment.ts');
 
 describe('administrator/index.ts adminAdministratorPostRequest', () => {
 
-  let mockRequest: Request;
+  let mockRequest: Request & JWT;
   let mockResponse: Response;
   let mockNext: jest.Mock;
   let spyLogger: jest.SpyInstance;
@@ -19,7 +20,8 @@ describe('administrator/index.ts adminAdministratorPostRequest', () => {
     mockRequest = {
       headers: {},
       body: {},
-    } as Request;
+      token: {}
+    } as Request & JWT;
 
     mockResponse = {
       status: jest.fn(() => mockResponse),
@@ -117,7 +119,7 @@ describe('administrator/index.ts adminAdministratorGetRequest', () => {
 
 describe('administrator/index.ts adminAdministratorDeleteRequest', () => {
 
-  let mockRequest: Request;
+  let mockRequest: Request & JWT;
   let mockResponse: Response;
   let mockNext: jest.Mock;
   let spyLogger: jest.SpyInstance;
@@ -128,7 +130,8 @@ describe('administrator/index.ts adminAdministratorDeleteRequest', () => {
       body: {},
       params: {},
       query: {},
-    } as Request;
+      token: {}
+    } as Request & JWT;
 
     mockResponse = {
       status: jest.fn(() => mockResponse),

@@ -42,6 +42,19 @@ const authAttestationPostRequestSchema = object({
  *          Helper functions            *
  * **************************************/
 
+interface JSONWebToken {
+  _id: string;
+  username: string;
+}
+
+export type JWT = {
+  token: {
+    data: JSONWebToken,
+    iat: number,
+    exp: number,
+  }
+};
+
 /**
  * Generates a signed jwt token, which contains the user
  * object
@@ -52,7 +65,7 @@ const authAttestationPostRequestSchema = object({
 function generateJWToken(user: IAdministratorDocument) {
   const data = {
     _id: user._id,
-    name: user.name,
+    username: user.username,
   };
   const signature = config.jwt.secret;
   const expiration = config.jwt.expiresIn;
@@ -207,6 +220,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
       registrationTokenDoc.delete();
 
       // 8. Send jwt to user
+      loggerFile.info(`${userDoc.username} registered successfully`);
       const response = new ApiSuccess(200, { 'accesstoken': generateJWToken(userDoc) });
       next(response);
 
@@ -314,6 +328,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
       authenticator.save();
 
       // 6. Send jwt to user
+      loggerFile.info(`${userDoc.username} logged in successfully`);
       const response = new ApiSuccess(200, { 'accesstoken': generateJWToken(userDoc) });
       next(response);
 

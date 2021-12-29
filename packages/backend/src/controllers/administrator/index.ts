@@ -5,6 +5,7 @@ import { ApiError, ApiSuccess } from '../../utils/api';
 import { RegistrationToken } from '../authentication/registrationToken.schema';
 import { config } from '../../configuration/environment';
 import { object } from '@hapi/joi';
+import { JWT } from '../authentication';
 
 /****************************************
  *       User input validation          *
@@ -26,7 +27,7 @@ const adminAdministratorDeleteRequestSchema = object({
  * @param res Response
  * @param next NextFunction
  */
-export async function adminAdministratorPostRequest(req: Request, res: Response, next: NextFunction) {
+export async function adminAdministratorPostRequest(req: Request & JWT, res: Response, next: NextFunction) {
 
     try {
 
@@ -40,6 +41,7 @@ export async function adminAdministratorPostRequest(req: Request, res: Response,
             lifetime: config.registrationTokenLifetime,
         };
 
+        loggerFile.warn(`New registration token created by "${req.token.data.username}"`);
         const response = new ApiSuccess(201, responseBody);
         next(response);
 
@@ -91,7 +93,7 @@ export async function adminAdministratorGetRequest(req: Request, res: Response, 
  * @param res Response
  * @param next NextFunction
  */
-export async function adminAdministratorDeleteRequest(req: Request, res: Response, next: NextFunction) {
+export async function adminAdministratorDeleteRequest(req: Request & JWT, res: Response, next: NextFunction) {
 
     try {
 
@@ -112,6 +114,7 @@ export async function adminAdministratorDeleteRequest(req: Request, res: Respons
             // 4. Delete admin
             await administrator.deleteOne();
 
+            loggerFile.warn(`Administrator "${administrator.username}" deleted by "${req.token.data.username}"`);
             const response = new ApiSuccess(204);
             next(response);
         } catch (error) {
