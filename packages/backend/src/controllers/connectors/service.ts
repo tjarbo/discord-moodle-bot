@@ -172,7 +172,6 @@ class ConnectorService {
 
       default:
         throw new ApiError(404, 'Unknown connector type!');
-        break;
     }
 
     return plugin.Document;
