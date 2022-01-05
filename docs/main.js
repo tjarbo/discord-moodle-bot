@@ -157,9 +157,9 @@ async function onSubmit(event) {
             moodleURLInput.value,
             '/login/token.php',
             '?username=',
-            usernameInput.value,
+            encodeURIComponent(usernameInput.value),
             '&password=',
-            passwordInput.value,
+            encodeURIComponent(passwordInput.value),
             '&service=moodle_mobile_app'
         ].join('');
 
