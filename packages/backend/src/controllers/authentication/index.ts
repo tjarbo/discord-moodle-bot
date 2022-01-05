@@ -162,7 +162,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
     userDoc.currentChallenge = attestationOptions.challenge;
     userDoc.save();
 
-    // 4. Done
+    // 6. Done
     const response = new ApiSuccess(200, attestationOptions);
     next(response);
 
@@ -229,7 +229,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
       throw new ApiError(400, error.message);
 
     } finally {
-      // 8. Delete challenge from user. To try again, it is necessary to request a new challenge
+      // 9. Delete challenge from user. To try again, it is necessary to request a new challenge
       userDoc.currentChallenge = undefined;
       userDoc.save();
     }
