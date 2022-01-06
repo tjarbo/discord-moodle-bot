@@ -25,6 +25,6 @@ const configLogger = {
 
 };
 
-const logTyp = config.logsToFile ? 'all' : 'default';
+const logTyp = config.logToFile ? 'all' : 'default';
 export const loggerFile = log4js.configure(configLogger).getLogger(logTyp);
 export const loggerMiddleware = log4js.connectLogger(loggerFile, {level: 'auto'});
