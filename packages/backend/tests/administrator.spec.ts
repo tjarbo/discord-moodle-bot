@@ -20,7 +20,9 @@ describe('administrator/index.ts adminAdministratorPostRequest', () => {
     mockRequest = {
       headers: {},
       body: {},
-      token: {}
+      token: {
+        data: {}
+      }
     } as Request & JWT;
 
     mockResponse = {
@@ -65,7 +67,10 @@ describe('administrator/index.ts adminAdministratorGetRequest', () => {
     mockRequest = {
       headers: {},
       body: {},
-    } as Request;
+      token: {
+        data: {}
+      }
+    } as Request & JWT;
 
     mockResponse = {
       status: jest.fn(() => mockResponse),
@@ -130,7 +135,9 @@ describe('administrator/index.ts adminAdministratorDeleteRequest', () => {
       body: {},
       params: {},
       query: {},
-      token: {}
+      token: {
+        data: {}
+      }
     } as Request & JWT;
 
     mockResponse = {
