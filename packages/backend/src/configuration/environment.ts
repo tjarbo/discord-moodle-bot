@@ -24,7 +24,7 @@ const envVarsSchema = object({
   LANGUAGE: string()
     .allow(...allowedLocales)
     .default('en')
-    .description('Defines the language the notification messages will be displayed.'), 
+    .description('Defines the language the notification messages will be displayed.'),
   LOG_TO_FILE: boolean()
     .default(false)
     .description('Defines whether logs are written to filesystem or not'),
