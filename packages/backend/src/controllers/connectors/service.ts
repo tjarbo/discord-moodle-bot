@@ -98,7 +98,7 @@ class ConnectorService {
   public publish(courseId: number, message: Message): void {
     let messageWasSent: boolean = false;
 
-    loggerFile.info('Got new message publish order');
+    loggerFile.debug('Got new message publish order');
 
     this.#connectors.forEach(connector => {
       // Check if connector is active and course is assigned to this connector - skip if not
@@ -113,7 +113,7 @@ class ConnectorService {
     // If the message was sent to a plugin, stop here
     if (messageWasSent) return;
 
-    loggerFile.info(`No connector for course ${courseId} found. Use default connectors!`);
+    loggerFile.warn(`No connector for course ${courseId} found. Use default connectors!`);
 
     // If not, send the message to all default connectors
     this.#connectors.forEach(connector => {
