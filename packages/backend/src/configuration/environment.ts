@@ -24,7 +24,7 @@ const envVarsSchema = object({
   LANGUAGE: string()
     .allow(...allowedLocales)
     .default('en')
-    .description('Defines the language the notification messages will be displayed.'),
+    .description('Defines the language for all notification messages.'),
   LOG_TO_FILE: boolean()
     .default(false)
     .description('Defines whether logs are written to filesystem or not'),
@@ -40,10 +40,10 @@ const envVarsSchema = object({
   MOODLE_BASE_URL: string()
     .required()
     .uri()
-    .description('URL of your Moodle instance, eg. https://moodle.domain.me .'),
+    .description('URL of your Moodle instance, eg. https://moodle.example.com .'),
   MOODLE_FETCH_INTERVAL: number()
     .default(900000)
-    .description('Interval to look for updates on moodle (in ms).'),
+    .description('Interval to look for updates on Moodle (in ms).'),
   MOODLE_REMINDER_TIME_LEFT: number()
     .default(86400)
     .description('Send notification if deadline is within given time (in seconds).'),
