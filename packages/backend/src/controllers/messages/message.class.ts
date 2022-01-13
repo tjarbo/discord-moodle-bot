@@ -1,7 +1,7 @@
 import { compile } from 'handlebars';
 
 /**
- * Abstract class for notification messages
+ * Abstract class for notification messages.
  *
  * @export
  * @abstract
@@ -10,7 +10,7 @@ import { compile } from 'handlebars';
 export abstract class Message {
 
   /**
-   * handlebar.js template for Markdown messages
+   * handlebars.js template for Markdown messages.
    *
    * @protected
    * @abstract
@@ -20,7 +20,7 @@ export abstract class Message {
   protected abstract readonly markdownTemplate: string;
 
   /**
-   * Content for the templates
+   * Content for the templates.
    *
    * ! Content depends on the used template class
    *
@@ -32,13 +32,23 @@ export abstract class Message {
   protected context: any;
 
   /**
-   * Return the message as Markdown
+   * Creates an instance of Message.
+   *
+   * @param {any} context Contains properties for the template class
+   * @memberof Message
+   */
+  constructor(context: any) {
+    this.context = context;
+  }
+
+  /**
+   * Returns the message as Markdown.
    *
    * @readonly
    * @type {string}
    * @memberof Message
    */
-  public get Markdown() : string {
+  public get Markdown(): string {
     return compile(this.markdownTemplate)(this.context);
   }
 }
