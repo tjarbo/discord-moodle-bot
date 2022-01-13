@@ -105,7 +105,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     const discordChannel = this.client.channels.cache.get(this.document.socket.channel);
     if (!discordChannel) return connectorLogger.error(`Channel not in discord cache. Send a small 'test' message to the channel and try again.`, this.objectId);
 
-    (discordChannel as TextChannel).send(message.Markdown)
+    (discordChannel as TextChannel).send(message.markdown)
       .then(() => {
         connectorLogger.info('Successfully sent message via Discord bot!', this.objectId);
       })

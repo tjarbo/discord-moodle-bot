@@ -10,6 +10,6 @@ describe('assignmentReminderMessage.class.ts', () => {
   });
 
   it('should match Markdown', () => {
-    expect(assignmentMessage.Markdown).toMatchSnapshot();
+    expect(assignmentMessage.markdown).toMatchSnapshot();
   });
 });
