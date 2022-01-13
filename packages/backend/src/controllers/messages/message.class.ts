@@ -48,7 +48,7 @@ export abstract class Message {
    * @type {string}
    * @memberof Message
    */
-  public get Markdown(): string {
+  public get markdown(): string {
     return compile(this.markdownTemplate)(this.context);
   }
 }
