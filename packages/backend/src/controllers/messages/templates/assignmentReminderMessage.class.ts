@@ -9,7 +9,6 @@ export class AssignmentReminderMessage extends Message {
   ].join('\n');
 
   constructor(course: string, title: string) {
-    super();
-    this.context = { course, title };
+    super({ course, title });
   }
 }
