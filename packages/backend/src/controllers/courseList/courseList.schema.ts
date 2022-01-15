@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Schema, model, Model, Document } from 'mongoose';
 
 export interface ICourseListSchema extends Document {
