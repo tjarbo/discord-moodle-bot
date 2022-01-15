@@ -35,7 +35,7 @@ const envVarsSchema = object({
     .when('NODE_ENV', {
       is: string().equal('development'),
       then: boolean().default(true),
-      otherwise: boolean().default(false)
+      otherwise: boolean().default(false),
     }),
   MOODLE_BASE_URL: string()
     .required()
@@ -75,14 +75,14 @@ const envVarsSchema = object({
     .when('NODE_ENV', {
       is: string().equal('development'),
       then: string().default('localhost'),
-      otherwise: string().min(8).required()
+      otherwise: string().min(8).required(),
     })
     .description('Unique identifier of the website for webauthn.'),
   RP_ORIGIN: string()
     .uri()
     .required()
     .description('URL your service will be available from. Compare with CORS.'),
-  }).unknown()
+}).unknown()
   .required();
 
 const { error, value: envVars } = envVarsSchema.validate(process.env);
@@ -118,5 +118,5 @@ export const config = {
     name: envVars.RP_NAME,
     id: envVars.RP_ID,
     origin: envVars.RP_ORIGIN,
-  }
+  },
 };

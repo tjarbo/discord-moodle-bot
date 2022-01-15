@@ -10,7 +10,7 @@ export abstract class ConnectorPlugin {
   public abstract send(message: Message): void;
   public abstract destroy(): Promise<Readonly<LeanDocument<IConnectorDocument>>>;
   public abstract update(body: { [key: string]: any }): Promise<Readonly<LeanDocument<IConnectorDocument>>>;
-  public abstract get Document(): Readonly<LeanDocument<IConnectorDocument>>
+  public abstract get Document(): Readonly<LeanDocument<IConnectorDocument>>;
 
 
   /**
@@ -21,11 +21,11 @@ export abstract class ConnectorPlugin {
    * @return {Promise<IConnectorLogItemDocument[]>} Array of ConnectorLogItemDocuments
    * @memberof ConnectorPlugin
    */
-  public async getLogs(limit: number = 50): Promise<IConnectorLogItemDocument[]> {
+  public async getLogs(limit = 50): Promise<IConnectorLogItemDocument[]> {
     const query = {
-      connector: this.objectId
+      connector: this.objectId,
     };
-    return await ConnectorLogItem.find(query).sort({ createdAt: -1 }).limit(limit);
+    return ConnectorLogItem.find(query).sort({ createdAt: -1 }).limit(limit);
   }
 
   /**

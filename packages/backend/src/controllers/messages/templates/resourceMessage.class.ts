@@ -4,8 +4,8 @@ export class ResourceMessage extends Message {
 
   protected readonly markdownTemplate = [
     `**{{course}} - ${t('messages.resourceMessage.title')}**:`,
-    `📁 {{title}}`,
-    `🔗 {{link}}`
+    '📁 {{title}}',
+    '🔗 {{link}}',
   ].join('\n');
 
   constructor(course: string, title: string, link: string) {

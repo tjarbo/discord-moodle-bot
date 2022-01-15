@@ -32,7 +32,7 @@ export const apiMiddleware = (param: any, req: Request, res: Response, next: any
      * Convert HttpError to ApiError and send response
      */
     case param instanceof HttpError:
-      const { status, message} = (param as HttpError);
+      const { status, message } = (param as HttpError);
       apiError = new ApiError(status, message);
       res.status(status).json(apiError);
       break;

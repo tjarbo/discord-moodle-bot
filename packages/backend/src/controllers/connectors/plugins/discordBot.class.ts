@@ -9,17 +9,18 @@ import { Message } from '../../../controllers/messages/message.class';
 
 export class DiscordBotConnectorPlugin extends ConnectorPlugin {
   private readonly client: Discord.Client = new Discord.Client();
-  private isReady: boolean = false;
+
+  private isReady = false;
 
   private static readonly socketSchema: ObjectSchema = object({
-      channel: string().alphanum().length(18).when(ref('$isRequired'), {
-        is: boolean().invalid(false),
-        then: required()
-      }),
-      token: string().when(ref('$isRequired'), {
-        is: boolean().invalid(false),
-        then: required()
-      }),
+    channel: string().alphanum().length(18).when(ref('$isRequired'), {
+      is: boolean().invalid(false),
+      then: required(),
+    }),
+    token: string().when(ref('$isRequired'), {
+      is: boolean().invalid(false),
+      then: required(),
+    }),
   }).required();
 
   /**
@@ -87,7 +88,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
    * @memberof DiscordBotConnectorPlugin
    */
   public static validateSocket(unknownSocket: unknown, isRequired: boolean): any {
-    const validation = this.socketSchema.validate(unknownSocket, { context: { isRequired }});
+    const validation = this.socketSchema.validate(unknownSocket, { context: { isRequired } });
     if (validation.error) throw new Error(validation.error.message);
 
     return validation.value;
@@ -100,10 +101,10 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
    */
   public send(message: Message): void {
 
-    if (!this.isReady) return connectorLogger.error(`Discord Bot not ready! Unable to send message.`, this.objectId);
+    if (!this.isReady) return connectorLogger.error('Discord Bot not ready! Unable to send message.', this.objectId);
 
     const discordChannel = this.client.channels.cache.get(this.document.socket.channel);
-    if (!discordChannel) return connectorLogger.error(`Channel not in discord cache. Send a small 'test' message to the channel and try again.`, this.objectId);
+    if (!discordChannel) return connectorLogger.error('Channel not in discord cache. Send a small \'test\' message to the channel and try again.', this.objectId);
 
     (discordChannel as TextChannel).send(message.markdown)
       .then(() => {

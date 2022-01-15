@@ -21,7 +21,7 @@ export class ApiError extends ApiResponse {
     if (typeof error === 'string') {
       super(ApiStatus.Error, code, null, [ createHttpError(error) ]);
     } else {
-      super(ApiStatus.Error, code, null, error as ValidationErrorItem[]);
+      super(ApiStatus.Error, code, null, error );
     }
   }
 }

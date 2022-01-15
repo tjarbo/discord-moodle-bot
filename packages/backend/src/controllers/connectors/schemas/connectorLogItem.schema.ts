@@ -14,7 +14,7 @@ export interface IConnectorLogItemDocument extends Document {
 
 const connectorLogItemSchema = new Schema({
   connector: { type: Schema.Types.ObjectId, ref: 'Connector', required: true },
-  createdAt: { type: Date, default: Date.now, expires: config.connectorLogLifetime, },
+  createdAt: { type: Date, default: Date.now, expires: config.connectorLogLifetime },
   message: { type: String, required: true },
   type: { type: String, required: true },
 });

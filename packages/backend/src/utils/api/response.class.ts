@@ -3,7 +3,7 @@ import { HttpError } from 'http-errors';
 
 export enum ApiStatus {
   Success = 'success',
-  Error = 'error'
+  Error = 'error',
 }
 
 type HTTPStatusCode = number;

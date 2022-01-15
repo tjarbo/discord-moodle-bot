@@ -14,7 +14,7 @@ class ConnectorLogger {
   private createContent(message: string, objectId: string): { [key: string]: string } {
     return {
       connector: objectId,
-      message
+      message,
     };
   }
 
@@ -26,7 +26,7 @@ class ConnectorLogger {
    * @param skipSave default: true - skips adding the message to ConnectorLogs
    * @returns void
    */
-  public info(message: string, objectId: string, skipSave: boolean = false): void {
+  public info(message: string, objectId: string, skipSave = false): void {
     loggerFile.info(message);
 
     if (skipSave) return;
@@ -43,7 +43,7 @@ class ConnectorLogger {
    * @param skipSave default: true - skips adding the message to ConnectorLogs
    * @returns void
    */
-  public warn(message: string, objectId: string, skipSave: boolean = false): void {
+  public warn(message: string, objectId: string, skipSave = false): void {
     loggerFile.warn(message);
 
     if (skipSave) return;
@@ -60,7 +60,7 @@ class ConnectorLogger {
    * @param skipSave default: true - skips adding the message to ConnectorLogs
    * @returns void
    */
-  public error(message: string, objectId: string, skipSave: boolean = false): void {
+  public error(message: string, objectId: string, skipSave = false): void {
     loggerFile.error(message);
 
     if (skipSave) return;
