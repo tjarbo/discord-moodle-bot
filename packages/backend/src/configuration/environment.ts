@@ -85,38 +85,40 @@ const envVarsSchema = object({
 }).unknown()
   .required();
 
+type EnvVars = { [key: string]: string | number | boolean }
+
 const { error, value: envVars } = envVarsSchema.validate(process.env);
 const envDescriptionLink = 'https://github.com/tjarbo/discord-moodle-bot/wiki/What-is-inside-.env%3F';
 if (error) throw new Error(`Config validation error: ${error.message} \nSee ${envDescriptionLink} for more information`);
 
 export const config = {
-  connectorLogLifetime: envVars.CONNECTOR_LOG_LIFETIME,
-  discordToken: envVars.DISCORD_TOKEN,
-  discordChannel: envVars.DISCORD_CHANNEL,
-  env: envVars.NODE_ENV,
+  connectorLogLifetime: envVars.CONNECTOR_LOG_LIFETIME as string,
+  discordChannel: envVars.DISCORD_CHANNEL as string,
+  discordToken: envVars.DISCORD_TOKEN as string,
+  env: envVars.NODE_ENV as string,
   jwt: {
-    secret: envVars.JWT_SECRET,
-    expiresIn: envVars.JWT_EXPIRESIN,
+    secret: envVars.JWT_SECRET as string,
+    expiresIn: envVars.JWT_EXPIRESIN as string,
   },
-  language: envVars.LANGUAGE,
-  logToFile: envVars.LOG_TO_FILE,
+  language: envVars.LANGUAGE as string,
+  logToFile: envVars.LOG_TO_FILE as boolean,
   mongo: {
-    host: envVars.MONGO_HOST,
+    host: envVars.MONGO_HOST as string,
   },
-  mongooseDebug: envVars.MONGOOSE_DEBUG,
+  mongooseDebug: envVars.MONGOOSE_DEBUG as boolean,
   moodle: {
-    baseURL: envVars.MOODLE_BASE_URL,
-    fetchInterval: envVars.MOODLE_FETCH_INTERVAL,
-    reminderTimeLeft: envVars.MOODLE_REMINDER_TIME_LEFT,
-    token:   envVars.MOODLE_TOKEN,
-    useCourseShortname: envVars.MOODLE_USE_COURSE_SHORTNAME,
-    userId:  envVars.MOODLE_USERID,
+    baseURL: envVars.MOODLE_BASE_URL as string,
+    fetchInterval: envVars.MOODLE_FETCH_INTERVAL as number,
+    reminderTimeLeft: envVars.MOODLE_REMINDER_TIME_LEFT as number,
+    token:   envVars.MOODLE_TOKEN as string,
+    useCourseShortname: envVars.MOODLE_USE_COURSE_SHORTNAME as boolean,
+    userId:  envVars.MOODLE_USERID as number,
   },
-  port: envVars.PORT,
-  registrationTokenLifetime: envVars.REGISTRATION_TOKEN_LIFETIME,
+  port: envVars.PORT as number,
+  registrationTokenLifetime: envVars.REGISTRATION_TOKEN_LIFETIME as string,
   rp: {
-    name: envVars.RP_NAME,
-    id: envVars.RP_ID,
-    origin: envVars.RP_ORIGIN,
+    name: envVars.RP_NAME  as string,
+    id: envVars.RP_ID as string,
+    origin: envVars.RP_ORIGIN  as string,
   },
 };
