@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { config } from '../../configuration/environment';
 import { loggerFile } from '../../configuration/logger';
 import { getCourseBlacklist } from '../courseList/courseList';

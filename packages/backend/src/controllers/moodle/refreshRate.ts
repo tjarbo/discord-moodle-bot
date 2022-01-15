@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { loggerFile } from '../../configuration/logger';
 import { Request, Response, NextFunction } from 'express';
 import { object, number } from 'joi';

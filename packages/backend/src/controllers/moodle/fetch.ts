@@ -1,3 +1,4 @@
+/* eslint-disable */
 import fetch from 'node-fetch';
 import { config } from '../../configuration/environment';
 import { ICourse } from './interfaces/course.interface';

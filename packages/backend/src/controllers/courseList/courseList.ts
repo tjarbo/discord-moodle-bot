@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { CourseList, ICourseListSchema } from './courseList.schema';
 import { fetchEnrolledCourses } from '../moodle/fetch';
 import { loggerFile } from '../../configuration/logger';

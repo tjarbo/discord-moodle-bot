@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { config } from '../../configuration/environment';
 import { ICourse } from './interfaces/course.interface';
 import { IResource } from './interfaces/resource.interface';

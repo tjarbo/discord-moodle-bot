@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Schema, model, Model, Document } from 'mongoose';
 import { loggerFile } from '../../../configuration/logger';
 import { config } from '../../../configuration/environment';
