@@ -1,4 +1,4 @@
-import { boolean, number, object, string } from '@hapi/joi';
+import { boolean, number, object, string } from 'joi';
 import { config as dotenvConfig } from 'dotenv';
 
 export const allowedLocales = ['en', 'de'];
@@ -6,8 +6,10 @@ export const allowedLocales = ['en', 'de'];
 // require and configure dotenv, will load vars in .env in PROCESS.ENV
 dotenvConfig();
 
+type EnvVars = { [key: string]: string | number | boolean };
+
 // define validation for all the env vars
-const envVarsSchema = object({
+const envVarsSchema = object<EnvVars>({
   CONNECTOR_LOG_LIFETIME: string()
     .default('31d')
     .description('Defines how long log entries/items will be stored'),
@@ -84,8 +86,6 @@ const envVarsSchema = object({
     .description('URL your service will be available from. Compare with CORS.'),
 }).unknown()
   .required();
-
-type EnvVars = { [key: string]: string | number | boolean }
 
 const { error, value: envVars } = envVarsSchema.validate(process.env);
 const envDescriptionLink = 'https://github.com/tjarbo/discord-moodle-bot/wiki/What-is-inside-.env%3F';

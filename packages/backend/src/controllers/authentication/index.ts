@@ -3,7 +3,7 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { object } from '@hapi/joi';
+import { object } from 'joi';
 import { Administrator, administratorUsernameValidationSchema, IAdministratorDocument } from '../administrator/administrator.schema';
 import { loggerFile } from '../../configuration/logger';
 import jwt from 'jsonwebtoken';

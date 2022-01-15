@@ -1,7 +1,7 @@
 /* tslint:disable:ban-types */
 import { Schema, model, Model, Document } from 'mongoose';
 import { IAuthenticatorDocument, authenticatorSchema } from './authenticator.schema';
-import { string, alternatives } from '@hapi/joi';
+import { string, alternatives } from 'joi';
 
 export interface IAdministratorDocument extends Document {
   [_id: string]: any;

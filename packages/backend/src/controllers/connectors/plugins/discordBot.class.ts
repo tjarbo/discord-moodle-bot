@@ -2,7 +2,7 @@ import Discord, { TextChannel } from 'discord.js';
 import { IConnectorDocument } from '../schemas/connector.schema';
 import { connectorLogger } from '../logger';
 import { ConnectorPlugin } from './connectorPlugin.class';
-import { object, ObjectSchema, string, ref, boolean, required } from '@hapi/joi';
+import { object, ObjectSchema, string, ref, boolean, required } from 'joi';
 import { ApiError } from '../../../utils/api';
 import { LeanDocument } from 'mongoose';
 import { Message } from '../../../controllers/messages/message.class';

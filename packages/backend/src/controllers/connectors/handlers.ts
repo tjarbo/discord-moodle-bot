@@ -1,4 +1,4 @@
-import { array, boolean, number, object, string } from '@hapi/joi';
+import { array, boolean, number, object, string } from 'joi';
 import { NextFunction, Request, Response } from 'express';
 import { loggerFile } from '../../configuration/logger';
 import { ApiError, ApiSuccess } from '../../utils/api';

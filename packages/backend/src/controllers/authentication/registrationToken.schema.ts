@@ -2,7 +2,7 @@
 import { config } from '../../configuration/environment';
 import { Schema, model, Model, Document } from 'mongoose';
 import { v4 as uuidv4, validate as validateUUID } from 'uuid';
-import { string, CustomHelpers } from '@hapi/joi';
+import { string, CustomHelpers } from 'joi';
 
 interface IRegistrationTokenDocument extends Document {
   [_id: string]: any;
