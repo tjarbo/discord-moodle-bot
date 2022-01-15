@@ -58,9 +58,9 @@ export async function fetchAndNotify(): Promise<boolean> {
 
     handleAssignments(courseList, lastFetch);
 
-    await MoodleSettings.findOneAndUpdate({}, { $set: { lastFetch: Math.floor(Date.now() / 1000) }});
+    await MoodleSettings.findOneAndUpdate({}, { $set: { lastFetch: Math.floor(Date.now() / 1000) } });
     return true;
-  } catch(error) {
+  } catch (error) {
     loggerFile.error('Moodle API request failed', error);
     return false;
   }
@@ -78,7 +78,7 @@ export async function continuousFetchAndNotify(): Promise<void> {
   // Call function again after database interval
   const interval = await MoodleSettings.getRefreshRate();
   const nextFetch = Math.floor((Date.now() + interval) / 1000);
-  await MoodleSettings.findOneAndUpdate({}, { $set: { nextFetch }});
+  await MoodleSettings.findOneAndUpdate({}, { $set: { nextFetch } });
   setTimeout(continuousFetchAndNotify, interval);
 }
 

@@ -14,18 +14,18 @@ import { IContentfile } from './interfaces/contentfile.interface';
  * @returns {string} - The formatted date string
  */
 function formatMoodleDate(timestamp: number): string {
-    if (!timestamp) return 'keine Zeit gesetzt';
+  if (!timestamp) return 'keine Zeit gesetzt';
 
-    const dateOptions = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
-    } as Intl.DateTimeFormatOptions;
+  const dateOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  } as Intl.DateTimeFormatOptions;
 
-    return new Date(timestamp * 1000).toLocaleString('de-DE', dateOptions);
+  return new Date(timestamp * 1000).toLocaleString('de-DE', dateOptions);
 }
 
 /**
@@ -36,28 +36,28 @@ function formatMoodleDate(timestamp: number): string {
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
 export async function handleAssignments(courses: ICourse[], lastFetch: number): Promise<void> {
-    for (const course of courses) {
-        for (const assignment of course.assignments) {
-            const coursename = config.moodle.useCourseShortname ? course.shortname : course.fullname;
+  for (const course of courses) {
+    for (const assignment of course.assignments) {
+      const coursename = config.moodle.useCourseShortname ? course.shortname : course.fullname;
 
-            // check if assignment was newly created or has been modified
-            if (assignment.timemodified > lastFetch) {
-                const message = new AssignmentMessage(coursename, assignment.name, formatMoodleDate(assignment.duedate));
-                connectorService.publish(course.id, message);
-            }
+      // check if assignment was newly created or has been modified
+      if (assignment.timemodified > lastFetch) {
+        const message = new AssignmentMessage(coursename, assignment.name, formatMoodleDate(assignment.duedate));
+        connectorService.publish(course.id, message);
+      }
 
-            // check if new deadline is incoming that hasn`t been notified about
-            const timeUntilDueDate = assignment.duedate - Math.floor(Date.now() / 1000);
-            const isWithinDeadline = timeUntilDueDate > 0 && timeUntilDueDate < config.moodle.reminderTimeLeft;
-            const reminderExists = await Reminder.findOne({assignment_id: assignment.id});
+      // check if new deadline is incoming that hasn`t been notified about
+      const timeUntilDueDate = assignment.duedate - Math.floor(Date.now() / 1000);
+      const isWithinDeadline = timeUntilDueDate > 0 && timeUntilDueDate < config.moodle.reminderTimeLeft;
+      const reminderExists = await Reminder.findOne({ assignment_id: assignment.id });
 
-            if (isWithinDeadline && !reminderExists) {
-                await new Reminder({assignment_id: assignment.id}).save();
-                const message = new AssignmentReminderMessage(coursename, assignment.name);
-                connectorService.publish(course.id, message);
-            }
-        }
+      if (isWithinDeadline && !reminderExists) {
+        await new Reminder({ assignment_id: assignment.id }).save();
+        const message = new AssignmentReminderMessage(coursename, assignment.name);
+        connectorService.publish(course.id, message);
+      }
     }
+  }
 }
 
 /**
@@ -67,26 +67,26 @@ export async function handleAssignments(courses: ICourse[], lastFetch: number): 
  * @returns {IContentfile[]} - The contentfiles
  */
 function extractContentFiles(contents: any): IContentfile[] {
-    // extract files from array
-    function extractObject(input:any) {
-        if (Object.keys(input).includes('type') && input.type === 'file') {
-            fileArray.push(input as IContentfile);
-            return;
-        }
-        for (const value of Object.values(input)){
-            if (value instanceof Array) extractArray(value);
-            else if (value instanceof Object) extractObject(value);
-        }
+  // extract files from array
+  function extractObject(input:any) {
+    if (Object.keys(input).includes('type') && input.type === 'file') {
+      fileArray.push(input as IContentfile);
+      return;
     }
-    function extractArray(input:any){
-        for (const element of input){
-            if (element instanceof Array) extractArray(element);
-            else if (element instanceof Object) extractObject(element);
-        }
+    for (const value of Object.values(input)){
+      if (value instanceof Array) extractArray(value);
+      else if (value instanceof Object) extractObject(value);
     }
-    const fileArray:IContentfile[] = [];
-    extractArray(contents);
-    return fileArray;
+  }
+  function extractArray(input:any){
+    for (const element of input){
+      if (element instanceof Array) extractArray(element);
+      else if (element instanceof Object) extractObject(element);
+    }
+  }
+  const fileArray:IContentfile[] = [];
+  extractArray(contents);
+  return fileArray;
 }
 
 /**
@@ -98,14 +98,14 @@ function extractContentFiles(contents: any): IContentfile[] {
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
 export async function handleContents(contents: any, courseName: string, lastFetch: number): Promise<void> {
-    const fileArray = extractContentFiles(contents);
+  const fileArray = extractContentFiles(contents);
 
-    for (const file of fileArray) {
-        if (file.timemodified <= lastFetch) continue;
+  for (const file of fileArray) {
+    if (file.timemodified <= lastFetch) continue;
 
-        const message = new ResourceMessage(courseName, file.filename, file.fileurl.replace('/webservice', ''));
-        connectorService.publish(undefined, message);
-    }
+    const message = new ResourceMessage(courseName, file.filename, file.fileurl.replace('/webservice', ''));
+    connectorService.publish(undefined, message);
+  }
 }
 
 /**
@@ -119,12 +119,12 @@ export async function handleContents(contents: any, courseName: string, lastFetc
  * @param {number} lastFetch - The timestamp of the last fetch (in seconds!)
  */
 export async function handleResources(resources: IResource[], courseMap: Map<number, string>, lastFetch: number): Promise<void> {
-    for (const resource of resources) {
-        for (const file of resource.contentfiles) {
-            if (file.timemodified <= lastFetch) continue;
+  for (const resource of resources) {
+    for (const file of resource.contentfiles) {
+      if (file.timemodified <= lastFetch) continue;
 
-            const message = new ResourceMessage(courseMap.get(resource.course), file.filename, file.fileurl.replace('/webservice', ''));
-            connectorService.publish(undefined, message);
-        }
+      const message = new ResourceMessage(courseMap.get(resource.course), file.filename, file.fileurl.replace('/webservice', ''));
+      connectorService.publish(undefined, message);
     }
+  }
 }

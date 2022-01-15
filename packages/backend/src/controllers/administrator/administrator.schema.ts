@@ -24,5 +24,5 @@ export const Administrator: Model<IAdministratorDocument> = model<IAdministrator
 
 export const administratorUsernameValidationSchema = alternatives().try(
   string().required().min(8).max(64).alphanum(),
-  string().required().min(8).max(36).pattern(/^[\w\s]{3,32}#[0-9]{4}$/)
+  string().required().min(8).max(36).pattern(/^[\w\s]{3,32}#[0-9]{4}$/),
 ).required().description('Username of administrator');

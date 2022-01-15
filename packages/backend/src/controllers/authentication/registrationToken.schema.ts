@@ -17,8 +17,8 @@ const registrationTokenSchema = new Schema({
     type: Date,
     default: Date.now,
     expires: config.registrationTokenLifetime,
-   },
-   userIsDeletable: { type: Boolean, default: true },
+  },
+  userIsDeletable: { type: Boolean, default: true },
 });
 
 export const RegistrationToken: Model<IRegistrationTokenDocument> = model<IRegistrationTokenDocument>('RegistrationToken', registrationTokenSchema);

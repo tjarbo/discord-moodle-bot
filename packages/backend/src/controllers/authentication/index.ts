@@ -23,7 +23,7 @@ const authAssertionGetRequestSchema = object({
 
 const authAssertionPostRequestSchema = object({
   username: administratorUsernameValidationSchema,
-  assertionResponse: object().unknown().required().description('Webauthn challenge')
+  assertionResponse: object().unknown().required().description('Webauthn challenge'),
 });
 
 const authAttestationGetRequestSchema = object({
@@ -34,7 +34,7 @@ const authAttestationGetRequestSchema = object({
 const authAttestationPostRequestSchema = object({
   username: administratorUsernameValidationSchema,
   token: registrationTokenValidationSchema,
-  attestationResponse: object().unknown().required().description('Webauthn challenge')
+  attestationResponse: object().unknown().required().description('Webauthn challenge'),
 });
 
 
@@ -70,7 +70,7 @@ function generateJWToken(user: IAdministratorDocument) {
   const signature = config.jwt.secret;
   const expiration = config.jwt.expiresIn;
 
-  return jwt.sign({ data, }, signature, { expiresIn: expiration });
+  return jwt.sign({ data }, signature, { expiresIn: expiration });
 }
 
 /**
@@ -181,7 +181,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
  * @param {Request} req
  * @param {Response} res
  */
- export async function authAttestationPostRequest(req: Request, res: Response, next: NextFunction) : Promise<void> {
+export async function authAttestationPostRequest(req: Request, res: Response, next: NextFunction) : Promise<void> {
   try {
     // 1. Validate user input
     const attestationPostRequest = authAttestationPostRequestSchema.validate(req.body);
@@ -251,7 +251,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
  * @param {Request} req
  * @param {Response} res
  */
- export async function authAssertionGetRequest(req: Request, res: Response, next: NextFunction) : Promise<void> {
+export async function authAssertionGetRequest(req: Request, res: Response, next: NextFunction) : Promise<void> {
   try {
     // 1. Validate user input
     const assertionGetRequest = authAssertionGetRequestSchema.validate(req.query);
@@ -267,7 +267,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
       // Require users to use a previously-registered authenticator
       allowCredentials: [{
         id: userDoc.device.credentialID,
-        type: 'public-key'
+        type: 'public-key',
       }],
       userVerification: 'preferred',
     });
@@ -295,7 +295,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
  * @param {Request} req
  * @param {Response} res
  */
- export async function authAssertionPostRequest(req: Request, res: Response, next: NextFunction) : Promise<void> {
+export async function authAssertionPostRequest(req: Request, res: Response, next: NextFunction) : Promise<void> {
   try {
     // 1. Validate user input
     const assertionPostRequest = authAssertionPostRequestSchema.validate(req.body);

@@ -15,44 +15,42 @@ import { connectorService } from '../connectors/service';
  * @param next NextFunction
  */
 export async function statusGetRequest(req: Request, res: Response, next: NextFunction) {
+  try {
+
+    // TODO: Better handling in #19
+    let moodleConnectionStatus = 'Unknown';
     try {
-
-        // TODO: Better handling in #19
-        let moodleConnectionStatus = 'Unknown';
-        try {
-            const courses = await fetchEnrolledCourses(getBaseUrl()) as any;
-            if (courses.length) moodleConnectionStatus = 'Ok';
-            else if (courses.message) moodleConnectionStatus = courses.message;
-        }
-        catch (error) {
-            moodleConnectionStatus = error.message;
-        }
-
-        const moodleCurrentFetchInterval = await MoodleSettings.getRefreshRate();
-        const moodleLastFetchTimestamp = await MoodleSettings.getLastFetch();
-        const moodleNextFetchTimestamp = await MoodleSettings.getNextFetch();
-
-        const [
-            connectorsLength,
-            connectorsActiveLength,
-            connectorsDefaultLength
-        ] = connectorService.status;
-
-        const responseObject = {
-            moodleConnectionStatus,
-            moodleLastFetchTimestamp,
-            moodleNextFetchTimestamp,
-            moodleCurrentFetchInterval,
-            connectorsLength,
-            connectorsActiveLength,
-            connectorsDefaultLength,
-        };
-
-        const response = new ApiSuccess(200, responseObject);
-        next(response);
+      const courses = await fetchEnrolledCourses(getBaseUrl()) as any;
+      if (courses.length) moodleConnectionStatus = 'Ok';
+      else if (courses.message) moodleConnectionStatus = courses.message;
+    } catch (error) {
+      moodleConnectionStatus = error.message;
     }
-    catch (err) {
-        loggerFile.error(err.message);
-        next(err);
-    }
+
+    const moodleCurrentFetchInterval = await MoodleSettings.getRefreshRate();
+    const moodleLastFetchTimestamp = await MoodleSettings.getLastFetch();
+    const moodleNextFetchTimestamp = await MoodleSettings.getNextFetch();
+
+    const [
+      connectorsLength,
+      connectorsActiveLength,
+      connectorsDefaultLength,
+    ] = connectorService.status;
+
+    const responseObject = {
+      moodleConnectionStatus,
+      moodleLastFetchTimestamp,
+      moodleNextFetchTimestamp,
+      moodleCurrentFetchInterval,
+      connectorsLength,
+      connectorsActiveLength,
+      connectorsDefaultLength,
+    };
+
+    const response = new ApiSuccess(200, responseObject);
+    next(response);
+  } catch (err) {
+    loggerFile.error(err.message);
+    next(err);
+  }
 }

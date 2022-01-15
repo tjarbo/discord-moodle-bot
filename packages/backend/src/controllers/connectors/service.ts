@@ -96,7 +96,7 @@ class ConnectorService {
    * @memberof ConnectorService
    */
   public publish(courseId: number, message: Message): void {
-    let messageWasSent: boolean = false;
+    let messageWasSent = false;
 
     loggerFile.debug('Got new message publish order');
 
@@ -238,7 +238,7 @@ class ConnectorService {
     return [
       connectorsLength,
       connectorsActiveLength,
-      connectorsDefaultLength
+      connectorsDefaultLength,
     ];
   }
 

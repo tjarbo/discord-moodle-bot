@@ -1,9 +1,9 @@
 export interface IContentfile {
-    filename: string;
-    filepath: string;
-    filesize: number;
-    fileurl: string;
-    timemodified: number;
-    mimetype: string;
-    isexternalfile: boolean;
-  }
+  filename: string;
+  filepath: string;
+  filesize: number;
+  fileurl: string;
+  timemodified: number;
+  mimetype: string;
+  isexternalfile: boolean;
+}

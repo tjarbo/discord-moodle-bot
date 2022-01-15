@@ -13,22 +13,21 @@ import { MoodleSettings } from './schemas/moodle.schema';
  */
 export async function getRefreshRateRequest(req: Request, res: Response, next: NextFunction) {
 
-    try {
-        const refreshRate = await MoodleSettings.getRefreshRate();
-        if (!refreshRate) throw new ApiError(503, 'Internal error while retrieving refresh rate');
+  try {
+    const refreshRate = await MoodleSettings.getRefreshRate();
+    if (!refreshRate) throw new ApiError(503, 'Internal error while retrieving refresh rate');
 
-        const response = new ApiSuccess(200, {refreshRate});
-        next(response);
-    }
-    catch (err) {
-        loggerFile.error(err.message);
-        next(err);
-    }
+    const response = new ApiSuccess(200, { refreshRate });
+    next(response);
+  } catch (err) {
+    loggerFile.error(err.message);
+    next(err);
   }
+}
 
 // Schema for validating api input
 const refreshRateRequestSchema = object({
-    refreshRate: number().greater(5000).less(2147483647).required()
+  refreshRate: number().greater(5000).less(2147483647).required(),
 });
 
 /**
@@ -40,20 +39,19 @@ const refreshRateRequestSchema = object({
  */
 export async function setRefreshRateRequest(req: Request, res: Response, next: NextFunction) {
 
-    try {
-        // Input checking and parsing
-        const request = refreshRateRequestSchema.validate(req.body);
-        if (request.error) throw new ApiError(400, request.error.message);
-        const refreshRate = request.value.refreshRate;
+  try {
+    // Input checking and parsing
+    const request = refreshRateRequestSchema.validate(req.body);
+    if (request.error) throw new ApiError(400, request.error.message);
+    const refreshRate = request.value.refreshRate;
 
-        // Method call and exit
-        await MoodleSettings.findOneAndUpdate({},{ $set: { refreshRate } });
+    // Method call and exit
+    await MoodleSettings.findOneAndUpdate({}, { $set: { refreshRate } });
 
-        const response = new ApiSuccess();
-        next(response);
-    }
-    catch (err) {
-        loggerFile.error(err.message);
-        next(err);
-    }
+    const response = new ApiSuccess();
+    next(response);
+  } catch (err) {
+    loggerFile.error(err.message);
+    next(err);
   }
+}
