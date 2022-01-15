@@ -25,7 +25,8 @@ module.exports = {
     parser: "@typescript-eslint/parser",
     parserOptions: {
         "project": "tsconfig.json",
-        "sourceType": "module"
+        "sourceType": "module",
+        tsconfigRootDir: __dirname,
     },
     plugins: [
         "eslint-plugin-jsdoc",
@@ -34,5 +35,7 @@ module.exports = {
         "@typescript-eslint"
     ],
     rules: {
+        "@typescript-eslint/no-throw-literal": "off",
+        "@typescript-eslint/no-explicit-any": "off",
     }
 };
