@@ -35,7 +35,7 @@ export abstract class ConnectorPlugin {
    * @type {string}
    * @memberof ConnectorPlugin
    */
-  public get objectId(): string { return this.document.id; }
+  public get objectId(): string { return this.document.id as string; }
 
   /**
    * Returns all courses, that are assigned to this bot.

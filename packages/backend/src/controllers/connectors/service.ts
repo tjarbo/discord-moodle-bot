@@ -18,26 +18,29 @@ class ConnectorService {
   constructor() {
     loggerFile.info('ConnectorService has been started');
     // Get all connectors from database
-    Connector.find().then((connectorList: IConnectorDocument[]) => {
-      connectorList.forEach(connector =>  {
-        switch (connector.type) {
-          case ConnectorType.Discord:
-            loggerFile.debug(`Found connector of type Discord Bot (${connector._id})`);
-            this.#connectors.push(new DiscordBotConnectorPlugin(connector));
-            break;
+    Connector.find()
+      .then((connectorList: IConnectorDocument[]) => {
+        connectorList.forEach(connector =>  {
+          switch (connector.type) {
+            case ConnectorType.Discord:
+              loggerFile.debug(`Found connector of type Discord Bot (${connector._id as string})`);
+              this.#connectors.push(new DiscordBotConnectorPlugin(connector));
+              break;
 
-          default:
-            loggerFile.error(`Found connector with unknown type ${connector.type} at ${connector._id}`);
-            break;
+            default:
+              loggerFile.error(`Found connector with unknown type ${connector.type as string} at ${connector._id as string}`);
+              break;
+          }
+        });
+
+        // If no connector has been found, start to create connectors based on .env
+        if (connectorList.length === 0) {
+          loggerFile.warn('No connector found within database');
+          // Ignore promise here as the catch
+          void this.createConnectorsFromEnv();
         }
-      });
-
-      // If no connector has been found, start to create connectors based on .env
-      if (connectorList.length === 0) {
-        loggerFile.warn('No connector found within database');
-        this.createConnectorsFromEnv();
-      }
-    });
+      })
+      .catch((reason: any) => loggerFile.fatal('Failed to initialize the connector service!', reason));
   }
 
   /**
@@ -48,7 +51,7 @@ class ConnectorService {
    * @memberof ConnectorService
    */
   private async createConnectorsFromEnv(): Promise<void> {
-    loggerFile.debug('Start creating connectors from environment variables');
+    loggerFile.debug('Start creating connectors from environment variables.');
 
     // Create optional discord Bot
     if (!!config.discordChannel && !!config.discordToken) {
@@ -59,14 +62,17 @@ class ConnectorService {
           token: config.discordToken,
         };
 
-        this.create('Discord Bot (Environment)', ConnectorType.Discord, socket);
+        await this.create('Discord Bot (Environment)', ConnectorType.Discord, socket);
       } catch (error) {
-        let { message } = error;
-        if (error instanceof ApiError) message = error.error;
+        let message: string;
+        if (error instanceof Error) message = error.message;
+        if (error instanceof ApiError) message = error.error.toString();
 
         loggerFile.error(`Failed to create Discord bot from .env! Reason(s): ${ message }`);
       }
     }
+
+    loggerFile.debug('Finished creating connectors from environment variables.');
   }
 
   /**
@@ -156,7 +162,7 @@ class ConnectorService {
 
         } catch (error) {
           // Validation failed -> throw ApiError
-          throw new ApiError(400, error.message);
+          throw new ApiError(400, (error as Error).message);
         }
 
         // 4. Add connector to database
@@ -165,7 +171,7 @@ class ConnectorService {
 
         // 5. Add connector to service
         this.#connectors.push(plugin);
-        loggerFile.debug(`Connector of type Discord (${connector._id}) has been created`);
+        loggerFile.debug(`Connector of type Discord (${connector._id as string}) has been created`);
         break;
 
       default:
@@ -191,7 +197,7 @@ class ConnectorService {
     try {
       connector = this.findConnectorWith(id);
     } catch (error) {
-      throw new ApiError(404, error.message);
+      throw new ApiError(404, (error as Error).message);
     }
 
     return connector.update(body);
@@ -213,7 +219,7 @@ class ConnectorService {
     try {
       connector = this.findConnectorWith(id);
     } catch (error) {
-      throw new ApiError(404, error.message);
+      throw new ApiError(404, (error as Error).message);
     }
     await connector.destroy();
     this.#connectors.splice(this.#connectors.indexOf(connector), 1);

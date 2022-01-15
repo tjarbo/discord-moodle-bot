@@ -5,7 +5,7 @@ import { ConnectorLogItem } from './schemas/connectorLogItem.schema';
 class ConnectorLogger {
 
   /**
-   * Creates object with message and connector attribute for ConnectorLogItem
+   * Creates object with message and connector attribute for ConnectorLogItem.
    *
    * @param message message that needs to be stored
    * @param objectId objectId of the connector
@@ -19,7 +19,23 @@ class ConnectorLogger {
   }
 
   /**
-   * Prints and stores an info message
+   * Creates a new ConnectorLogItem and save it to the database.
+   *
+   * @private
+   * @param {{ [key: string]: any, type: ConnectorLogType }} content
+   * @return {Promise<void>} Return nothing
+   * @memberof ConnectorLogger
+   */
+  private async log(content: { [key: string]: any, type: ConnectorLogType }): Promise<void> {
+    try {
+      await new ConnectorLogItem(content).save();
+    } catch (reason) {
+      loggerFile.error('Failed to save ConnectorLogItem!', reason);
+    }
+  }
+
+  /**
+   * Prints and stores an info message.
    *
    * @param message message that needs to be stored
    * @param objectId objectId of the connector
@@ -32,11 +48,11 @@ class ConnectorLogger {
     if (skipSave) return;
 
     const content = this.createContent(message, objectId);
-    new ConnectorLogItem({ ...content, type: ConnectorLogType.Info }).save();
+    void this.log({ ...content, type: ConnectorLogType.Info });
   }
 
   /**
-   * Prints and stores a warning message
+   * Prints and stores a warning message.
    *
    * @param message message that needs to be stored
    * @param objectId objectId of the connector
@@ -49,11 +65,11 @@ class ConnectorLogger {
     if (skipSave) return;
 
     const content = this.createContent(message, objectId);
-    new ConnectorLogItem({ ...content, type: ConnectorLogType.Warning }).save();
+    void this.log({ ...content, type: ConnectorLogType.Warning });
   }
 
   /**
-   * Prints and stores an error message
+   * Prints and stores an error message.
    *
    * @param message message that needs to be stored
    * @param objectId objectId of the connector
@@ -66,7 +82,7 @@ class ConnectorLogger {
     if (skipSave) return;
 
     const content = this.createContent(message, objectId);
-    new ConnectorLogItem({ ...content, type: ConnectorLogType.Error }).save();
+    void this.log({ ...content, type: ConnectorLogType.Error });
   }
 }
 

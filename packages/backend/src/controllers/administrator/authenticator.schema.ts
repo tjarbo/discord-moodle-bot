@@ -1,5 +1,5 @@
 /* tslint:disable:ban-types */
-import { Schema, model, Model, Document } from 'mongoose';
+import { Schema, Document } from 'mongoose';
 
 export interface IAuthenticatorDocument extends Document {
   [_id: string]: any;

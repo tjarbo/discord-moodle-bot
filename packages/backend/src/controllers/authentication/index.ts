@@ -4,7 +4,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import { object } from 'joi';
-import { Administrator, administratorUsernameValidationSchema, IAdministratorDocument } from '../administrator/administrator.schema';
+import { Administrator, administratorUsernameValidationSchema, IAdministratorDocument, HasUsername } from '../administrator/administrator.schema';
 import { loggerFile } from '../../configuration/logger';
 import jwt from 'jsonwebtoken';
 import expressjwt from 'express-jwt';
@@ -17,21 +17,23 @@ import { IAuthenticatorDocument } from '../administrator/authenticator.schema';
 /****************************************
  *       User input validation          *
  * **************************************/
-const authAssertionGetRequestSchema = object({
+type HasToken = { token: string };
+
+const authAssertionGetRequestSchema = object<HasUsername>({
   username: administratorUsernameValidationSchema,
 });
 
-const authAssertionPostRequestSchema = object({
+const authAssertionPostRequestSchema = object<HasUsername & { assertionResponse: any }>({
   username: administratorUsernameValidationSchema,
   assertionResponse: object().unknown().required().description('Webauthn challenge'),
 });
 
-const authAttestationGetRequestSchema = object({
+const authAttestationGetRequestSchema = object<HasUsername & HasToken>({
   username: administratorUsernameValidationSchema,
   token: registrationTokenValidationSchema,
 });
 
-const authAttestationPostRequestSchema = object({
+const authAttestationPostRequestSchema = object<HasUsername & HasToken & { attestationResponse: any }>({
   username: administratorUsernameValidationSchema,
   token: registrationTokenValidationSchema,
   attestationResponse: object().unknown().required().description('Webauthn challenge'),
@@ -62,7 +64,7 @@ export type JWT = {
  * @param {IUserDocument} user
  * @returns jwt
  */
-function generateJWToken(user: IAdministratorDocument) {
+function generateJWToken(user: IAdministratorDocument): string {
   const data = {
     _id: user._id,
     username: user.username,
@@ -160,7 +162,7 @@ export async function authAttestationGetRequest(req: Request, res: Response, nex
 
     // 5. Save current challenge to user
     userDoc.currentChallenge = attestationOptions.challenge;
-    userDoc.save();
+    await userDoc.save();
 
     // 6. Done
     const response = new ApiSuccess(200, attestationOptions);
@@ -226,12 +228,12 @@ export async function authAttestationPostRequest(req: Request, res: Response, ne
 
     } catch (error) {
       // Looks like a bad request
-      throw new ApiError(400, error.message);
+      throw new ApiError(400, (error as Error).message);
 
     } finally {
       // 9. Delete challenge from user. To try again, it is necessary to request a new challenge
       userDoc.currentChallenge = undefined;
-      userDoc.save();
+      await userDoc.save();
     }
   } catch (err) {
     loggerFile.error(err);
@@ -274,7 +276,7 @@ export async function authAssertionGetRequest(req: Request, res: Response, next:
 
     // 4. Save current challenge
     userDoc.currentChallenge = options.challenge;
-    userDoc.save();
+    await userDoc.save();
 
     // 5. Done
     const response = new ApiSuccess(200, options);
@@ -312,7 +314,7 @@ export async function authAssertionPostRequest(req: Request, res: Response, next
 
     // 4. Verify challenge
     try {
-      const { verified, assertionInfo } = await verifyAssertionResponse({
+      const { verified, assertionInfo } = verifyAssertionResponse({
         credential: assertionPostRequest.value.assertionResponse,
         expectedChallenge: userDoc.currentChallenge,
         expectedOrigin: config.rp.origin,
@@ -325,7 +327,7 @@ export async function authAssertionPostRequest(req: Request, res: Response, next
 
       // 5. Increase counter for authenticator
       authenticator.counter = assertionInfo.newCounter;
-      authenticator.save();
+      await authenticator.save();
 
       // 6. Send jwt to user
       loggerFile.info(`${userDoc.username} logged in successfully`);
@@ -333,13 +335,13 @@ export async function authAssertionPostRequest(req: Request, res: Response, next
       next(response);
 
     } catch (error) {
-      // Looks like a bad request
-      throw new ApiError(400, error.message);
-
+      // Passthrough ApiError
+      if (error instanceof ApiError) throw error;
+      throw new ApiError(500, (error as Error).message);
     } finally {
       // 7. Delete challenge from user. To try again, it is necessary to request a new challenge
       userDoc.currentChallenge = undefined;
-      userDoc.save();
+      await userDoc.save();
     }
   } catch (err) {
     loggerFile.error(err);
