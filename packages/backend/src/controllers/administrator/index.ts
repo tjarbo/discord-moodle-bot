@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { loggerFile } from '../../configuration/logger';
-import { Administrator, administratorUsernameValidationSchema } from './administrator.schema';
+import { Administrator, administratorUsernameValidationSchema, HasUsername } from './administrator.schema';
 import { ApiError, ApiSuccess } from '../../utils/api';
 import { RegistrationToken } from '../authentication/registrationToken.schema';
 import { config } from '../../configuration/environment';
@@ -10,7 +10,7 @@ import { JWT } from '../authentication';
 /****************************************
  *       User input validation          *
  * **************************************/
-const adminAdministratorDeleteRequestSchema = object({
+const adminAdministratorDeleteRequestSchema = object<HasUsername>({
   username: administratorUsernameValidationSchema,
 }).unknown();
 
@@ -69,9 +69,9 @@ export async function adminAdministratorGetRequest(req: Request, res: Response, 
     // 2. Extract relevant details
     const administratorList = administrators.map(model => {
       return {
-        username: model.get('username'),
-        createdAt: new Date(model.get('createdAt')).getTime(),
-        deletable: model.get('deletable'),
+        username: model.username,
+        createdAt: new Date(model.createdAt).getTime(),
+        deletable: model.deletable,
         hasDevice: !!model.get('device'),
       };
     });

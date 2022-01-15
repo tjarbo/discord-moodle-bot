@@ -1,15 +1,14 @@
 /* tslint:disable:ban-types */
-import { Schema, model, Model, Document } from 'mongoose';
+import { Schema, model, Model, Document, Types } from 'mongoose';
 import { config } from '../../../configuration/environment';
 import { ConnectorLogType } from '..';
-import { ConnectorType } from '../plugins';
 
 export interface IConnectorLogItemDocument extends Document {
   [_id: string]: any;
-  connector: string;
+  connector: Types.ObjectId;
   createdAt: Date;
   message: string;
-  type: ConnectorType;
+  type: ConnectorLogType;
 }
 
 const connectorLogItemSchema = new Schema({

@@ -2,7 +2,7 @@
 import { config } from '../../configuration/environment';
 import { Schema, model, Model, Document } from 'mongoose';
 import { v4 as uuidv4, validate as validateUUID } from 'uuid';
-import { string, CustomHelpers } from 'joi';
+import { string, CustomHelpers, ErrorReport } from 'joi';
 
 interface IRegistrationTokenDocument extends Document {
   [_id: string]: any;
@@ -23,7 +23,7 @@ const registrationTokenSchema = new Schema({
 
 export const RegistrationToken: Model<IRegistrationTokenDocument> = model<IRegistrationTokenDocument>('RegistrationToken', registrationTokenSchema);
 
-const isUUID = (value: any, helper: CustomHelpers) : any => {
+const isUUID = (value: string, helper: CustomHelpers): string | ErrorReport => {
   if (!validateUUID(value)) return helper.error('any.invalid');
   return value;
 };

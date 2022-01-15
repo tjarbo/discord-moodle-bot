@@ -29,7 +29,7 @@ export abstract class Message {
    * @type {*}
    * @memberof Message
    */
-  protected context: any;
+  protected context: unknown;
 
   /**
    * Creates an instance of Message.
@@ -37,7 +37,7 @@ export abstract class Message {
    * @param {any} context Contains properties for the template class
    * @memberof Message
    */
-  constructor(context: any) {
+  constructor(context: unknown) {
     this.context = context;
   }
 

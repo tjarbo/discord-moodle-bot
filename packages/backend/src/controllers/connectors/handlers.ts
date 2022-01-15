@@ -3,23 +3,35 @@ import { NextFunction, Request, Response } from 'express';
 import { loggerFile } from '../../configuration/logger';
 import { ApiError, ApiSuccess } from '../../utils/api';
 import { JWT } from '../authentication';
-import { ConnectorTypeValues } from './plugins';
+import { ConnectorType, ConnectorTypeValues } from './plugins';
 import { connectorService } from './service';
 
 /****************************************
  *       User input validation          *
  * **************************************/
-const connectorsIdSchema = object({
+const connectorsIdSchema = object<{ id: string }>({
   id: string().hex().length(24).required(),
 });
 
-const connectorsPostRequestSchema = object({
+type ConnectorsPostRequestSchema = {
+  name: string,
+  type: ConnectorType,
+  socket: any,
+};
+const connectorsPostRequestSchema = object<ConnectorsPostRequestSchema>({
   name: string().max(64).required(),
   type: string().required().valid(...ConnectorTypeValues),
   socket: object().unknown().required(),
 }).required();
 
-const connectorsIdPatchRequestSchema = object({
+type ConnectorsIdPatchRequestSchema = {
+  active: boolean,
+  courses: number[],
+  default: boolean,
+  name: string,
+  socket: any,
+};
+const connectorsIdPatchRequestSchema = object<ConnectorsIdPatchRequestSchema>({
   active: boolean(),
   courses: array().items(number()),
   default: boolean(),
@@ -69,7 +81,7 @@ export async function connectorsPostRequest(req: Request & JWT, res: Response, n
     const connector = await connectorService.create(name, type, socket);
 
     // 3. Send response
-    loggerFile.info(`New connector "${connector.name}" (${connector._id}) created by "${req.token.data.username}"`);
+    loggerFile.info(`New connector "${connector.name as string}" (${connector._id as string}) created by "${req.token.data.username}"`);
     const response = new ApiSuccess(200, connector);
     next(response);
   } catch (err) {
@@ -104,7 +116,7 @@ export async function connectorsIdPatchRequest(req: Request & JWT, res: Response
     const updatedConnector = await connectorService.update(connectorsIdValidation.value.id, connectorsIdPatchRequestValidation.value);
 
     // 4. Send response
-    loggerFile.info(`Connector "${updatedConnector.name}" (${updatedConnector._id}) updated by "${req.token.data.username}"`);
+    loggerFile.info(`Connector "${updatedConnector.name as string}" (${updatedConnector._id as string}) updated by "${req.token.data.username}"`);
     const response = new ApiSuccess(200, updatedConnector);
     next(response);
   } catch (error) {
