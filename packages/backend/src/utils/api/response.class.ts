@@ -1,4 +1,4 @@
-import { ValidationErrorItem } from '@hapi/joi';
+import { ValidationErrorItem } from 'joi';
 import { HttpError } from 'http-errors';
 
 export enum ApiStatus {

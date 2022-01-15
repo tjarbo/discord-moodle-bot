@@ -1,6 +1,6 @@
 import { loggerFile } from '../../configuration/logger';
 import { Request, Response, NextFunction } from 'express';
-import { object, number } from '@hapi/joi';
+import { object, number } from 'joi';
 import { ApiSuccess, ApiError } from '../../utils/api';
 import { MoodleSettings } from './schemas/moodle.schema';
 

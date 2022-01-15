@@ -4,7 +4,7 @@ import { Administrator, administratorUsernameValidationSchema } from './administ
 import { ApiError, ApiSuccess } from '../../utils/api';
 import { RegistrationToken } from '../authentication/registrationToken.schema';
 import { config } from '../../configuration/environment';
-import { object } from '@hapi/joi';
+import { object } from 'joi';
 import { JWT } from '../authentication';
 
 /****************************************

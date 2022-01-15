@@ -1,5 +1,5 @@
 import { ApiResponse, ApiStatus } from './response.class';
-import { ValidationErrorItem } from '@hapi/joi';
+import { ValidationErrorItem } from 'joi';
 import createHttpError from 'http-errors';
 
 

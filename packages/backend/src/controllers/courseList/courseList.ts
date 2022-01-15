@@ -4,7 +4,7 @@ import { loggerFile } from '../../configuration/logger';
 import { config } from '../../configuration/environment';
 import { getBaseUrl } from '../moodle/index';
 import { Request, Response, NextFunction } from 'express';
-import { object, number, boolean } from '@hapi/joi';
+import { object, number, boolean } from 'joi';
 import { ApiSuccess, ApiError } from '../../utils/api';
 import { JWT } from '../authentication';
 
