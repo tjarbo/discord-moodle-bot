@@ -42,7 +42,7 @@ export const apiMiddleware = (param: any, req: Request, res: Response, next: any
      * Convert Error to ApiError and send response
      */
     case (param instanceof Error && param.name === 'UnauthorizedError'):
-      apiError = new ApiError(401, param.message);
+      apiError = new ApiError(401, (param as Error).message);
       res.status(401).json(apiError);
       break;
 
@@ -52,7 +52,7 @@ export const apiMiddleware = (param: any, req: Request, res: Response, next: any
      * Send 500 - Internal Server error as response.
      */
     default:
-      if (config.env === 'development') { loggerFile.debug(param.stack); }
+      if (config.env === 'development' && param instanceof Error) loggerFile.debug(param.stack);
       apiError = new ApiError(500, 'Internal server error');
       res.status(500).json(apiError);
       break;

@@ -3,7 +3,7 @@ import compress from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import methodOverride from 'method-override';
@@ -42,7 +42,7 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter, router);
 
 // catch 404 and forward to error handler
-app.use((req: Request, res: Response, next: any ) => {
+app.use((req: Request, res: Response, next: NextFunction ) => {
   const apiError = new ApiError(404, 'Not found');
   return next(apiError);
 });

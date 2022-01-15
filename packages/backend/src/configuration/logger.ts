@@ -1,5 +1,6 @@
 import log4js from 'log4js';
 import { config } from './environment';
+import { RequestHandler } from 'express';
 
 const configLogger = {
   appenders: {
@@ -27,4 +28,4 @@ const configLogger = {
 
 const logTyp = config.logToFile ? 'all' : 'default';
 export const loggerFile = log4js.configure(configLogger).getLogger(logTyp);
-export const loggerMiddleware = log4js.connectLogger(loggerFile, { level: 'auto' });
+export const loggerMiddleware = log4js.connectLogger(loggerFile, { level: 'auto' }) as RequestHandler;

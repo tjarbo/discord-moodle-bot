@@ -13,4 +13,4 @@ i18n.configure({
 
 i18n.setLocale(config.language);
 
-export const t = i18n.__;
+export const t = (...args: any[]) => i18n.__.bind(i18n, ...args);
