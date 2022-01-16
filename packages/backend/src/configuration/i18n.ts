@@ -14,4 +14,4 @@ i18n.configure({
 i18n.setLocale(config.language);
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-export const t = (...args: any[]): string => i18n.__.bind(i18n, ...args) as string;
+export const t = (...args: any[]): string => i18n.__.call(i18n, ...args) as string;
