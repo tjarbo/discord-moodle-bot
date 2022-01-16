@@ -1,7 +1,0 @@
-{
-  "compilerOptions": {
-    "types": ["jest", "node"]
-  },
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"],
-  "include": ["./src/**/*.tsx", "./src/**/*.ts"]
-}
