@@ -33,7 +33,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
    */
   constructor(protected document: IConnectorDocument) {
     super();
-    // Ignore error here because the connector is already blocked by the isReady var 
+    // Ignore error here because the connector is already blocked by the isReady var
     // and the function has its own catch block.
     void this.setupClient();
   }
@@ -152,7 +152,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     // Log update process
     connectorLogger.info('New values have been applied', this.objectId);
 
-    // Ignore error here because the connector is already blocked by the isReady var 
+    // Ignore error here because the connector is already blocked by the isReady var
     // and the function has its own catch block.
     void this.setupClient();
 
