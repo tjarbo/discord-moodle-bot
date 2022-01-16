@@ -1,32 +1,31 @@
 categories:
   - title: ':sparkles: New Features'
     label: ':sparkles: new feature'
+  - title: ':zap: Improvements'
+    label: ':zap: improvement'
   - title: ':bug: Bug Fixes'
     labels:
       - ':butterfly: bugfix'
       - ':bug: bug'
-  - title: ':zap: Improvements'
-    label: ':zap: improvement'
   - title: ':lock: Security and others'
     labels:
       - ':lock: security'
       - '⬆️ dependencies'
 category-template: '### $TITLE'
 template: |
-  <img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/master/logo.png" alt="FMDB Logo" align="right" width="128">
+  <img src="https://raw.githubusercontent.com/tjarbo/discord-moodle-bot/version-2/logo.svg" alt="Notification Service for Moodle - Logo" align="right" width="128">
 
   ## Hey there :wave:
   <<ENTER TEXT>>
 
-  To stay up to date and get notified as soon as a new release is available, click on watch in the upper right corner, then custom and activate Releases and Discussions :white_check_mark: (so that your inbox is not spammed :wink:)! And if you like the fmdb, give it a :star2: - thank you :star_struck:!
-
+  To stay up to date and get notified as soon as a new release is available, click on *Watch* in the upper right corner, then *Custom* and activate ✅ *Releases* and *Discussions* (so that your inbox is not spammed 😉 )! And if you like the Notification Service, give it a 🌟  - thank you 🤩!
   $CHANGES
 
   ### Available Docker Images:
-  - `tjarbo/fmdb:latest` - the latest release based on `release`
-  - `tjarbo/fmdb:next` - the latest release based on `main` (⚠️ possibly unstable, due to the preparation for version 2.0!)
+  - `tjarbo/notification-service:latest` - the latest release
+  - `tjarbo/notification-service:next` - the latest commit of default branch (⚠️ maybe unstable)
 
-  All images can be found [here](https://hub.docker.com/r/tjarbo/fmdb/)
+  All image tags can be found [here](https://hub.docker.com/r/tjarbo/notification-service/tags).
 
   ---
-  You want to setup your own bot? Visit our [wiki](https://github.com/tjarbo/discord-moodle-bot/wiki/Setup-your-own-bot) to find more about!
+  [Wiki](https://docs.tjarbo.me/moodle-notification-service/2.0.0/home) · [FAQ](https://github.com/tjarbo/discord-moodle-bot/discussions/categories/q-a) · [Issues](https://github.com/tjarbo/discord-moodle-bot/issues) · [All Releases](https://github.com/tjarbo/discord-moodle-bot/releases)
