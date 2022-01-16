@@ -22,11 +22,12 @@
     },
     "include": [
         "src/**/*",
-        "tests/**/*",
+        "src/**/*.json",
         "index.ts",
         "missing.d.ts"
     ],
     "exclude": [
         "node_modules",
+        "**/__mocks__"
     ]
 }
