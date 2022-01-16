@@ -2,17 +2,19 @@ import Discord, { TextChannel } from 'discord.js';
 import { IConnectorDocument } from '../schemas/connector.schema';
 import { connectorLogger } from '../logger';
 import { ConnectorPlugin } from './connectorPlugin.class';
-import { object, ObjectSchema, string, ref, boolean, required } from 'joi';
+import { object, string, ref, boolean, required } from 'joi';
 import { ApiError } from '../../../utils/api';
 import { LeanDocument } from 'mongoose';
 import { Message } from '../../../controllers/messages/message.class';
+
+type SocketSchema = { channel: string, token: string };
 
 export class DiscordBotConnectorPlugin extends ConnectorPlugin {
   private readonly client: Discord.Client = new Discord.Client();
 
   private isReady = false;
 
-  private static readonly socketSchema: ObjectSchema = object({
+  private static readonly socketSchema = object<SocketSchema>({
     channel: string().alphanum().length(18).when(ref('$isRequired'), {
       is: boolean().invalid(false),
       then: required(),
@@ -31,7 +33,9 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
    */
   constructor(protected document: IConnectorDocument) {
     super();
-    this.setupClient();
+    // Ignore error here because the connector is already blocked by the isReady var 
+    // and the function has its own catch block.
+    void this.setupClient();
   }
 
   /**
@@ -49,11 +53,11 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     this.setUpListeners();
 
     try {
-      await this.client.login(this.document.socket.token);
+      await this.client.login((this.document.socket as SocketSchema).token);
       this.isReady = true;
       connectorLogger.info(`Logged in as ${this.client.user.tag}!`, this.objectId);
     } catch (error) {
-      connectorLogger.error(error.message, this.objectId);
+      connectorLogger.error((error as Error).message, this.objectId);
     }
   }
 
@@ -70,9 +74,9 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
       connectorLogger.warn(`discord.js: ${info}`, this.objectId);
     });
 
-    this.client.on('disconnect', (info) => {
+    this.client.on('error', (error) => {
       this.isReady = false;
-      connectorLogger.error(`discord.js: ${info}`, this.objectId);
+      connectorLogger.error(`discord.js: ${error.message}`, this.objectId);
     });
   }
 
@@ -87,7 +91,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
    * @return {*} Validated socket object with optional missing parameters
    * @memberof DiscordBotConnectorPlugin
    */
-  public static validateSocket(unknownSocket: unknown, isRequired: boolean): any {
+  public static validateSocket(unknownSocket: unknown, isRequired: boolean): SocketSchema {
     const validation = this.socketSchema.validate(unknownSocket, { context: { isRequired } });
     if (validation.error) throw new Error(validation.error.message);
 
@@ -103,7 +107,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
 
     if (!this.isReady) return connectorLogger.error('Discord Bot not ready! Unable to send message.', this.objectId);
 
-    const discordChannel = this.client.channels.cache.get(this.document.socket.channel);
+    const discordChannel = this.client.channels.cache.get((this.document.socket as SocketSchema).channel);
     if (!discordChannel) return connectorLogger.error('Channel not in discord cache. Send a small \'test\' message to the channel and try again.', this.objectId);
 
     (discordChannel as TextChannel).send(message.markdown)
@@ -111,7 +115,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
         connectorLogger.info('Successfully sent message via Discord bot!', this.objectId);
       })
       .catch((error) => {
-        connectorLogger.info(`Failed to send message via Discord bot! ${error.message}`, this.objectId);
+        connectorLogger.info(`Failed to send message via Discord bot! ${(error as Error).message}`, this.objectId);
       });
   }
 
@@ -132,8 +136,8 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
       delete patch.socket;
 
     } catch (error) {
-      // Validation failed -> throw ApiError
-      throw new ApiError(400, error);
+      // Validation failed with Error object -> throw ApiError
+      throw new ApiError(400, (error as Error).message);
     }
 
     // Apply changes
@@ -148,7 +152,9 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     // Log update process
     connectorLogger.info('New values have been applied', this.objectId);
 
-    this.setupClient();
+    // Ignore error here because the connector is already blocked by the isReady var 
+    // and the function has its own catch block.
+    void this.setupClient();
 
     return this.Document;
   }
@@ -172,7 +178,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
     const doc = this.document.toObject();
 
     // Hide sensitive information
-    doc.socket.token = 'hidden';
+    (doc.socket as SocketSchema).token = 'hidden';
 
     return Object.freeze(doc);
   }
