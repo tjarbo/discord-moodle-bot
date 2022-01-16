@@ -9,7 +9,8 @@ const configLogger = {
       layout: {
         type: 'pattern',
         pattern: '[%p] %m',
-      } },
+      },
+    },
     file: {
       type: 'file',
       filename: 'log/server.log',
@@ -18,7 +19,8 @@ const configLogger = {
         type: 'pattern',
         pattern: '[%d{ISO8601}] [%p] %m',
       },
-    } },
+    },
+  },
   categories: {
     all: { appenders: ['default', 'file'], level: 'all' },
     default: { appenders: ['default'], level: 'all' },

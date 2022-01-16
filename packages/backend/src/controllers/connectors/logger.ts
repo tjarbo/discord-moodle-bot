@@ -19,11 +19,11 @@ class ConnectorLogger {
   }
 
   /**
-   * Creates a new ConnectorLogItem and save it to the database.
+   * Creates a new ConnectorLogItem and saves it to the database.
    *
    * @private
-   * @param {{ [key: string]: any, type: ConnectorLogType }} content
-   * @return {Promise<void>} Return nothing
+   * @param content
+   * @return nothing
    * @memberof ConnectorLogger
    */
   private async log(content: { [key: string]: any, type: ConnectorLogType }): Promise<void> {
