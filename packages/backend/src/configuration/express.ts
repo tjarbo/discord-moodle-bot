@@ -34,7 +34,7 @@ app.use(/^((?!(api)).)*/, (_, res) => { res.sendFile(path.join(__dirname, uiDist
 
 // Delimit number of requests per minute
 const apiLimiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minutes
+  windowMs: 60 * 1000, // 1 minute
   max: 100,
 });
 

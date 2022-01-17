@@ -2,12 +2,12 @@ module.exports = {
     env: {
         "browser": true,
         "es6": true,
-        "node": true
+        "node": true,
     },
     extends: [
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "airbnb-typescript/base"
+        "airbnb-typescript/base",
     ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
@@ -19,7 +19,7 @@ module.exports = {
         "eslint-plugin-jsdoc",
         "eslint-plugin-prefer-arrow",
         "eslint-plugin-import",
-        "@typescript-eslint"
+        "@typescript-eslint",
     ],
     rules: {
         "@typescript-eslint/no-throw-literal": "off",
@@ -32,5 +32,5 @@ module.exports = {
         "semi": "error",
         "no-trailing-spaces": "error",
         "comma-dangle": ["error", "always-multiline"],
-    }
+    },
 };
