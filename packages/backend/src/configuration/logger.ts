@@ -25,7 +25,6 @@ const configLogger = {
     all: { appenders: ['default', 'file'], level: 'all' },
     default: { appenders: ['default'], level: 'all' },
   },
-
 };
 
 const logTyp = config.logToFile ? 'all' : 'default';
