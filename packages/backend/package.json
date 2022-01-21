@@ -32,7 +32,7 @@
     "i18n": "^0.13.3",
     "joi": "^17.5.0",
     "jsonwebtoken": "^8.5.1",
-    "log4js": "^6.3.0",
+    "log4js": "^6.4.0",
     "method-override": "^3.0.0",
     "mongoose": "^6.0.10",
     "node-fetch": "^2.6.0",
