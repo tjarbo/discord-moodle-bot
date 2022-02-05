@@ -1,1114 +1,1144 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Source code: https://github.com/tjarbo/discord-moodle-bot\nDocs: https://docs.tjarbo.me\n",
-        "version": "2.0.0",
-        "title": "Moodle Notification Service API",
-        "license": {
-            "name": "GNU AFFERO GENERAL PUBLIC LICENSE",
-            "url": "https://github.com/tjarbo/discord-moodle-bot/blob/main/LICENSE.md"
-        },
-        "contact": {
-            "name": "tjarbo",
-            "url": "https://github.com/tjarbo"
-        }
+      "description": "Source code: https://github.com/tjarbo/discord-moodle-bot\nDocs: https://docs.tjarbo.me\n",
+      "version": "2.0.0",
+      "title": "Moodle Notification Service API",
+      "license": {
+        "name": "GNU AFFERO GENERAL PUBLIC LICENSE",
+        "url": "https://github.com/tjarbo/discord-moodle-bot/blob/main/LICENSE.md"
+      },
+      "contact": {
+        "name": "tjarbo",
+        "url": "https://github.com/tjarbo"
+      }
     },
     "basePath": "/api",
     "tags": [
-        {
-            "name": "Administrator",
-            "description": "Manage administrators"
-        },
-        {
-            "name": "Authentification",
-            "description": "Go passwordless with WebAutn",
-            "externalDocs": {
-                "description": "Find out more about jwt",
-                "url": "https://jwt.io/#debugger"
-            }
-        },
-        {
-            "name": "Connectors"
+      {
+        "name": "Administrator",
+        "description": "Manage administrators"
+      },
+      {
+        "name": "Authentification",
+        "description": "Go passwordless with WebAutn",
+        "externalDocs": {
+          "description": "Find out more about jwt",
+          "url": "https://jwt.io/#debugger"
         }
+      },
+      {
+        "name": "Connectors",
+        "description": "Manage connectors"
+      }
     ],
     "schemes": [
-        "http",
-        "https"
+      "http",
+      "https"
     ],
     "paths": {
-        "/webauthn/register": {
-            "get": {
-                "tags": [
-                    "Authentification"
-                ],
-                "summary": "Request challenge options for attestation",
-                "description": "Handles requests to create a new challenge that is required to register a new device.",
-                "operationId": "authAttestationGetRequest",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "username",
-                        "in": "query",
-                        "description": "Username of admin to register. Only between 8 and 64 characters allowed.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "token",
-                        "in": "query",
-                        "description": "Registration token in form of 000000-0000-0000-0000-000000 or more.",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Attestation options have been created successfully!",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "404": {
-                        "description": "Registration token not found",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        },
-                        "examples": {
-                            "application/json": {
-                                "status": "error",
-                                "code": 404,
-                                "data": {},
-                                "error": [
-                                    {
-                                        "message": "User test#0000 not found"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
+      "/webauthn/register": {
+        "get": {
+          "tags": [
+            "Authentification"
+          ],
+          "summary": "Request challenge options for attestation",
+          "description": "Handles requests to create a new challenge that is required to register a new device.",
+          "operationId": "authAttestationGetRequest",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "username",
+              "in": "query",
+              "description": "Username of admin to register. Only between 8 and 64 characters allowed.",
+              "required": true,
+              "type": "string"
             },
-            "post": {
-                "tags": [
-                    "Authentification"
-                ],
-                "summary": "Validates the attestation response done by user to register a new device",
-                "description": "Validates the attestation response done by user to register a new device",
-                "operationId": "authAttestationPostRequest",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "username",
-                        "in": "query",
-                        "description": "Username of admin to register. Only between 8 and 64 characters allowed.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "token",
-                        "in": "query",
-                        "description": "Registration token in form of 000000-0000-0000-0000-000000 or more.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "attestationResponse",
-                        "in": "body",
-                        "description": "Value received from navigator.credentials.get()",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "unknown_structure": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Registration was successful. Response contains jwt!",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        },
-                        "examples": {
-                            "application/json": {
-                                "status": "success",
-                                "code": 200,
-                                "data": {
-                                    "accesstoken": "abcd.1234.efghi"
-                                },
-                                "error": []
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "description": "Validation of attestation response failed.",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        },
-                        "examples": {
-                            "application/json": {
-                                "status": "error",
-                                "code": 401,
-                                "data": {},
-                                "error": [
-                                    {
-                                        "message": "Challenge has not been solved correctly"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Registration token not found",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        },
-                        "examples": {
-                            "application/json": {
-                                "status": "error",
-                                "code": 404,
-                                "data": {},
-                                "error": [
-                                    {
-                                        "message": "User test#0000 not found"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
+            {
+              "name": "token",
+              "in": "query",
+              "description": "Registration token in form of 000000-0000-0000-0000-000000 or more.",
+              "required": true,
+              "type": "string"
             }
-        },
-        "/webauthn/login": {
-            "get": {
-                "tags": [
-                    "Authentification"
-                ],
-                "summary": "Request challenge options for assertion",
-                "description": "Handles requests to create a new challenge that is required to login.",
-                "operationId": "authAssertionGetRequest",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "username",
-                        "in": "query",
-                        "description": "Username of registered admin. Only between 8 and 64 characters allowed.",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Assertion options have been created successfully!",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "404": {
-                        "description": "Registration token not found",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        },
-                        "examples": {
-                            "application/json": {
-                                "status": "error",
-                                "code": 404,
-                                "data": {},
-                                "error": [
-                                    {
-                                        "message": "User test#0000 not found"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
+          ],
+          "responses": {
+            "200": {
+              "description": "Attestation options have been created successfully!",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
             },
-            "post": {
-                "tags": [
-                    "Authentification"
-                ],
-                "summary": "Validates the assertion response done by user to login",
-                "description": "Validates the assertion response done by user to login",
-                "operationId": "authAssertionPostRequest",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "username",
-                        "in": "query",
-                        "description": "Username of registered admin. Only between 8 and 64 characters allowed.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "assertionResponse",
-                        "in": "body",
-                        "description": "Value received from navigator.credentials.get()",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "unknown_structure": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Login was successful. Response contains jwt!",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        },
-                        "examples": {
-                            "application/json": {
-                                "status": "success",
-                                "code": 200,
-                                "data": {
-                                    "accesstoken": "abcd.1234.efghi"
-                                },
-                                "error": []
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "description": "Validation of assertion response failed.",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        },
-                        "examples": {
-                            "application/json": {
-                                "status": "error",
-                                "code": 401,
-                                "data": {},
-                                "error": [
-                                    {
-                                        "message": "Challenge has not been solved correctly"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Registration token not found",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        },
-                        "examples": {
-                            "application/json": {
-                                "status": "error",
-                                "code": 404,
-                                "data": {},
-                                "error": [
-                                    {
-                                        "message": "User test#0000 not found"
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
-            }
-        },
-        "/fetch": {
-            "get": {
-                "tags": [
-                    "Moodle"
-                ],
-                "summary": "Triggers bot to fetch new updates from moodle.",
-                "description": "This endpoint allows the user to trigger the bot to fetch new updates from moodle, independent from the current interval. \n",
-                "operationId": "manualFetchRequest",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Fetch was successful",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
-            }
-        },
-        "/settings/administrator": {
-            "get": {
-                "tags": [
-                    "Administrator"
-                ],
-                "summary": "Gets administrator list",
-                "description": "Gets a list of all administrators from the database.",
-                "operationId": "getAdministratorListRequest",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "status": {
-                                    "type": "string",
-                                    "example": "success"
-                                },
-                                "code": {
-                                    "type": "integer",
-                                    "format": "int32",
-                                    "example": 200
-                                },
-                                "data": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "userName": {
-                                                "type": "string",
-                                                "example": "DiscordUser#1234"
-                                            },
-                                            "userId": {
-                                                "type": "string",
-                                                "minLength": 18,
-                                                "maxLength": 18,
-                                                "example": "123456789123456789"
-                                            },
-                                            "createdAt": {
-                                                "type": "number",
-                                                "example": 1591198290510
-                                            }
-                                        }
-                                    }
-                                },
-                                "error": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "message": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    },
-                                    "example": []
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
+            "400": {
+              "$ref": "#/responses/400"
             },
-            "post": {
-                "tags": [
-                    "Administrator"
-                ],
-                "summary": "Creates administrator",
-                "description": "Creates a new Administrator",
-                "operationId": "addAdministratorRequest",
-                "security": [
+            "404": {
+              "description": "Registration token not found",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              },
+              "examples": {
+                "application/json": {
+                  "status": "error",
+                  "code": 404,
+                  "data": {},
+                  "error": [
                     {
-                        "Bearer": []
+                      "message": "User test#0000 not found"
                     }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "body",
-                        "in": "body",
-                        "description": "Username and ID of the administrator",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "username": {
-                                    "type": "string"
-                                },
-                                "userid": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "$ref": ""
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/responses/500"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
+                  ]
                 }
-            }
-        },
-        "/settings/administrator/{id}": {
-            "delete": {
-                "tags": [
-                    "Administrator"
-                ],
-                "summary": "Deletes administrator",
-                "description": "Deletes an administrator from the database.",
-                "operationId": "deleteAdministratorRequest",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "User id",
-                        "required": true,
-                        "type": "string",
-                        "minLength": 18,
-                        "maxLength": 18
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Deletion Successful",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "404": {
-                        "description": "Administrator not found",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
-            }
-        },
-        "/settings/refreshRate": {
-            "get": {
-                "tags": [
-                    "Moodle"
-                ],
-                "summary": "Gets moodle fetch interval",
-                "description": "Returns the refresh interval in which the current data is requested and notifications are sent accordingly.",
-                "operationId": "getRefreshRateRequest",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
+              }
             },
-            "put": {
-                "tags": [
-                    "Moodle"
-                ],
-                "summary": "Sets moodle fetch interval",
-                "description": "Sets the refresh interval in which the current dataset is requested and notifications are sent accordingly.",
-                "operationId": "setRefreshRateRequest",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "body",
-                        "in": "body",
-                        "description": "New refresh rate in milliseconds",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "refreshRate": {
-                                    "type": "number",
-                                    "example": 60000,
-                                    "minimum": 5000,
-                                    "maximum": 2147483647
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
+            "500": {
+              "$ref": "#/responses/500"
             }
+          }
         },
-        "/settings/courses": {
-            "get": {
-                "tags": [
-                    "Moodle"
-                ],
-                "summary": "Gets course list",
-                "description": "Returns a list of all courses with the status whether the associated notifications are enabled or disabled.",
-                "operationId": "getCourseListRequest",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "properties": {
-                                    "courseId": {
-                                        "type": "number",
-                                        "example": 5910,
-                                        "minimum": 0,
-                                        "maximum": 2147483647
-                                    },
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Kryptologie"
-                                    },
-                                    "isActive": {
-                                        "type": "boolean"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "404": {
-                        "description": "No courses found",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
-            }
-        },
-        "/settings/courses/{id}": {
-            "put": {
-                "tags": [
-                    "Moodle"
-                ],
-                "summary": "Sets single course status",
-                "description": "Enables or disables the notifications assigned to the course id.",
-                "operationId": "setCourseRequest",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Course id",
-                        "required": true,
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 2147483647
-                    },
-                    {
-                        "name": "body",
-                        "in": "body",
-                        "description": "Course active status",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "isActive": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "404": {
-                        "description": "Course not found",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
-            }
-        },
-        "/status": {
-            "get": {
-                "tags": [
-                    "Status"
-                ],
-                "summary": "Get various status information",
-                "description": "Returns a list of objects that show the current connection, discord and fetch status and settings.",
-                "operationId": "getStatusRequest",
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Successful operation",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "status": {
-                                    "type": "string",
-                                    "example": "success"
-                                },
-                                "code": {
-                                    "type": "integer",
-                                    "format": "int32",
-                                    "example": 200
-                                },
-                                "data": {
-                                    "type": "object",
-                                    "properties": {
-                                        "moodleConnectionStatus": {
-                                            "type": "string",
-                                            "example": "Ok"
-                                        },
-                                        "moodleLastFetchTimestamp": {
-                                            "type": "number",
-                                            "example": "1598862126"
-                                        },
-                                        "moodleNextFetchTimestamp": {
-                                            "type": "number",
-                                            "example": "1598865126"
-                                        },
-                                        "moodleCurrentFetchInterval": {
-                                            "type": "number",
-                                            "example": "900000"
-                                        },
-                                        "discordLastReadyTimestamp": {
-                                            "type": "number",
-                                            "example": "1598861227218"
-                                        },
-                                        "discordCurrentChannelId": {
-                                            "type": "string",
-                                            "example": "703550541160639540"
-                                        },
-                                        "discordCurrentChannelName": {
-                                            "type": "string",
-                                            "example": "moodle-updates"
-                                        }
-                                    }
-                                },
-                                "error": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "message": {
-                                                "type": "string"
-                                            }
-                                        }
-                                    },
-                                    "example": []
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                }
-            }
-        },
-        "/verify": {
-            "get": {
-                "responses": {
-                    "200": {
-                        "description": "The provided token is valid!",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                },
-                "summary": "Verify login status",
-                "description": "This endpoint allows to test if the peovided authentification token is valid or not",
-                "operationId": "authVerify",
-                "tags": [
-                    "Authentification"
-                ],
-                "produces": [
-                    "application/json"
-                ]
-            }
-        },
-        "/connectors": {
-            "get": {
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                },
-                "tags": [
-                    "Connectors"
-                ],
-                "operationId": "connectorsGetRequest",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a list of all connectors.",
-                "description": " "
+        "post": {
+          "tags": [
+            "Authentification"
+          ],
+          "summary": "Validates the attestation response done by user to register a new device",
+          "description": "Validates the attestation response done by user to register a new device",
+          "operationId": "authAttestationPostRequest",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "username",
+              "in": "query",
+              "description": "Username of admin to register. Only between 8 and 64 characters allowed.",
+              "required": true,
+              "type": "string"
             },
-            "post": {
-                "responses": {
-                    "200": {
-                        "description": "Connector created! Attribute \"data\" will contain the new connector object. ",
-                        "schema": {
-                            "$ref": "#/definitions/ApiResponse"
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                },
-                "description": " ",
-                "operationId": "connectorsPostRequest",
-                "tags": [
-                    "Connectors"
-                ],
-                "summary": "Add a new connector",
-                "produces": [
-                    "application/json"
-                ],
-                "consumes": [
-                    "application/json"
-                ]
-            }
-        },
-        "/connectors/{id}": {
-            "patch": {
-                "responses": {
-                    "200": {
-                        "description": "Connector successfully updated!",
-                        "schema": {
-                            "type": "object",
-                            "properties": {}
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                },
-                "summary": "Update connector",
-                "operationId": "connectorsIdPatchRequest",
-                "tags": [
-                    "Connectors"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "description": " "
+            {
+              "name": "token",
+              "in": "query",
+              "description": "Registration token in form of 000000-0000-0000-0000-000000 or more.",
+              "required": true,
+              "type": "string"
             },
-            "parameters": [
-                {
-                    "name": "id",
-                    "in": "path",
-                    "type": "string",
-                    "required": true
-                }
-            ],
-            "delete": {
-                "responses": {
-                    "200": {
-                        "description": "Connector successfully deleted!"
-                    },
-                    "400": {
-                        "$ref": "#/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/responses/401"
-                    },
-                    "500": {
-                        "$ref": "#/responses/500"
-                    }
-                },
-                "summary": "Delete a connector",
-                "operationId": "connectorsIdDeleteRequest",
-                "tags": [
-                    "Connectors"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "description": " "
-            }
-        }
-    },
-    "securityDefinitions": {
-        "Bearer": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header",
-            "description": "Get your token from the running web application"
-        }
-    },
-    "definitions": {
-        "ApiResponse": {
-            "type": "object",
-            "title": "Default Response Body",
-            "description": "This is structure of the default response body. The code field is equal with the HTTP status code. The object field is either of type array or object, depending on the endpoint.",
-            "properties": {
-                "status": {
+            {
+              "name": "attestationResponse",
+              "in": "body",
+              "description": "Value received from navigator.credentials.get()",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "unknown_structure": {
                     "type": "string"
-                },
-                "code": {
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Registration was successful. Response contains jwt!",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              },
+              "examples": {
+                "application/json": {
+                  "status": "success",
+                  "code": 200,
+                  "data": {
+                    "accesstoken": "abcd.1234.efghi"
+                  },
+                  "error": []
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "description": "Validation of attestation response failed.",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              },
+              "examples": {
+                "application/json": {
+                  "status": "error",
+                  "code": 401,
+                  "data": {},
+                  "error": [
+                    {
+                      "message": "Challenge has not been solved correctly"
+                    }
+                  ]
+                }
+              }
+            },
+            "404": {
+              "description": "Registration token not found",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              },
+              "examples": {
+                "application/json": {
+                  "status": "error",
+                  "code": 404,
+                  "data": {},
+                  "error": [
+                    {
+                      "message": "User test#0000 not found"
+                    }
+                  ]
+                }
+              }
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        }
+      },
+      "/webauthn/login": {
+        "get": {
+          "tags": [
+            "Authentification"
+          ],
+          "summary": "Request challenge options for assertion",
+          "description": "Handles requests to create a new challenge that is required to login.",
+          "operationId": "authAssertionGetRequest",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "username",
+              "in": "query",
+              "description": "Username of registered admin. Only between 8 and 64 characters allowed.",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Assertion options have been created successfully!",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "404": {
+              "description": "Registration token not found",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              },
+              "examples": {
+                "application/json": {
+                  "status": "error",
+                  "code": 404,
+                  "data": {},
+                  "error": [
+                    {
+                      "message": "User test#0000 not found"
+                    }
+                  ]
+                }
+              }
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Authentification"
+          ],
+          "summary": "Validates the assertion response done by user to login",
+          "description": "Validates the assertion response done by user to login",
+          "operationId": "authAssertionPostRequest",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "username",
+              "in": "query",
+              "description": "Username of registered admin. Only between 8 and 64 characters allowed.",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "assertionResponse",
+              "in": "body",
+              "description": "Value received from navigator.credentials.get()",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "unknown_structure": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Login was successful. Response contains jwt!",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              },
+              "examples": {
+                "application/json": {
+                  "status": "success",
+                  "code": 200,
+                  "data": {
+                    "accesstoken": "abcd.1234.efghi"
+                  },
+                  "error": []
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "description": "Validation of assertion response failed.",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              },
+              "examples": {
+                "application/json": {
+                  "status": "error",
+                  "code": 401,
+                  "data": {},
+                  "error": [
+                    {
+                      "message": "Challenge has not been solved correctly"
+                    }
+                  ]
+                }
+              }
+            },
+            "404": {
+              "description": "Registration token not found",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              },
+              "examples": {
+                "application/json": {
+                  "status": "error",
+                  "code": 404,
+                  "data": {},
+                  "error": [
+                    {
+                      "message": "User test#0000 not found"
+                    }
+                  ]
+                }
+              }
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        }
+      },
+      "/fetch": {
+        "get": {
+          "tags": [
+            "Moodle"
+          ],
+          "summary": "Triggers bot to fetch new updates from moodle.",
+          "description": "This endpoint triggers a new process to lookup for changes on moodle. \n",
+          "operationId": "manualFetchRequest",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Fetch was successful",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        }
+      },
+      "/settings/administrator": {
+        "get": {
+          "tags": [
+            "Administrator"
+          ],
+          "summary": "Gets administrator list",
+          "description": "Gets a list of all administrators from the database.",
+          "operationId": "getAdministratorListRequest",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "success"
+                  },
+                  "code": {
                     "type": "integer",
-                    "format": "int32"
-                },
-                "data": {
-                    "anyOf": [
-                        {
-                            "type": "array",
-                            "items": {
-                                "type": "object"
-                            }
-                        },
-                        {
-                            "type": "object"
-                        }
-                    ]
-                },
-                "error": {
+                    "format": "int32",
+                    "example": 200
+                  },
+                  "data": {
                     "type": "array",
                     "items": {
-                        "type": "object",
-                        "properties": {
-                            "message": {
-                                "type": "string"
-                            }
+                      "type": "object",
+                      "properties": {
+                        "userName": {
+                          "type": "string",
+                          "example": "DiscordUser#1234"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "minLength": 18,
+                          "maxLength": 18,
+                          "example": "123456789123456789"
+                        },
+                        "createdAt": {
+                          "type": "number",
+                          "example": 1591198290510
                         }
+                      }
                     }
+                  },
+                  "error": {
+                    "type": "array",
+                    "items": {
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "example": []
+                  }
                 }
+              }
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
             }
+          }
+        },
+        "post": {
+          "tags": [
+            "Administrator"
+          ],
+          "summary": "Creates administrator",
+          "description": "Creates a new Administrator",
+          "operationId": "addAdministratorRequest",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "Username and ID of the administrator",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "userid": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "$ref": ""
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "$ref": "#/responses/500"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
         }
+      },
+      "/settings/administrator/{username}": {
+        "delete": {
+          "tags": [
+            "Administrator"
+          ],
+          "summary": "Deletes administrator",
+          "description": "Deletes an administrator from the database.",
+          "operationId": "deleteAdministratorRequest",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "username",
+              "in": "path",
+              "description": "User id",
+              "required": true,
+              "type": "string",
+              "minLength": 18,
+              "maxLength": 18
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Deletion Successful",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "404": {
+              "description": "Administrator not found",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ]
+      },
+      "/settings/refreshRate": {
+        "get": {
+          "tags": [
+            "Moodle"
+          ],
+          "summary": "Gets moodle fetch interval",
+          "description": "Returns the refresh interval in which the current data is requested and notifications are sent accordingly.",
+          "operationId": "getRefreshRateRequest",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        },
+        "put": {
+          "tags": [
+            "Moodle"
+          ],
+          "summary": "Sets moodle fetch interval",
+          "description": "Sets the refresh interval in which the current dataset is requested and notifications are sent accordingly.",
+          "operationId": "setRefreshRateRequest",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "body",
+              "in": "body",
+              "description": "New refresh rate in milliseconds",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshRate": {
+                    "type": "number",
+                    "example": 60000,
+                    "minimum": 5000,
+                    "maximum": 2147483647
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation"
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        }
+      },
+      "/settings/courses": {
+        "get": {
+          "tags": [
+            "Moodle"
+          ],
+          "summary": "Gets course list",
+          "description": "Returns a list of all courses with the status whether the associated notifications are enabled or disabled.",
+          "operationId": "getCourseListRequest",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "courseId": {
+                      "type": "number",
+                      "example": 5910,
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Kryptologie"
+                    },
+                    "isActive": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "404": {
+              "description": "No courses found",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        }
+      },
+      "/settings/courses/{id}": {
+        "put": {
+          "tags": [
+            "Moodle"
+          ],
+          "summary": "Sets single course status",
+          "description": "Enables or disables the notifications assigned to the course id.",
+          "operationId": "setCourseRequest",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Course id",
+              "required": true,
+              "type": "number",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "Course active status",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "isActive": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "404": {
+              "description": "Course not found",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        }
+      },
+      "/status": {
+        "get": {
+          "tags": [
+            "Status"
+          ],
+          "summary": "Get various status information",
+          "description": "Returns a list of objects that show the current connection, discord and fetch status and settings.",
+          "operationId": "getStatusRequest",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "success"
+                  },
+                  "code": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 200
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "moodleConnectionStatus": {
+                        "type": "string",
+                        "example": "Ok"
+                      },
+                      "moodleLastFetchTimestamp": {
+                        "type": "number",
+                        "example": 1598862126
+                      },
+                      "moodleNextFetchTimestamp": {
+                        "type": "number",
+                        "example": 1598865126
+                      },
+                      "moodleCurrentFetchInterval": {
+                        "type": "number",
+                        "example": 900000
+                      },
+                      "connectorsLength": {
+                        "type": "number",
+                        "example": 1598861227218
+                      },
+                      "connectorsActiveLength": {
+                        "type": "number",
+                        "example": 703550541160639500
+                      },
+                      "connectorsDefaultLength": {
+                        "type": "number",
+                        "example": "moodle-updates"
+                      }
+                    }
+                  },
+                  "error": {
+                    "type": "array",
+                    "example": [],
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          }
+        }
+      },
+      "/verify": {
+        "get": {
+          "responses": {
+            "200": {
+              "description": "The provided token is valid!",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          },
+          "summary": "Verify login status",
+          "description": "This endpoint allows to test if the peovided authentification token is valid or not",
+          "operationId": "authVerify",
+          "tags": [
+            "Authentification"
+          ],
+          "produces": [
+            "application/json"
+          ]
+        }
+      },
+      "/connectors": {
+        "get": {
+          "responses": {
+            "200": {
+              "description": "",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          },
+          "tags": [
+            "Connectors"
+          ],
+          "operationId": "connectorsGetRequest",
+          "produces": [
+            "application/json"
+          ],
+          "summary": "Get a list of all connectors.",
+          "description": "This endpoint returns a list of all configuered connectors.",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "post": {
+          "responses": {
+            "200": {
+              "description": "Connector created! Attribute \"data\" will contain the new connector object. ",
+              "schema": {
+                "$ref": "#/definitions/ApiResponse"
+              }
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          },
+          "description": " ",
+          "operationId": "connectorsPostRequest",
+          "tags": [
+            "Connectors"
+          ],
+          "summary": "Add a new connector",
+          "produces": [
+            "application/json"
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      },
+      "/connectors/{id}": {
+        "patch": {
+          "responses": {
+            "200": {
+              "description": "Connector successfully updated!",
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          },
+          "summary": "Update connector",
+          "operationId": "connectorsIdPatchRequest",
+          "tags": [
+            "Connectors"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "description": " Updates the given connector.",
+          "parameters": [],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "number",
+            "required": true
+          }
+        ],
+        "delete": {
+          "responses": {
+            "200": {
+              "description": "Connector successfully deleted!"
+            },
+            "400": {
+              "$ref": "#/responses/400"
+            },
+            "401": {
+              "$ref": "#/responses/401"
+            },
+            "500": {
+              "$ref": "#/responses/500"
+            }
+          },
+          "summary": "Delete a connector",
+          "operationId": "connectorsIdDeleteRequest",
+          "tags": [
+            "Connectors"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "description": "Removes the connector. Keep in mind, that if there is no connector configuered, the service will try to create new connectors based on the environment variables.",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ]
+        }
+      }
+    },
+    "securityDefinitions": {
+      "Bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Get your token from the running web application"
+      }
+    },
+    "definitions": {
+      "ApiResponse": {
+        "type": "object",
+        "title": "Default Response Body",
+        "description": "This is structure of the default response body. The code field is equal with the HTTP status code. The object field is either of type array or object, depending on the endpoint.",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              {
+                "type": "object"
+              }
+            ]
+          },
+          "error": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "externalDocs": {
-        "description": "Get source code",
-        "url": "https://github.com/tjarbo/discord-moodle-bot/"
+      "url": "https://docs.tjarbo.me/moodle-notification-service/2.0.0/home"
     },
     "responses": {
-        "400": {
-            "description": "Invalid Request! Common reason is that the request body does not meet the expected struture. Make shure to check the api documentation. More information are available within the HTTP response ",
-            "schema": {
-                "$ref": "#/definitions/ApiResponse"
-            }
-        },
-        "401": {
-            "description": "The authentification token is invalid or expired. Please login again to receive a new valid token!",
-            "schema": {
-                "$ref": "#/definitions/ApiResponse"
-            }
-        },
-        "500": {
-            "description": "Oh no, an internal server error happend :/ Please check the server logs for further information!",
-            "schema": {
-                "$ref": "#/definitions/ApiResponse"
-            },
-            "examples": {
-                "application/json": {
-                    "status": "error",
-                    "code": 500,
-                    "data": {},
-                    "error": [
-                        {
-                            "message": "Internal server error"
-                        }
-                    ]
-                }
-            }
+      "400": {
+        "description": "Invalid Request! Common reason is that the request body does not meet the expected struture. Make shure to check the api documentation. More information are available within the HTTP response ",
+        "schema": {
+          "$ref": "#/definitions/ApiResponse"
         }
+      },
+      "401": {
+        "description": "The authentification token is invalid or expired. Please login again to receive a new valid token!",
+        "schema": {
+          "$ref": "#/definitions/ApiResponse"
+        }
+      },
+      "500": {
+        "description": "Oh no, an internal server error happend :/ Please check the server logs for further information!",
+        "schema": {
+          "$ref": "#/definitions/ApiResponse"
+        },
+        "examples": {
+          "application/json": {
+            "status": "error",
+            "code": 500,
+            "data": {},
+            "error": [
+              {
+                "message": "Internal server error"
+              }
+            ]
+          }
+        }
+      }
     }
-}
+  }
