@@ -901,7 +901,7 @@
             }
           },
           "summary": "Verify login status",
-          "description": "This endpoint allows to test if the peovided authentification token is valid or not",
+          "description": "This endpoint allows to test if the provided authentification token is valid or not",
           "operationId": "authVerify",
           "tags": [
             "Authentification"
@@ -1049,7 +1049,7 @@
           "produces": [
             "application/json"
           ],
-          "description": "Removes the connector. Keep in mind, that if there is no connector configuered, the service will try to create new connectors based on the environment variables.",
+          "description": "Removes the connector. Keep in mind, that if there is no connector configured, the service will try to create new connectors based on the environment variables.",
           "security": [
             {
               "Bearer": []
@@ -1070,7 +1070,7 @@
       "ApiResponse": {
         "type": "object",
         "title": "Default Response Body",
-        "description": "This is structure of the default response body. The code field is equal with the HTTP status code. The object field is either of type array or object, depending on the endpoint.",
+        "description": "This is the structure of the default response body. The code field is equal with the HTTP status code. The object field is either of type array or object, depending on the endpoint.",
         "properties": {
           "status": {
             "type": "string"
@@ -1111,7 +1111,7 @@
     },
     "responses": {
       "400": {
-        "description": "Invalid Request! Common reason is that the request body does not meet the expected struture. Make shure to check the api documentation. More information are available within the HTTP response ",
+        "description": "Invalid Request! Common reason is that the request body does not meet the expected structure. Make sure to check the api documentation. More information are available within the HTTP response ",
         "schema": {
           "$ref": "#/definitions/ApiResponse"
         }
@@ -1123,7 +1123,7 @@
         }
       },
       "500": {
-        "description": "Oh no, an internal server error happend :/ Please check the server logs for further information!",
+        "description": "Oh no, an internal server error occurred :/ Please check the server logs for further information!",
         "schema": {
           "$ref": "#/definitions/ApiResponse"
         },
