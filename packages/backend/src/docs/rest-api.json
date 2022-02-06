@@ -675,7 +675,7 @@
           "Moodle"
         ],
         "summary": "Gets course list",
-        "description": "Returns a list of all courses with the status whether the associated notifications are enabled or disabled.",
+        "description": "Returns a list of all courses including a status indicating whether the associated notifications are enabled or disabled.",
         "operationId": "getCourseListRequest",
         "security": [
           {
@@ -935,7 +935,7 @@
           "application/json"
         ],
         "summary": "Get a list of all connectors.",
-        "description": "This endpoint returns a list of all configuered connectors.",
+        "description": "This endpoint returns a list of all configured connectors.",
         "security": [
           {
             "Bearer": []
@@ -945,7 +945,7 @@
       "post": {
         "responses": {
           "200": {
-            "description": "Connector created! Attribute \"data\" will contain the new connector object. ",
+            "description": "Connector created! Attribute \"data\" will contain the new connector object.",
             "schema": {
               "$ref": "#/definitions/ApiResponse"
             }
@@ -1070,7 +1070,7 @@
     "ApiResponse": {
       "type": "object",
       "title": "Default Response Body",
-      "description": "This is the structure of the default response body. The code field is equal with the HTTP status code. The object field is either of type array or object, depending on the endpoint.",
+      "description": "This is the structure of the default response body. The code field is equal to the HTTP status code. The object field is either of type array or object, depending on the endpoint.",
       "properties": {
         "status": {
           "type": "string"
