@@ -30,7 +30,7 @@ jobs:
 
     - name: "Create tags for Docker image"
       id: docker_meta
-      uses: docker/metadata-action@v3.7.0
+      uses: docker/metadata-action@v4.0.1
       with:
         tag-latest: true
         images: tjarbo/notification-service
