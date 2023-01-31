@@ -27,7 +27,7 @@
     "test": "lerna run test --parallel"
   },
   "devDependencies": {
-    "lerna": "^4.0.0"
+    "lerna": "^6.4.1"
   },
   "dependencies": {}
 }
