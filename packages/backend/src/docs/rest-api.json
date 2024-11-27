@@ -437,7 +437,7 @@
                       "userId": {
                         "type": "string",
                         "minLength": 18,
-                        "maxLength": 18,
+                        "maxLength": 19,
                         "example": "123456789123456789"
                       },
                       "createdAt": {
@@ -546,7 +546,7 @@
             "required": true,
             "type": "string",
             "minLength": 18,
-            "maxLength": 18
+            "maxLength": 19
           }
         ],
         "responses": {

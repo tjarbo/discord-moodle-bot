@@ -15,7 +15,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
   private isReady = false;
 
   private static readonly socketSchema = object<SocketSchema>({
-    channel: string().alphanum().length(18).when(ref('$isRequired'), {
+    channel: string().alphanum().min(18).max(19).when(ref('$isRequired'), {
       is: boolean().invalid(false),
       then: required(),
     }),
@@ -24,6 +24,7 @@ export class DiscordBotConnectorPlugin extends ConnectorPlugin {
       then: required(),
     }),
   }).required();
+
 
   /**
    * Creates an instance of DiscordBotConnectorPlugin.
